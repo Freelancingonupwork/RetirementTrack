@@ -11,6 +11,17 @@ npm run dev
 
 Open `http://127.0.0.1:5173/login`.
 
+## GitHub Pages preview
+
+The `Deploy RetirementTrack to GitHub Pages` workflow publishes the current
+`main` branch to:
+
+`https://freelancingonupwork.github.io/RetirementTrack/`
+
+In the GitHub repository, set **Settings → Pages → Build and deployment →
+Source** to **GitHub Actions**. Each push to `main` will then rebuild and update
+the preview automatically.
+
 ## Validate
 
 ```bash

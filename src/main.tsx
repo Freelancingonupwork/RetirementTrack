@@ -1919,7 +1919,7 @@ function App() {
   useEffect(() => registerProgressReader(() => current.current), []);
   return (
     <Context.Provider value={{ s, set }}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/login" element={<Auth />} />
           <Route path="/activate" element={<Auth activate />} />
