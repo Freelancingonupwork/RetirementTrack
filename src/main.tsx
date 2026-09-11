@@ -268,7 +268,7 @@ function Shell() {
           <Routes>
             <Route
               path="dashboard"
-              element={<Dashboard />}
+              element={<Dashboard contact={() => setContact(true)} />}
             />
             <Route path="planning-update" element={<Planning />} />
             <Route path="planning-update/review" element={<Review />} />
@@ -331,7 +331,7 @@ function AttentionItem({
     </div>
   );
 }
-function Dashboard() {
+function Dashboard({ contact }: { contact: () => void }) {
   const { s } = useStore();
   const completed = s.planning.status === "Completed";
   const assessed = s.assessment.status === "Completed";
@@ -435,6 +435,14 @@ function Dashboard() {
         <Header
           title={`${completed || assessed ? "Welcome back" : "Good morning"}, ${s.profile.name}.`}
         />
+        <button type="button" className="dashboard-advisor-cta" onClick={contact}>
+          <span className="avatar">MC</span>
+          <span>
+            <small>Your advisor</small>
+            <strong>Contact Advisor</strong>
+          </span>
+          <ArrowRight size={18} />
+        </button>
       </div>
       <section className="hero-status">
         <div className="hero-status-left">
@@ -719,7 +727,6 @@ function Auth({ activate = false }: { activate?: boolean }) {
         <small>Harbor Wealth · RetirementTrack</small>
       </aside>
       <main>
-        <Brand />
         <span className="demo-pill">INTERACTIVE PROTOTYPE · MOCK ACCOUNTS</span>
         <Header
           eyebrow={
@@ -1503,14 +1510,7 @@ function ResourcePane({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
   return (
-    <div className="library-pane-root">
-      <button
-        type="button"
-        className="library-pane-backdrop"
-        aria-label="Close resource"
-        onClick={onClose}
-      />
-      <aside className="library-pane" role="dialog" aria-modal="true" aria-labelledby="library-pane-title">
+      <aside className="library-pane library-pane-inline" aria-labelledby="library-pane-title">
         <header className="library-pane-header">
           <div>
             <p className="eyebrow">
@@ -1583,7 +1583,6 @@ function ResourcePane({
           </Button>
         </footer>
       </aside>
-    </div>
   );
 }
 function Education() {
@@ -1611,35 +1610,9 @@ function Education() {
     (_, index) => !s.read.includes(String(index)),
   );
   const featuredIndex = unreadIndex === -1 ? 0 : unreadIndex;
-  const featured = articles[featuredIndex];
-  const showFeatured = contentType === "All" && !query;
-  const gridArticles = showFeatured
-    ? visibleArticles.filter(({ index }) => index !== featuredIndex)
-    : visibleArticles;
   return (
     <>
       <Header eyebrow="YOUR LEARNING LIBRARY" title="Learning library" />
-      {showFeatured && (
-        <section className="return-engagement library-feature">
-          <div className="return-icon">
-            <Sparkles size={21} />
-          </div>
-          <div>
-            <p className="eyebrow">
-              {s.read.length ? "CONTINUE EXPLORING" : "START HERE"}
-            </p>
-            <h3>{featured.title}</h3>
-          </div>
-          <button
-            type="button"
-            className="library-feature-open"
-            onClick={() => setOpenIndex(featuredIndex)}
-          >
-            {s.read.includes(String(featuredIndex)) ? "Open again" : "Open"}
-            <ArrowRight size={16} />
-          </button>
-        </section>
-      )}
       <section
         className="library-controls"
         aria-label="Filter learning resources"
@@ -1673,24 +1646,57 @@ function Education() {
           ))}
         </div>
       </section>
-      <div className="library-summary">
-        <strong>{visibleArticles.length} resources</strong>
-      </div>
-      <div className="article-grid library-grid">
-        {gridArticles.map(({ index }) => (
-          <ArticleCard key={index} i={index} onOpen={setOpenIndex} />
-        ))}
-      </div>
-      {!visibleArticles.length && (
-        <section className="card library-empty">
-          <Lightbulb />
-          <h2>No matching resources</h2>
-          <p>Try another content type or search term.</p>
+      <div className="library-browser">
+        <section className="library-list" aria-label="Learning resources">
+          <div className="library-list-heading">
+            <strong>{visibleArticles.length} resources</strong>
+            <span>Select an item to preview</span>
+          </div>
+          {visibleArticles.map(({ article, index }) => {
+            const ContentIcon = contentIcon(article.type);
+            const selected = openIndex === index;
+            return (
+              <button
+                key={index}
+                type="button"
+                className={`library-list-item ${selected ? "selected" : ""}`}
+                aria-pressed={selected}
+                onClick={() => setOpenIndex(index)}
+              >
+                <span className="library-list-icon"><ContentIcon size={19} /></span>
+                <span className="library-list-copy">
+                  <span className="library-list-meta">{article.type} · {article.topic}</span>
+                  <strong>{article.title}</strong>
+                  <small>{article.reason}</small>
+                </span>
+                <span className="library-list-time">
+                  {s.read.includes(String(index)) ? "Viewed" : article.time}
+                  <ChevronRight size={17} />
+                </span>
+              </button>
+            );
+          })}
+          {!visibleArticles.length && (
+            <div className="library-list-empty">
+              <Lightbulb />
+              <strong>No matching resources</strong>
+              <span>Try another content type or search term.</span>
+            </div>
+          )}
         </section>
-      )}
-      {openIndex !== null && (
-        <ResourcePane index={openIndex} onClose={() => setOpenIndex(null)} />
-      )}
+        {openIndex !== null ? (
+          <ResourcePane index={openIndex} onClose={() => setOpenIndex(null)} />
+        ) : (
+          <aside className="library-preview-empty">
+            <BookOpen size={34} />
+            <h2>Choose a resource</h2>
+            <p>Select an item from the list to view its content here.</p>
+            <button type="button" onClick={() => setOpenIndex(featuredIndex)}>
+              Open recommended resource <ArrowRight size={16} />
+            </button>
+          </aside>
+        )}
+      </div>
     </>
   );
 }
