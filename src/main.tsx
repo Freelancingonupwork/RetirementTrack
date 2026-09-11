@@ -64,7 +64,7 @@ import "./theme.css";
 import { FirmAdministration } from "./admin";
 import { AdvisorWorkspace } from "./advisor";
 import { PlatformWorkspace } from "./platform";
-import michaelCarterAvatar from "./assets/michael-carter-avatar.svg";
+import michaelCarterAvatar from "./assets/michael-carter-avatar.png";
 const Context = createContext<{
   s: State;
   set: React.Dispatch<React.SetStateAction<State>>;
