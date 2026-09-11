@@ -1816,6 +1816,13 @@ progress { accent-color: var(--brand-primary); }
   background: var(--brand-primary-soft);
   color: var(--brand-primary-strong);
 }
+.advisor-photo {
+  display: block;
+  flex: 0 0 auto;
+  padding: 0 !important;
+  object-fit: cover;
+  border: 1px solid var(--brand-border);
+}
 .dashboard-advisor-cta small,
 .dashboard-advisor-cta strong {
   display: block;

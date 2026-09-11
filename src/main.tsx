@@ -64,6 +64,7 @@ import "./theme.css";
 import { FirmAdministration } from "./admin";
 import { AdvisorWorkspace } from "./advisor";
 import { PlatformWorkspace } from "./platform";
+import michaelCarterAvatar from "./assets/michael-carter-avatar.svg";
 const Context = createContext<{
   s: State;
   set: React.Dispatch<React.SetStateAction<State>>;
@@ -217,7 +218,11 @@ function Shell() {
         <div className="sidebar-bottom">
           <div className="sidebar-advisor-card">
             <div className="advisor-mini">
-              <div className="avatar">MC</div>
+              <img
+                className="avatar advisor-photo"
+                src={michaelCarterAvatar}
+                alt="Michael Carter"
+              />
               <div>
                 <strong>Michael Carter</strong>
                 <small>Your advisor</small>
@@ -436,7 +441,11 @@ function Dashboard({ contact }: { contact: () => void }) {
           title={`${completed || assessed ? "Welcome back" : "Good morning"}, ${s.profile.name}.`}
         />
         <button type="button" className="dashboard-advisor-cta" onClick={contact}>
-          <span className="avatar advisor-avatar" aria-hidden="true">MC</span>
+          <img
+            className="avatar advisor-photo advisor-avatar"
+            src={michaelCarterAvatar}
+            alt="Michael Carter"
+          />
           <span>
             <small>{advisor.name}</small>
             <strong>Contact Advisor</strong>

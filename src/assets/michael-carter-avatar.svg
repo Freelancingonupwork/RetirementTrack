@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title description">
+  <title id="title">Michael Carter</title>
+  <desc id="description">Illustrated advisor profile portrait</desc>
+  <rect width="96" height="96" rx="48" fill="#DCECF8"/>
+  <circle cx="48" cy="37" r="18" fill="#F2C9A5"/>
+  <path d="M29 36c1-15 9-23 20-23 12 0 19 9 19 23-5-1-10-5-13-10-6 7-15 10-26 10Z" fill="#1E405C"/>
+  <path d="M19 88c2-20 13-31 29-31s28 11 30 31" fill="#146C94"/>
+  <path d="m39 59 9 12 9-12-4-3H43Z" fill="#FFFFFF"/>
+  <path d="M48 71 44 84h8Z" fill="#19A7CE"/>
+  <circle cx="42" cy="38" r="1.4" fill="#16324F"/>
+  <circle cx="55" cy="38" r="1.4" fill="#16324F"/>
+  <path d="M43 47c3 2 7 2 10 0" fill="none" stroke="#9A5F49" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
