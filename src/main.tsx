@@ -1477,7 +1477,7 @@ function ArticleCard({
           </p>
         )}
         <span>
-          {s.read.includes(String(i)) ? "Viewed · Open again" : article.time}
+          {s.read.includes(String(i)) ? "Completed · Open again" : article.time}
           <ArrowRight size={17} />
         </span>
       </div>
@@ -1581,11 +1581,12 @@ function ResourcePane({
         <footer className="library-pane-footer">
           {article.type !== "Video" && (
             <Button
+              disabled={s.read.includes(id)}
               onClick={() =>
                 set({ ...s, read: [...new Set([...s.read, id])] })
               }
             >
-              {s.read.includes(id) ? "Marked as read" : "Mark as read"}
+              {s.read.includes(id) ? "Completed" : "Mark as Completed"}
               <Check size={17} />
             </Button>
           )}
@@ -1666,11 +1667,14 @@ function Education() {
           {visibleArticles.map(({ article, index }) => {
             const ContentIcon = contentIcon(article.type);
             const selected = openIndex === index;
+            const isCompleted = s.read.includes(String(index));
             return (
               <button
                 key={index}
                 type="button"
-                className={`library-list-item ${selected ? "selected" : ""}`}
+                className={`library-list-item ${
+                  isCompleted ? "is-completed" : "is-remaining"
+                } ${selected ? "selected" : ""}`}
                 aria-pressed={selected}
                 onClick={() => setOpenIndex(index)}
               >
@@ -1680,9 +1684,23 @@ function Education() {
                   <strong>{article.title}</strong>
                   <small>{article.reason}</small>
                 </span>
-                <span className="library-list-time">
-                  {s.read.includes(String(index)) ? "Viewed" : article.time}
-                  <ChevronRight size={17} />
+                <span className="library-list-aside">
+                  <span
+                    className={`library-resource-status ${
+                      isCompleted ? "completed" : "remaining"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <CheckCircle2 size={14} />
+                    ) : (
+                      <Clock size={14} />
+                    )}
+                    {isCompleted ? "Completed" : "Remaining"}
+                  </span>
+                  <span className="library-list-time">
+                    {article.time}
+                    <ChevronRight size={17} />
+                  </span>
                 </span>
               </button>
             );
