@@ -436,9 +436,9 @@ function Dashboard({ contact }: { contact: () => void }) {
           title={`${completed || assessed ? "Welcome back" : "Good morning"}, ${s.profile.name}.`}
         />
         <button type="button" className="dashboard-advisor-cta" onClick={contact}>
-          <span className="avatar">MC</span>
+          <span className="avatar advisor-avatar" aria-hidden="true">MC</span>
           <span>
-            <small>Your advisor</small>
+            <small>{advisor.name}</small>
             <strong>Contact Advisor</strong>
           </span>
           <ArrowRight size={18} />
@@ -1570,14 +1570,16 @@ function ResourcePane({
           </section>
         </div>
         <footer className="library-pane-footer">
-          <Button
-            onClick={() =>
-              set({ ...s, read: [...new Set([...s.read, id])] })
-            }
-          >
-            {s.read.includes(id) ? "Marked as read" : "Mark as read"}
-            <Check size={17} />
-          </Button>
+          {article.type !== "Video" && (
+            <Button
+              onClick={() =>
+                set({ ...s, read: [...new Set([...s.read, id])] })
+              }
+            >
+              {s.read.includes(id) ? "Marked as read" : "Mark as read"}
+              <Check size={17} />
+            </Button>
+          )}
           <Button className="secondary" onClick={onClose}>
             Close
           </Button>
