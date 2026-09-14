@@ -386,3 +386,200 @@
   .advisor-topbar { height: 60px; padding: 0 18px; }
   .advisor-main { padding: var(--space-6) 18px var(--space-8); }
 }
+
+/* Search, filters and responsive advisor page grids. */
+.advisor-tools {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto auto;
+  gap: var(--space-3);
+  align-items: end;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  background: var(--brand-surface);
+  box-shadow: 0 1px 2px var(--brand-shadow);
+}
+
+.advisor-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 42px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-sm);
+  background: var(--brand-surface);
+  color: var(--brand-muted);
+}
+
+.advisor-search:focus-within {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-primary-soft);
+}
+
+.advisor-search input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font: inherit;
+  font-size: var(--fs-body-sm);
+}
+
+.advisor-select {
+  display: grid;
+  gap: 4px;
+}
+
+.advisor-select > span {
+  color: var(--brand-muted);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: .55px;
+  text-transform: uppercase;
+}
+
+.advisor-select select {
+  min-width: 170px;
+  min-height: 42px;
+  padding: 0 34px 0 var(--space-3);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-sm);
+  background: var(--brand-surface);
+  color: var(--brand-ink);
+  font: inherit;
+  font-size: var(--fs-body-sm);
+}
+
+.advisor-result-count {
+  align-self: center;
+  min-width: 130px;
+  color: var(--brand-muted);
+  font-size: var(--fs-small);
+  text-align: right;
+}
+
+.advisor-section-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.advisor-section-actions > span {
+  color: var(--brand-muted);
+  font-size: var(--fs-body-sm);
+}
+
+.advisor-page-section {
+  margin-bottom: var(--space-7);
+}
+
+.advisor-page-section .advisor-section-title {
+  margin-bottom: var(--space-3);
+}
+
+.advisor-card-grid,
+.advisor-communication-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  max-width: 1040px;
+}
+
+.advisor-card-grid .advisor-review,
+.advisor-communication-grid .advisor-review {
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-content: start;
+  min-height: 174px;
+  padding: var(--space-4);
+}
+
+.advisor-card-grid .advisor-review-action,
+.advisor-communication-grid .advisor-review-action {
+  grid-column: 2;
+  align-self: end;
+  margin-top: var(--space-2);
+}
+
+.advisor-card-grid .advisor-review-action .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.advisor-card-grid > .advisor-empty,
+.advisor-communication-grid > .advisor-empty {
+  grid-column: 1 / -1;
+}
+
+.advisor-empty.compact {
+  padding: var(--space-6) var(--space-4);
+}
+
+.advisor-table-empty {
+  padding: var(--space-6);
+  border-top: 1px solid var(--brand-border);
+  color: var(--brand-muted);
+  font-size: var(--fs-body-sm);
+  text-align: center;
+}
+
+.advisor-layout > section,
+.advisor-layout > aside,
+.advisor-client-layout > section,
+.advisor-client-layout > aside {
+  min-width: 0;
+}
+
+.advisor-layout {
+  grid-template-columns: minmax(0, 1fr) 285px;
+  gap: var(--space-4);
+}
+
+.advisor-rail {
+  gap: var(--space-3);
+}
+
+.advisor-rail-card {
+  padding: var(--space-4);
+}
+
+@media (max-width: 1100px) {
+  .advisor-tools {
+    grid-template-columns: minmax(230px, 1fr) auto;
+  }
+  .advisor-result-count {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+  .advisor-card-grid,
+  .advisor-communication-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .advisor-tools {
+    grid-template-columns: 1fr;
+  }
+  .advisor-select select {
+    width: 100%;
+  }
+  .advisor-result-count {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .advisor-section-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .advisor-section-actions .button {
+    width: 100%;
+  }
+}
