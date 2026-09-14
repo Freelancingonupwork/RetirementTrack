@@ -119,3 +119,270 @@
   .advisor-outstanding-list article { grid-template-columns: 22px 1fr; }
   .advisor-outstanding-list em { grid-column: 2; }
 }
+
+/* Advisor shell aligned with the finalized client portal theme. */
+.advisor-app,
+.advisor-workspace,
+.advisor-main {
+  background: var(--dashboard-canvas) !important;
+}
+
+.advisor-sidebar {
+  width: 226px !important;
+  padding: var(--space-6) var(--space-2) var(--space-4) !important;
+  background: var(--brand-sidebar-bg) !important;
+  border-right: 1px solid var(--brand-border);
+  box-shadow: none;
+}
+
+.advisor-workspace {
+  width: calc(100% - 226px) !important;
+  margin-left: 226px !important;
+}
+
+.advisor-brand {
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  color: var(--brand-primary-strong) !important;
+  font-size: var(--fs-h3);
+  font-weight: 700;
+}
+
+.advisor-brand svg {
+  width: 30px;
+  height: 30px;
+  color: var(--brand-primary) !important;
+}
+
+.advisor-brand small {
+  margin-top: 4px;
+  color: var(--brand-primary-strong) !important;
+  font-size: var(--fs-micro);
+  letter-spacing: 1.15px;
+}
+
+.advisor-sidebar > p {
+  margin: var(--space-6) var(--space-4) var(--space-3);
+  color: var(--brand-primary-strong);
+  font-size: var(--fs-small);
+  letter-spacing: 1.1px;
+}
+
+.advisor-sidebar nav {
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+}
+
+.advisor-sidebar nav a {
+  min-height: 40px;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--brand-sidebar-muted) !important;
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+}
+
+.advisor-sidebar nav a svg {
+  box-sizing: content-box;
+  width: 18px;
+  height: 18px;
+  padding: 5px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-surface-muted);
+}
+
+.advisor-sidebar nav a:hover,
+.advisor-sidebar nav a.active {
+  background: var(--brand-nav-selected) !important;
+  color: var(--brand-primary-strong) !important;
+  box-shadow: none !important;
+}
+
+.advisor-sidebar nav a:hover svg,
+.advisor-sidebar nav a.active svg {
+  background: var(--brand-primary-soft);
+}
+
+.advisor-sidebar nav a.active { font-weight: 700; }
+
+.advisor-sidebar-foot {
+  margin: auto var(--space-2) 0;
+  padding: var(--space-4) var(--space-2) 0;
+  border-color: var(--brand-border);
+  color: var(--brand-sidebar-muted);
+}
+
+.advisor-sidebar-foot > svg {
+  box-sizing: content-box;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary-strong);
+}
+
+.advisor-sidebar-foot a {
+  min-height: 40px;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-sm);
+  color: var(--brand-primary-strong);
+  font-weight: 700;
+}
+
+.advisor-sidebar-foot a:hover {
+  background: var(--brand-primary-soft);
+  text-decoration: none;
+}
+
+.advisor-topbar {
+  height: 60px;
+  padding: 0 var(--content-padding-x);
+  background: var(--brand-surface) !important;
+  border-bottom: 1px solid var(--brand-border) !important;
+}
+
+.advisor-avatar {
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary-strong);
+  font-weight: 700;
+}
+
+.advisor-refresh {
+  min-height: 40px;
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+.advisor-main {
+  max-width: var(--container-max);
+  padding: var(--space-7) var(--content-padding-x) var(--space-9);
+}
+
+.advisor-heading {
+  margin-bottom: var(--space-5);
+}
+
+.advisor-heading > p {
+  margin-bottom: var(--space-2);
+  color: var(--dashboard-blue);
+  font-size: var(--fs-small);
+  letter-spacing: 1.4px;
+}
+
+.advisor-heading h1 {
+  margin-bottom: var(--space-2);
+  color: var(--brand-ink) !important;
+  font-size: var(--fs-h1) !important;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+}
+
+.advisor-heading > div {
+  color: var(--dashboard-mid-blue);
+  font-size: var(--fs-body);
+}
+
+.advisor-summary,
+.advisor-review,
+.advisor-rail-card,
+.activity-rows,
+.advisor-client-table,
+.advisor-client-journey,
+.advisor-outstanding-list,
+.advisor-empty {
+  border-color: var(--brand-border) !important;
+  border-radius: var(--radius-md);
+  background: var(--brand-surface) !important;
+  box-shadow: 0 1px 3px var(--brand-shadow);
+}
+
+.advisor-summary {
+  margin-bottom: var(--space-5);
+}
+
+.advisor-summary > div,
+.activity-rows > div,
+.advisor-client-row,
+.advisor-client-head {
+  border-color: var(--brand-border) !important;
+}
+
+.advisor-summary strong,
+.journey-metric strong {
+  color: var(--brand-primary-strong);
+}
+
+.advisor-operating-note {
+  margin: 0 0 var(--space-6);
+  border-color: var(--dashboard-soft-blue);
+  border-radius: var(--radius-md);
+  background: var(--brand-primary-soft);
+}
+
+.advisor-section-title h2 {
+  color: var(--brand-ink);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+}
+
+.advisor-section-title p,
+.advisor-rail-card > p,
+.advisor-client-journey > p {
+  color: var(--dashboard-blue);
+}
+
+.advisor-review {
+  min-height: 104px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.advisor-review:hover,
+.advisor-rail-card:hover {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 2px 6px var(--brand-shadow);
+}
+
+.advisor-initials {
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary-strong);
+}
+
+.advisor-client-count {
+  background: var(--brand-primary-soft) !important;
+  border-color: var(--dashboard-soft-blue) !important;
+  color: var(--brand-ink);
+}
+
+.advisor-client-count svg,
+.advisor-client-count h2,
+.advisor-client-count span,
+.advisor-client-count a {
+  color: var(--brand-primary-strong);
+}
+
+.advisor-client-head {
+  background: var(--brand-surface-muted) !important;
+  color: var(--brand-primary-strong);
+}
+
+.advisor-client-row:hover,
+.advisor-client-row.selected {
+  background: var(--brand-nav-selected) !important;
+}
+
+@media (max-width: 1050px) {
+  .advisor-sidebar { width: 226px !important; }
+  .advisor-workspace {
+    width: calc(100% - 226px) !important;
+    margin-left: 226px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .advisor-sidebar { display: none; }
+  .advisor-workspace { width: 100% !important; margin-left: 0 !important; }
+  .advisor-topbar { height: 60px; padding: 0 18px; }
+  .advisor-main { padding: var(--space-6) 18px var(--space-8); }
+}

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Activity, BellRing, Check, CheckCircle2, ChevronRight, CircleUserRound, ClipboardList, Clock3, Mail, ShieldAlert, ShieldCheck, UsersRound } from "lucide-react";
 import { initialState, type State } from "./domain";
-import "./advisor-enhancements.css";
 
 type ReviewItem={id:string;client:string;initials:string;type:"Planning Update"|"Assessment"|"Follow-up";reason:string;date:string;priority:"High"|"Standard";resolved:boolean};
 type Engagement={id:string;client:string;activity:string;type:"Planning"|"Assessment"|"Education"|"Checklist"|"Profile";time:string};
