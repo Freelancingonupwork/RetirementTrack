@@ -106,6 +106,20 @@ function Header({
   title: string;
   children?: React.ReactNode;
 }) {
+  const isDashboardGreeting = title.startsWith("Good morning,");
+  const isAuthenticationHeading =
+    title === "Welcome back." || title === "Your next chapter starts here.";
+
+  if (!isDashboardGreeting && !isAuthenticationHeading) return null;
+
+  if (isDashboardGreeting) {
+    return (
+      <header className="page-heading dashboard-greeting">
+        <h1 tabIndex={-1}>{title}</h1>
+      </header>
+    );
+  }
+
   return (
     <header className="page-heading">
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
@@ -440,7 +454,7 @@ function Dashboard({ contact }: { contact: () => void }) {
     <>
       <div className="heading-row">
         <Header
-          title={`${completed || assessed ? "Welcome back" : "Good morning"}, ${s.profile.name}.`}
+          title={`Good morning, ${s.profile.name}.`}
         />
         <button type="button" className="dashboard-advisor-cta" onClick={contact}>
           <img
@@ -590,10 +604,9 @@ function DashboardVariant({ contact }: { contact: () => void }) {
     <div className="dashboard-variant">
       <div className="variant-heading">
         <div>
-          <p className="eyebrow">CLIENT OVERVIEW · SEPTEMBER 9, 2026</p>
           <Header
             eyebrow="YOUR NEXT CHAPTER"
-            title={`${completed || assessed ? "Welcome back" : "Good morning"}, ${s.profile.name}.`}
+            title={`Good morning, ${s.profile.name}.`}
           >
             A clear view of what is current, what needs attention, and what is
             coming next.

@@ -53,9 +53,7 @@ const adminNav = [
   ["privacy", "Household & data privacy", LockKeyhole],
 ] as const;
 
-function AdminHeader({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
-  return <header className="admin-heading"><p>{eyebrow}</p><h1 tabIndex={-1}>{title}</h1>{children && <div>{children}</div>}</header>;
-}
+function AdminHeader(_props: { eyebrow: string; title: string; children?: React.ReactNode }) { return null; }
 
 function AdminShell({ state, setState }: { state: AdminState; setState: React.Dispatch<React.SetStateAction<AdminState>> }) {
   const location = useLocation();
