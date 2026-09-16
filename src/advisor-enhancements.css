@@ -539,6 +539,53 @@
   grid-column: 1 / -1;
 }
 
+/* Needs attention: compact exception queue. This page deliberately uses a
+   narrower reading measure than the dashboard so each exception scans as a
+   discrete task instead of stretching across the workspace. */
+.advisor-attention-page {
+  max-width: 920px;
+}
+
+.advisor-attention-page .advisor-tools {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.advisor-attention-page .advisor-section-actions {
+  margin-bottom: var(--space-3);
+}
+
+.advisor-attention-page .advisor-section-actions .button {
+  min-height: 38px;
+  padding: 8px 14px;
+}
+
+.advisor-attention-grid {
+  max-width: none;
+  gap: var(--space-3);
+}
+
+.advisor-attention-grid .advisor-review {
+  min-height: 142px;
+  padding: var(--space-3);
+  gap: var(--space-3);
+}
+
+.advisor-attention-grid .advisor-review h3 {
+  margin-top: 6px;
+}
+
+.advisor-attention-grid .advisor-review-action {
+  margin-top: 4px;
+}
+
+.advisor-attention-grid .advisor-review-action .button {
+  width: auto;
+  min-width: 154px;
+  min-height: 36px;
+  padding: 7px 12px;
+}
+
 .advisor-empty.compact {
   padding: var(--space-6) var(--space-4);
 }
@@ -594,6 +641,9 @@
   }
   .advisor-result-count {
     grid-column: auto;
+  }
+  .advisor-attention-page {
+    max-width: none;
   }
 }
 
