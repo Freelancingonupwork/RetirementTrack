@@ -1,0 +1,274 @@
+/* Compact list and grid system shared by Advisor, Firm Admin, and Platform
+   Admin. This file intentionally changes layout only; visual tokens continue
+   to come from the established RetirementTrack theme. */
+
+:root {
+  --compact-content: 1040px;
+  --compact-grid: 960px;
+  --compact-list-gap: var(--space-3);
+  --compact-row-pad-y: 13px;
+  --compact-row-pad-x: 16px;
+}
+
+/* Advisor: task and activity pages use readable rows instead of tall tiles. */
+.advisor-tools,
+.advisor-page-section,
+.advisor-section-actions,
+.advisor-context,
+.advisor-card-grid,
+.advisor-communication-grid,
+.advisor-outstanding-list,
+.activity-rows,
+.advisor-client-layout {
+  width: 100%;
+  max-width: var(--compact-content);
+}
+
+.advisor-card-grid,
+.advisor-communication-grid {
+  grid-template-columns: 1fr;
+  gap: var(--compact-list-gap);
+}
+
+.advisor-card-grid .advisor-review,
+.advisor-communication-grid .advisor-review {
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  align-content: center;
+  min-height: 0;
+  padding: var(--compact-row-pad-y) var(--compact-row-pad-x);
+  gap: var(--space-3);
+}
+
+.advisor-card-grid .advisor-review-action,
+.advisor-communication-grid .advisor-review-action {
+  grid-column: 3;
+  align-self: center;
+  margin-top: 0;
+}
+
+.advisor-card-grid .advisor-review-action .button {
+  width: auto;
+  min-width: 154px;
+  min-height: 36px;
+  justify-content: center;
+  padding: 7px 12px;
+}
+
+.advisor-review-main h3 {
+  margin: 5px 0 2px;
+}
+
+.advisor-review-main p {
+  margin-bottom: 2px;
+  line-height: 1.45;
+}
+
+.advisor-attention-page {
+  max-width: var(--compact-content);
+}
+
+.advisor-attention-grid .advisor-review {
+  min-height: 0;
+}
+
+.advisor-outstanding-list,
+.activity-rows {
+  gap: 0;
+}
+
+.advisor-outstanding-list article,
+.activity-rows > div {
+  min-height: 68px;
+  padding: 12px var(--compact-row-pad-x);
+}
+
+.advisor-page-section {
+  margin-bottom: var(--space-6);
+}
+
+.advisor-client-head,
+.advisor-client-row {
+  padding: 12px var(--compact-row-pad-x);
+}
+
+.advisor-client-row {
+  min-height: 58px;
+}
+
+.advisor-summary {
+  max-width: var(--compact-content);
+}
+
+.advisor-summary > div,
+.advisor-rail-card {
+  padding: var(--space-4);
+}
+
+/* Firm administration: compact navigation tiles, settings, and user rows. */
+.admin-intro,
+.admin-actions,
+.invite-form,
+.admin-table,
+.admin-setting-list,
+.admin-note,
+.admin-governance-grid,
+.admin-boundary-grid {
+  width: 100%;
+  max-width: var(--compact-grid);
+}
+
+.admin-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--compact-list-gap);
+  max-width: var(--compact-grid);
+}
+
+.admin-tile {
+  min-height: 142px;
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+
+.admin-tile h2 {
+  margin: 5px 0;
+}
+
+.admin-tile p {
+  margin-bottom: var(--space-3);
+  line-height: 1.45;
+}
+
+.admin-table-head,
+.admin-table-row {
+  padding: 12px var(--compact-row-pad-x);
+}
+
+.admin-table-row {
+  min-height: 60px;
+}
+
+.admin-toggle,
+.admin-radio {
+  padding: 15px var(--compact-row-pad-x);
+}
+
+.admin-card {
+  padding: var(--space-5);
+}
+
+.admin-governance-grid,
+.admin-boundary-grid {
+  gap: var(--compact-list-gap);
+}
+
+.governance-summary,
+.admin-boundary-grid article {
+  min-height: 116px;
+  padding: var(--space-4);
+}
+
+/* Platform administration: keep lifecycle information dense and scannable. */
+.platform-summary,
+.lifecycle,
+.platform-grid,
+.platform-tools,
+.tenant-table,
+.platform-form,
+.platform-settings,
+.platform-apply,
+.oversight-list,
+.platform-note,
+.platform-governance-grid,
+.platform-auth-summary {
+  width: 100%;
+  max-width: var(--compact-content);
+}
+
+.platform-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--compact-list-gap);
+}
+
+.platform-card {
+  min-height: 138px;
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+
+.platform-card h2,
+.platform-card p {
+  margin-bottom: 5px;
+}
+
+.platform-card b {
+  margin-top: var(--space-3);
+}
+
+.tenant-head,
+.tenant-row {
+  padding: 12px var(--compact-row-pad-x);
+  gap: var(--space-3);
+}
+
+.tenant-row {
+  min-height: 64px;
+}
+
+.platform-toggle {
+  padding: 15px var(--compact-row-pad-x);
+}
+
+.oversight-list {
+  gap: var(--compact-list-gap);
+}
+
+.oversight-list article {
+  min-height: 72px;
+  padding: 12px var(--compact-row-pad-x);
+}
+
+.platform-governance-grid,
+.platform-auth-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--compact-list-gap);
+}
+
+.platform-governance-grid article,
+.platform-auth-summary > div {
+  min-height: 120px;
+  padding: var(--space-4);
+}
+
+@media (max-width: 1100px) {
+  .admin-grid,
+  .platform-grid,
+  .admin-governance-grid,
+  .admin-boundary-grid,
+  .platform-governance-grid,
+  .platform-auth-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .advisor-card-grid .advisor-review,
+  .advisor-communication-grid .advisor-review {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  .advisor-card-grid .advisor-review-action,
+  .advisor-communication-grid .advisor-review-action {
+    grid-column: 2;
+    margin-top: var(--space-2);
+  }
+
+  .advisor-card-grid .advisor-review-action .button {
+    width: 100%;
+  }
+
+  .admin-grid,
+  .platform-grid {
+    grid-template-columns: 1fr;
+  }
+}
