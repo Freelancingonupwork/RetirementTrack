@@ -62,6 +62,7 @@ import "./advisor.css";
 import "./platform.css";
 import "./theme.css";
 import "./advisor-enhancements.css";
+import "./governance-enhancements.css";
 import { FirmAdministration } from "./admin";
 import { AdvisorWorkspace } from "./advisor";
 import { PlatformWorkspace } from "./platform";
