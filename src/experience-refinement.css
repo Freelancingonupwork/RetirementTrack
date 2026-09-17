@@ -1,39 +1,26 @@
-/* Cross-role visual refinement. These rules preserve the approved palette and
-   make hierarchy, actionability, and progress easier to recognize at a glance. */
+/* Content-first dashboard refinement.
+   This layer deliberately leaves copy, images, and data untouched. It gives
+   each role the same calm, compact hierarchy using the approved theme tokens. */
 
 :root {
-  --experience-lift: 0 6px 16px rgba(16, 31, 53, 0.07);
-  --experience-edge: 4px;
+  --experience-lift: 0 2px 7px rgba(16, 31, 53, 0.055);
+  --experience-edge: 3px;
 }
 
-/* Client portal: make the planning journey feel connected and active. */
+/* Never introduce a decorative image or gradient behind dashboard content. */
+.workspace,
+.advisor-app,
+.admin-app,
+.platform-app,
+.advisor-workspace,
+.admin-workspace,
+.platform-workspace {
+  background-image: none !important;
+}
+
+/* Shared card treatment: clear sections, modest contrast, no visual noise. */
 .hero-status,
-.variant-status {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--brand-panel-muted);
-  box-shadow: var(--experience-lift);
-}
-
-.hero-status::before,
-.variant-status::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: var(--experience-edge);
-  background: var(--brand-primary);
-}
-
-.hero-status-left,
-.variant-status-copy {
-  position: relative;
-}
-
-.hero-status .status-ring,
-.variant-progress .status-ring {
-  box-shadow: 0 0 0 7px var(--brand-primary-soft);
-}
-
+.variant-status,
 .attention-item,
 .article,
 .return-engagement,
@@ -41,10 +28,36 @@
 .benchmark-card,
 .notification-card,
 .journey-status-card,
-.library-list-item,
-.library-pane-inline {
+.advisor-summary,
+.advisor-operating-note,
+.activity-rows,
+.advisor-review,
+.advisor-rail-card,
+.admin-intro,
+.admin-tile,
+.platform-summary,
+.lifecycle,
+.platform-card,
+.platform-note {
   border-color: var(--brand-border) !important;
-  box-shadow: 0 1px 3px var(--brand-shadow);
+  box-shadow: var(--experience-lift);
+}
+
+/* Client dashboard: a concise plan summary with the next action visible first. */
+.hero-status,
+.variant-status {
+  position: relative;
+  overflow: hidden;
+  border-top: var(--experience-edge) solid var(--brand-primary) !important;
+}
+
+.hero-status .status-ring,
+.variant-progress .status-ring {
+  box-shadow: 0 0 0 5px var(--brand-primary-soft);
+}
+
+.dashboard-grid {
+  gap: var(--space-4);
 }
 
 .attention-item {
@@ -55,20 +68,8 @@
   border-left-color: var(--brand-success) !important;
 }
 
-.attention-item.featured {
-  box-shadow: var(--experience-lift);
-}
-
 .article {
-  border-top: 3px solid var(--brand-primary-soft) !important;
-}
-
-.article:hover,
-.attention-item:hover,
-.return-engagement:hover,
-.library-list-item:hover {
-  border-color: var(--brand-primary) !important;
-  box-shadow: var(--experience-lift);
+  border-top: var(--experience-edge) solid var(--brand-primary-soft) !important;
 }
 
 .return-engagement,
@@ -76,186 +77,93 @@
   border-left: var(--experience-edge) solid var(--brand-accent) !important;
 }
 
-.section-heading h2,
-.variant-section-title h2 {
-  letter-spacing: -0.35px;
-}
-
-/* Advisor: visually separate insight, automated follow-up, and true action. */
-.advisor-summary,
-.advisor-operating-note,
-.advisor-review,
-.activity-rows,
-.advisor-outstanding-list,
-.advisor-rail-card,
-.advisor-client-table,
-.advisor-client-journey {
-  border-color: var(--brand-border) !important;
-}
-
+/* Advisor: distinguish visibility, platform-managed work, and exceptions
+   through placement and restrained borders rather than decoration. */
 .advisor-summary > div {
   position: relative;
-  transition: background .15s ease;
+  border-top: var(--experience-edge) solid var(--brand-primary-soft);
 }
 
-.advisor-summary > div::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 100%;
-  height: 3px;
-  background: var(--brand-primary-soft);
-}
+.advisor-summary > div:nth-child(2) { border-top-color: var(--brand-warning-soft); }
+.advisor-summary > div:nth-child(3) { border-top-color: var(--brand-danger-soft); }
+.advisor-summary > div:nth-child(4) { border-top-color: var(--brand-accent-soft); }
 
-.advisor-summary > div:nth-child(2)::before { background: var(--brand-warning); }
-.advisor-summary > div:nth-child(3)::before { background: var(--brand-danger); }
-.advisor-summary > div:nth-child(4)::before { background: var(--brand-accent); }
-
-.advisor-summary > div:hover { background: var(--brand-surface-muted); }
-
-.advisor-operating-note {
-  border-left: var(--experience-edge) solid var(--brand-primary);
-  box-shadow: 0 1px 3px var(--brand-shadow);
+.advisor-operating-note,
+.lifecycle,
+.platform-note {
+  border-left: var(--experience-edge) solid var(--brand-primary) !important;
 }
 
 .advisor-review {
-  border-left: 3px solid var(--brand-primary-soft) !important;
+  border-left: var(--experience-edge) solid var(--brand-primary-soft) !important;
 }
 
-.advisor-review:has(.priority-high) { border-left-color: var(--brand-danger) !important; }
+.advisor-review:has(.priority-high) {
+  border-left-color: var(--brand-danger) !important;
+}
 
-.advisor-review:hover,
-.advisor-rail-card:hover,
-.activity-rows > div:hover,
-.advisor-outstanding-list article:hover,
-.advisor-client-row:hover {
-  box-shadow: var(--experience-lift);
+.advisor-layout {
+  gap: var(--space-4);
+}
+
+.advisor-rail {
+  gap: var(--space-3);
 }
 
 .advisor-rail-card {
-  border-top: 3px solid var(--brand-primary-soft) !important;
+  border-top: var(--experience-edge) solid var(--brand-primary-soft) !important;
 }
 
-.advisor-rail-card:nth-child(2) { border-top-color: var(--brand-accent-soft) !important; }
-.advisor-rail-card:nth-child(3) { border-top-color: var(--brand-primary) !important; }
-
-.advisor-section-title h2,
-.advisor-client-journey h2 {
-  letter-spacing: -0.35px;
+/* Firm and platform dashboards: limited, scannable operational cards. */
+.admin-grid,
+.platform-grid {
+  gap: var(--space-4);
 }
 
-/* Firm administration: surface configuration status and make controls clearer. */
 .admin-intro {
-  border: 1px solid var(--brand-primary) !important;
-  box-shadow: var(--experience-lift);
+  border-left: var(--experience-edge) solid var(--brand-primary) !important;
 }
 
 .admin-tile,
-.admin-card,
-.admin-setting-list,
-.admin-table,
-.admin-note,
-.admin-boundary-grid article,
-.admin-governance-grid article {
-  border-color: var(--brand-border) !important;
-}
-
-.admin-tile {
-  position: relative;
-  overflow: hidden;
-  border-top: 3px solid var(--brand-primary-soft) !important;
-}
-
-.admin-tile:nth-child(3n + 2) { border-top-color: var(--brand-accent-soft) !important; }
-.admin-tile:nth-child(3n) { border-top-color: var(--brand-primary) !important; }
-
-.admin-tile:hover,
-.admin-boundary-grid article:hover,
-.admin-governance-grid article:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--experience-lift);
-}
-
-.admin-toggle:hover,
-.admin-radio:hover,
-.admin-table-row:hover {
-  background: var(--brand-surface-muted);
-}
-
-.admin-table-head,
-.tenant-head,
-.advisor-client-head {
-  background: var(--brand-surface-muted) !important;
-}
-
-/* Platform: make the lifecycle and tenant status views feel operational,
-   without turning them into a dense back-office interface. */
-.platform-summary,
-.lifecycle,
-.platform-card,
-.tenant-table,
-.platform-settings,
-.platform-apply,
-.oversight-list article,
-.platform-note,
-.platform-governance-grid article,
-.platform-auth-summary > div {
-  border-color: var(--brand-border) !important;
-}
-
-.platform-summary > div {
-  position: relative;
-}
-
-.platform-summary > div::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 100%;
-  height: 3px;
-  background: var(--brand-primary);
-}
-
-.platform-summary > div:nth-child(2)::before { background: var(--brand-warning); }
-.platform-summary > div:nth-child(3)::before { background: var(--brand-accent); }
-
-.lifecycle {
-  border-left: var(--experience-edge) solid var(--brand-primary);
-  box-shadow: 0 1px 3px var(--brand-shadow);
-}
-
 .platform-card {
-  position: relative;
-  overflow: hidden;
-  border-top: 3px solid var(--brand-primary-soft) !important;
+  border-top: var(--experience-edge) solid var(--brand-primary-soft) !important;
 }
 
+.admin-tile:nth-child(3n + 2),
 .platform-card:not(.platform-card-primary):nth-child(even) {
   border-top-color: var(--brand-accent-soft) !important;
 }
 
-.platform-card:hover,
-.oversight-list article:hover,
-.tenant-row:hover,
-.platform-governance-grid article:hover,
-.platform-auth-summary > div:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--experience-lift);
+.platform-summary > div {
+  border-top: var(--experience-edge) solid var(--brand-primary-soft);
 }
 
-.platform-toggle:hover { background: var(--brand-surface-muted); }
+.platform-summary > div:nth-child(2) { border-top-color: var(--brand-warning-soft); }
+.platform-summary > div:nth-child(3) { border-top-color: var(--brand-accent-soft); }
+
+/* Interactions remain perceptible without moving content or changing density. */
+.attention-item:hover,
+.article:hover,
+.return-engagement:hover,
+.library-list-item:hover,
+.advisor-review:hover,
+.advisor-rail-card:hover,
+.admin-tile:hover,
+.platform-card:hover {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 4px 10px rgba(16, 31, 53, 0.07);
+}
 
 @media (prefers-reduced-motion: reduce) {
+  .attention-item,
+  .article,
+  .advisor-review,
   .admin-tile,
-  .platform-card,
-  .platform-governance-grid article,
-  .platform-auth-summary > div {
-    transition: none;
-  }
+  .platform-card { transition: none; }
 }
 
-/* The finalized desktop workspace rule is loaded after the legacy mobile
-   breakpoint. Reassert the intended narrow-screen layout here. */
+/* The finalized desktop workspace rule is loaded after a legacy mobile
+   breakpoint. Reassert the intended narrow-screen layout. */
 @media (max-width: 700px) {
   .workspace {
     margin-left: 0 !important;
@@ -264,5 +172,10 @@
 
   .workspace main {
     padding: var(--space-6) 18px var(--space-8) !important;
+  }
+
+  .advisor-layout,
+  .dashboard-grid {
+    gap: var(--space-3);
   }
 }
