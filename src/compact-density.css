@@ -1,0 +1,144 @@
+/* Compact density pass.
+   Shared spacing only: content, routes, and the finalized visual theme remain
+   unchanged. These values keep dashboards and forms comfortably scannable. */
+
+:root {
+  --content-padding-x: 24px;
+  --card-padding: 18px;
+  --card-padding-lg: 22px;
+  --compact-list-gap: 10px;
+  --compact-row-pad-y: 10px;
+  --compact-row-pad-x: 14px;
+}
+
+/* Main canvases use less unused space while retaining a clear reading edge. */
+.workspace main,
+.advisor-workspace main,
+.admin-workspace main,
+.platform-workspace main {
+  padding-top: var(--space-5) !important;
+  padding-bottom: var(--space-7) !important;
+}
+
+/* Client dashboard and journey views. */
+.heading-row,
+.section-heading,
+.library-heading,
+.workspace main .form-page .page-heading {
+  margin-bottom: var(--space-3) !important;
+}
+
+.hero-status,
+.variant-status,
+.progress-overview {
+  padding: var(--space-4) var(--space-5) !important;
+}
+
+.attention-layout,
+.dashboard-grid,
+.journey-status-grid,
+.learning-grid,
+.notification-stack,
+.milestone-actions {
+  gap: var(--space-3) !important;
+}
+
+.attention-item,
+.article,
+.return-engagement,
+.notification-card,
+.journey-status-card,
+.workspace main .form-card,
+.workspace main .reading,
+.workspace main .card {
+  padding: var(--card-padding) !important;
+}
+
+.workspace main .form-page {
+  padding-bottom: var(--space-4) !important;
+}
+
+.workspace main .stepper {
+  margin: var(--space-4) 0 !important;
+}
+
+/* Advisor dashboard and workflow screens. */
+.advisor-tools,
+.advisor-summary,
+.advisor-operating-note,
+.advisor-page-section,
+.advisor-context,
+.advisor-client-layout,
+.advisor-layout {
+  margin-bottom: var(--space-4) !important;
+}
+
+.advisor-summary > div,
+.advisor-rail-card,
+.advisor-operating-note,
+.advisor-review,
+.advisor-outstanding-list article,
+.activity-rows > div,
+.advisor-client-row {
+  padding: var(--compact-row-pad-y) var(--compact-row-pad-x) !important;
+}
+
+.advisor-layout,
+.advisor-card-grid,
+.advisor-communication-grid,
+.advisor-rail,
+.activity-rows,
+.advisor-outstanding-list,
+.advisor-client-layout {
+  gap: var(--compact-list-gap) !important;
+}
+
+/* Firm and platform dashboards and management routes. */
+.admin-intro,
+.admin-actions,
+.admin-note,
+.admin-card,
+.admin-tile,
+.admin-table-head,
+.admin-table-row,
+.admin-toggle,
+.admin-radio,
+.platform-card,
+.platform-note,
+.lifecycle,
+.platform-settings,
+.platform-apply,
+.tenant-head,
+.tenant-row,
+.platform-toggle,
+.oversight-list article,
+.platform-governance-grid article,
+.platform-auth-summary > div {
+  padding: var(--compact-row-pad-y) var(--compact-row-pad-x) !important;
+}
+
+.admin-grid,
+.platform-grid,
+.admin-governance-grid,
+.admin-boundary-grid,
+.platform-governance-grid,
+.platform-auth-summary,
+.oversight-list {
+  gap: var(--compact-list-gap) !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --content-padding-x: 18px;
+    --card-padding: 16px;
+    --card-padding-lg: 18px;
+  }
+
+  .workspace main,
+  .advisor-workspace main,
+  .admin-workspace main,
+  .platform-workspace main {
+    padding-top: var(--space-4) !important;
+    padding-bottom: var(--space-6) !important;
+  }
+}

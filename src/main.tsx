@@ -66,6 +66,7 @@ import "./governance-enhancements.css";
 import "./compact-layouts.css";
 import "./label-typography.css";
 import "./experience-refinement.css";
+import "./compact-density.css";
 import { FirmAdministration } from "./admin";
 import { AdvisorWorkspace } from "./advisor";
 import { PlatformWorkspace } from "./platform";
@@ -1953,7 +1954,7 @@ function App() {
   const [s, set] = useState<State>(() => {
     try {
       const saved = JSON.parse(
-        localStorage.getItem("retirementtrack-demo-v1") || "null",
+        localStorage.getItem("retirementtrack-demo-v2") || "null",
       );
       return saved?.version === 1 ? saved : initialState();
     } catch {
@@ -1962,7 +1963,7 @@ function App() {
   });
   useEffect(() => {
     try {
-      localStorage.setItem("retirementtrack-demo-v1", JSON.stringify(s));
+      localStorage.setItem("retirementtrack-demo-v2", JSON.stringify(s));
     } catch {
       /* Session remains usable if storage is unavailable. */
     }
