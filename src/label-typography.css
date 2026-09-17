@@ -1,0 +1,79 @@
+/* Shared label typography. Brand signatures and fine-print disclaimers retain
+   their established sizing; functional page labels use a readable 13px. */
+:root {
+  --fs-label: 13px;
+}
+
+/* Client portal and authentication controls. */
+.field,
+.field > span,
+.auth label,
+.choices legend,
+.choices label,
+.eyebrow,
+.card-meta,
+.library-list-meta,
+.library-list-heading span,
+.library-filters button,
+.content-card-labels > span,
+.content-card-labels small,
+.article-tag,
+.library-resource-status {
+  font-size: var(--fs-label) !important;
+}
+
+/* Advisor workspace labels, status captions, and table headings. */
+.advisor-select > span,
+.advisor-result-count,
+.advisor-summary span,
+.advisor-summary small,
+.advisor-section-title p,
+.advisor-rail-card > p,
+.advisor-client-journey > p,
+.advisor-client-head,
+.advisor-review small,
+.advisor-outstanding-list small,
+.journey-metric span,
+.journey-detail small,
+.journey-detail span,
+.activity-rows span,
+.priority,
+.review-type,
+.communication-status {
+  font-size: var(--fs-label) !important;
+}
+
+/* Firm administration labels and data-column headings. */
+.admin-form label,
+.invite-form label,
+.admin-sidebar-label,
+.admin-table-head,
+.admin-table-row small,
+.admin-table-row > span,
+.admin-tile span,
+.admin-actions > span,
+.admin-search,
+.governance-summary span,
+.admin-toggle span,
+.admin-radio span {
+  font-size: var(--fs-label) !important;
+}
+
+/* Platform administration labels, lifecycle steps, and table headings. */
+.platform-form label,
+.platform-tools > span,
+.platform-summary span,
+.platform-summary small,
+.platform-card p,
+.lifecycle > p,
+.lifecycle-steps span,
+.lifecycle-steps i,
+.tenant-head,
+.tenant-row small,
+.tenant-status,
+.platform-radio small,
+.platform-toggle small,
+.oversight-list article > div > small,
+.platform-auth-summary span {
+  font-size: var(--fs-label) !important;
+}
