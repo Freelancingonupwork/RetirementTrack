@@ -127,6 +127,85 @@
   gap: var(--compact-list-gap) !important;
 }
 
+/* Search stays available but becomes a quiet utility at the right edge of the
+   toolbar. The focus treatment remains visible for keyboard users without
+   creating a large, bright field highlight. */
+.advisor-tools {
+  grid-template-columns: auto auto minmax(220px, 300px) !important;
+  align-items: center;
+}
+
+.advisor-tools .advisor-search {
+  grid-column: 3;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.advisor-tools .advisor-select { grid-column: 1; }
+.advisor-tools .advisor-result-count { grid-column: 2; }
+
+.platform-tools {
+  grid-template-columns: auto auto minmax(220px, 300px) !important;
+  align-items: center;
+}
+
+.platform-tools > label { grid-column: 3; min-height: 36px; padding: 0 10px; }
+.platform-tools > select { grid-column: 1; min-height: 36px; }
+.platform-tools > span { grid-column: 2; }
+
+.platform-tools.single {
+  grid-template-columns: auto minmax(220px, 300px) !important;
+}
+
+.platform-tools.single > label { grid-column: 2; }
+.platform-tools.single > span { grid-column: 1; }
+
+.admin-actions {
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.admin-actions .admin-search {
+  order: 2;
+  flex: 0 1 300px;
+  min-width: 220px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.admin-actions .button { order: 1; }
+
+.advisor-search input,
+.advisor-search input:focus,
+.platform-tools label input,
+.platform-tools label input:focus,
+.admin-search input,
+.admin-search input:focus,
+.library-search input,
+.library-search input:focus {
+  min-height: 34px;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.advisor-search:focus-within,
+.platform-tools label:focus-within,
+.admin-search:focus-within,
+.library-search:focus-within {
+  border-color: var(--brand-panel-muted) !important;
+  box-shadow: 0 0 0 2px rgba(18, 114, 217, 0.10) !important;
+}
+
+.library-controls {
+  gap: var(--space-3) !important;
+}
+
+.library-search {
+  flex: 0 1 280px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
 @media (max-width: 700px) {
   :root {
     --content-padding-x: 18px;
@@ -140,5 +219,27 @@
   .platform-workspace main {
     padding-top: var(--space-4) !important;
     padding-bottom: var(--space-6) !important;
+  }
+
+  .advisor-tools,
+  .platform-tools,
+  .platform-tools.single {
+    grid-template-columns: 1fr !important;
+  }
+
+  .advisor-tools .advisor-search,
+  .advisor-tools .advisor-select,
+  .advisor-tools .advisor-result-count,
+  .platform-tools > label,
+  .platform-tools > select,
+  .platform-tools > span,
+  .platform-tools.single > label,
+  .platform-tools.single > span {
+    grid-column: auto;
+  }
+
+  .admin-actions .admin-search {
+    flex-basis: 100%;
+    min-width: 0;
   }
 }
