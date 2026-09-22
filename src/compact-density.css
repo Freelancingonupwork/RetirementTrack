@@ -746,6 +746,8 @@
 .documentation-empty h2 { margin: 14px 0 6px; color: var(--brand-primary-strong); font-size: var(--fs-h3); }
 .documentation-empty p { max-width: 54ch; margin: 0; font-size: var(--fs-body-sm); line-height: 1.55; }
 .documentation-empty code { padding: 2px 4px; border-radius: 3px; background: var(--brand-surface-muted); color: var(--brand-primary-strong); }
+.documentation-workflow-reference a { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; padding: 10px 14px; border: 1px solid var(--brand-primary); border-radius: var(--radius-sm); color: var(--brand-primary); font-size: var(--fs-body-sm); font-weight: 750; }
+.documentation-workflow-reference a:hover { background: var(--brand-primary-soft); text-decoration: none; }
 
 @media (max-width: 760px) {
   .documentation-app { grid-template-columns: 1fr; }

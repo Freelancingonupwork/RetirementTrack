@@ -10,16 +10,16 @@ type DocumentationItem = {
 };
 
 const documentationItems: DocumentationItem[] = [
-  { id: "task-1", label: "Task 1 · Discovery kickoff", fileName: "Existing Material Review and Discovery Kickoff Notes", load: () => import("./assets/documents/extracted/Task1_Existing_Material_Review_and_Discovery_Kickoff_Notes.html?raw") },
-  { id: "task-2", label: "Task 2 · Product requirements", fileName: "Product Requirements and User Workflow Definition", load: () => import("./assets/documents/extracted/Task2_Product_Requirements_User_Workflow_Definition 1 (1).html?raw") },
-  { id: "task-3", label: "Task 3 · MVP boundaries", fileName: "MVP Boundary and Prioritization", load: () => import("./assets/documents/extracted/Task3_MVP_Boundary_Prioritization 1.html?raw") },
-  { id: "task-4", label: "Task 4 · Domain data model", fileName: "Domain Data Model", load: () => import("./assets/documents/extracted/Task4_Domain_Data_Model (3).html?raw") },
-  { id: "task-5", label: "Task 5 · Source pending", fileName: "Task 5 document" },
-  { id: "task-6", label: "Task 6 · Security and privacy", fileName: "Multi Tenancy Identity Security and Privacy", load: () => import("./assets/documents/extracted/Task6_Multi_Tenancy_Identity_Security_Privacy (2).html?raw") },
-  { id: "task-7", label: "Task 7 · Technical architecture", fileName: "Azure NET Technical Architecture", load: () => import("./assets/documents/extracted/Task7_Azure_NET_Technical_Architecture.html?raw") },
-  { id: "task-8", label: "Task 8 · Engagement design", fileName: "Assessments Scoring Content Benchmarking and Engagement Design", load: () => import("./assets/documents/extracted/Task8_Assessments_Scoring_Content_Benchmarking_Engagement_Design.html?raw") },
-  { id: "task-9", label: "Task 9 · Operations", fileName: "DevOps Ownership and Operational Approach", load: () => import("./assets/documents/extracted/Task9_DevOps_Ownership_Operational_Approach_Updated.html?raw") },
-  { id: "task-10", label: "Task 10 · Implementation plan", fileName: "MVP Backlog and Implementation Plan", load: () => import("./assets/documents/extracted/Task10_MVP_Backlog_Implementation_Plan.html?raw") },
+  { id: "task-1", label: "Discovery kickoff", fileName: "Existing Material Review and Discovery Kickoff Notes", load: () => import("./assets/documents/extracted/Task1_Existing_Material_Review_and_Discovery_Kickoff_Notes.html?raw") },
+  { id: "task-2", label: "Product requirements", fileName: "Product Requirements and User Workflow Definition", load: () => import("./assets/documents/extracted/Task2_Product_Requirements_User_Workflow_Definition 1 (1).html?raw") },
+  { id: "task-3", label: "MVP boundaries", fileName: "MVP Boundary and Prioritization", load: () => import("./assets/documents/extracted/Task3_MVP_Boundary_Prioritization 1.html?raw") },
+  { id: "task-4", label: "Domain data model", fileName: "Domain Data Model", load: () => import("./assets/documents/extracted/Task4_Domain_Data_Model (3).html?raw") },
+  { id: "task-5", label: "Key UX / Workflow Definitions", fileName: "Key UX / Workflow Definitions" },
+  { id: "task-6", label: "Security and privacy", fileName: "Multi Tenancy Identity Security and Privacy", load: () => import("./assets/documents/extracted/Task6_Multi_Tenancy_Identity_Security_Privacy (2).html?raw") },
+  { id: "task-7", label: "Technical architecture", fileName: "Azure NET Technical Architecture", load: () => import("./assets/documents/extracted/Task7_Azure_NET_Technical_Architecture.html?raw") },
+  { id: "task-8", label: "Engagement design", fileName: "Assessments Scoring Content Benchmarking and Engagement Design", load: () => import("./assets/documents/extracted/Task8_Assessments_Scoring_Content_Benchmarking_Engagement_Design.html?raw") },
+  { id: "task-9", label: "Operations", fileName: "DevOps Ownership and Operational Approach", load: () => import("./assets/documents/extracted/Task9_DevOps_Ownership_Operational_Approach_Updated.html?raw") },
+  { id: "task-10", label: "Implementation plan", fileName: "MVP Backlog and Implementation Plan", load: () => import("./assets/documents/extracted/Task10_MVP_Backlog_Implementation_Plan.html?raw") },
   { id: "final", label: "Final Documentation", fileName: "Final Documentation Review and Handoff", load: () => import("./assets/documents/extracted/Task11_Final_Documentation_Review_Handoff.html?raw") },
 ];
 
@@ -85,12 +85,19 @@ export function Documentation() {
           <header className="documentation-reader-header">
             <p>{active.label}</p>
             <h1>{active.fileName}</h1>
-            <span>{active.load ? "Source document" : "Source document not added"}</span>
+            <span>{active.load ? "Source document" : "Workflow reference"}</span>
           </header>
           {content ? (
             <Content content={content} />
           ) : active.load ? (
             <div className="documentation-empty"><FileText size={32} /><p>Loading source document…</p></div>
+          ) : active.id === "task-5" ? (
+            <div className="documentation-empty documentation-workflow-reference">
+              <FileText size={32} />
+              <h2>Key UX / Workflow Definitions</h2>
+              <p>Use the prototype to review the client, advisor, firm admin, and platform admin workflows captured during Discovery.</p>
+              <Link to="/client/dashboard">Return to prototype <ChevronRight size={16} /></Link>
+            </div>
           ) : (
             <div className="documentation-empty">
               <FileText size={32} />
