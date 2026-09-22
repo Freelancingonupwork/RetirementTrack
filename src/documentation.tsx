@@ -1,26 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, ChevronRight, Compass, FileText } from "lucide-react";
+import { BookOpen, ChevronRight, Compass, Download, FileText } from "lucide-react";
+import task1Word from "./assets/documents/Task1_Existing_Material_Review_and_Discovery_Kickoff_Notes.docx?url";
+import task2Word from "./assets/documents/Task2_Product_Requirements_User_Workflow_Definition 1 (1).docx?url";
+import task3Word from "./assets/documents/Task3_MVP_Boundary_Prioritization 1.docx?url";
+import task4Word from "./assets/documents/Task4_Domain_Data_Model (3).docx?url";
+import task6Word from "./assets/documents/Task6_Multi_Tenancy_Identity_Security_Privacy (2).docx?url";
+import task7Word from "./assets/documents/Task7_Azure_NET_Technical_Architecture.docx?url";
+import task8Word from "./assets/documents/Task8_Assessments_Scoring_Content_Benchmarking_Engagement_Design.docx?url";
+import task9Word from "./assets/documents/Task9_DevOps_Ownership_Operational_Approach_Updated.docx?url";
+import task10Word from "./assets/documents/Task10_MVP_Backlog_Implementation_Plan.docx?url";
+import finalWord from "./assets/documents/Task11_Final_Documentation_Review_Handoff.docx?url";
 
 type DocumentationItem = {
   id: string;
   label: string;
   fileName: string;
   load?: () => Promise<{ default: string }>;
+  wordUrl?: string;
 };
 
 const documentationItems: DocumentationItem[] = [
-  { id: "task-1", label: "Discovery kickoff", fileName: "Existing Material Review and Discovery Kickoff Notes", load: () => import("./assets/documents/extracted/Task1_Existing_Material_Review_and_Discovery_Kickoff_Notes.html?raw") },
-  { id: "task-2", label: "Product requirements", fileName: "Product Requirements and User Workflow Definition", load: () => import("./assets/documents/extracted/Task2_Product_Requirements_User_Workflow_Definition 1 (1).html?raw") },
-  { id: "task-3", label: "MVP boundaries", fileName: "MVP Boundary and Prioritization", load: () => import("./assets/documents/extracted/Task3_MVP_Boundary_Prioritization 1.html?raw") },
-  { id: "task-4", label: "Domain data model", fileName: "Domain Data Model", load: () => import("./assets/documents/extracted/Task4_Domain_Data_Model (3).html?raw") },
+  { id: "task-1", label: "Discovery kickoff", fileName: "Existing Material Review and Discovery Kickoff Notes", wordUrl: task1Word, load: () => import("./assets/documents/extracted/Task1_Existing_Material_Review_and_Discovery_Kickoff_Notes.html?raw") },
+  { id: "task-2", label: "Product requirements", fileName: "Product Requirements and User Workflow Definition", wordUrl: task2Word, load: () => import("./assets/documents/extracted/Task2_Product_Requirements_User_Workflow_Definition 1 (1).html?raw") },
+  { id: "task-3", label: "MVP boundaries", fileName: "MVP Boundary and Prioritization", wordUrl: task3Word, load: () => import("./assets/documents/extracted/Task3_MVP_Boundary_Prioritization 1.html?raw") },
+  { id: "task-4", label: "Domain data model", fileName: "Domain Data Model", wordUrl: task4Word, load: () => import("./assets/documents/extracted/Task4_Domain_Data_Model (3).html?raw") },
   { id: "task-5", label: "Key UX / Workflow Definitions", fileName: "Key UX / Workflow Definitions" },
-  { id: "task-6", label: "Security and privacy", fileName: "Multi Tenancy Identity Security and Privacy", load: () => import("./assets/documents/extracted/Task6_Multi_Tenancy_Identity_Security_Privacy (2).html?raw") },
-  { id: "task-7", label: "Technical architecture", fileName: "Azure NET Technical Architecture", load: () => import("./assets/documents/extracted/Task7_Azure_NET_Technical_Architecture.html?raw") },
-  { id: "task-8", label: "Engagement design", fileName: "Assessments Scoring Content Benchmarking and Engagement Design", load: () => import("./assets/documents/extracted/Task8_Assessments_Scoring_Content_Benchmarking_Engagement_Design.html?raw") },
-  { id: "task-9", label: "Operations", fileName: "DevOps Ownership and Operational Approach", load: () => import("./assets/documents/extracted/Task9_DevOps_Ownership_Operational_Approach_Updated.html?raw") },
-  { id: "task-10", label: "Implementation plan", fileName: "MVP Backlog and Implementation Plan", load: () => import("./assets/documents/extracted/Task10_MVP_Backlog_Implementation_Plan.html?raw") },
-  { id: "final", label: "Final Documentation", fileName: "Final Documentation Review and Handoff", load: () => import("./assets/documents/extracted/Task11_Final_Documentation_Review_Handoff.html?raw") },
+  { id: "task-6", label: "Security and privacy", fileName: "Multi Tenancy Identity Security and Privacy", wordUrl: task6Word, load: () => import("./assets/documents/extracted/Task6_Multi_Tenancy_Identity_Security_Privacy (2).html?raw") },
+  { id: "task-7", label: "Technical architecture", fileName: "Azure NET Technical Architecture", wordUrl: task7Word, load: () => import("./assets/documents/extracted/Task7_Azure_NET_Technical_Architecture.html?raw") },
+  { id: "task-8", label: "Engagement design", fileName: "Assessments Scoring Content Benchmarking and Engagement Design", wordUrl: task8Word, load: () => import("./assets/documents/extracted/Task8_Assessments_Scoring_Content_Benchmarking_Engagement_Design.html?raw") },
+  { id: "task-9", label: "Operations", fileName: "DevOps Ownership and Operational Approach", wordUrl: task9Word, load: () => import("./assets/documents/extracted/Task9_DevOps_Ownership_Operational_Approach_Updated.html?raw") },
+  { id: "task-10", label: "Implementation plan", fileName: "MVP Backlog and Implementation Plan", wordUrl: task10Word, load: () => import("./assets/documents/extracted/Task10_MVP_Backlog_Implementation_Plan.html?raw") },
+  { id: "final", label: "Final Documentation", fileName: "Final Documentation Review and Handoff", wordUrl: finalWord, load: () => import("./assets/documents/extracted/Task11_Final_Documentation_Review_Handoff.html?raw") },
 ];
 
 function Content({ content }: { content: string }) {
@@ -79,7 +90,17 @@ export function Documentation() {
       <main className="documentation-main">
         <header className="documentation-topbar">
           <div><BookOpen size={19} /><span>Documentation</span></div>
-          <Link to="/client/dashboard">Return to prototype <ChevronRight size={16} /></Link>
+          <div className="documentation-actions">
+            <button type="button" onClick={() => window.print()} title="Save the open document as a PDF">
+              <Download size={16} /> Save PDF
+            </button>
+            {active.wordUrl && (
+              <a href={active.wordUrl} download>
+                <Download size={16} /> Download Word
+              </a>
+            )}
+            <Link to="/client/dashboard">Return to prototype <ChevronRight size={16} /></Link>
+          </div>
         </header>
         <section className="documentation-reader" ref={readerRef} aria-live="polite">
           <header className="documentation-reader-header">

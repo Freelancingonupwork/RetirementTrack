@@ -698,6 +698,13 @@
 .documentation-topbar a { display: inline-flex; align-items: center; gap: 8px; }
 .documentation-topbar > div { color: var(--brand-primary-strong); font-size: var(--fs-body-sm); font-weight: 750; }
 .documentation-topbar a { font-size: var(--fs-small); font-weight: 700; }
+.documentation-actions { display: flex !important; align-items: center; gap: 12px; }
+.documentation-actions button,
+.documentation-actions > a { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 6px 10px; border: 1px solid var(--brand-border); border-radius: var(--radius-sm); color: var(--brand-primary-strong); background: var(--brand-surface); font: inherit; font-size: var(--fs-small); font-weight: 700; }
+.documentation-actions button { cursor: pointer; }
+.documentation-actions button:hover,
+.documentation-actions > a:hover { border-color: var(--brand-primary); color: var(--brand-primary); background: var(--brand-primary-soft); text-decoration: none; }
+.documentation-actions > a:last-child { border-color: transparent; padding-right: 0; color: var(--brand-primary); }
 
 .documentation-reader {
   width: min(1280px, calc(100% - 40px));
@@ -759,4 +766,14 @@
   .documentation-reader { width: calc(100% - 28px); max-height: none; margin: 14px auto; }
   .documentation-reader-header,
   .documentation-body { padding-inline: 20px; }
+}
+
+@media print {
+  .documentation-sidebar,
+  .documentation-topbar,
+  .documentation-reader-header { display: none !important; }
+  .documentation-app,
+  .documentation-main,
+  .documentation-reader { display: block; width: auto; max-height: none; margin: 0; overflow: visible; border: 0; box-shadow: none; background: #fff; }
+  .documentation-body { padding: 0; }
 }
