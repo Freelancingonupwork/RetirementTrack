@@ -1,0 +1,190 @@
+RETIREMENTTRACK
+Multi-Tenancy, Identity, Security & Privacy
+# 1. Purpose and Scope
+Define the recommended first-build security, identity and tenant-isolation model for RetirementTrack, including authentication, authorization, advisor/client access, household privacy, platform administration, sensitive-data handling, auditability, encryption, retention/deletion, logging boundaries and controlled support access.
+# 2. Security and Privacy Design Principles
+Tenant isolation is mandatory: no tenant user may access another tenant’s business or client data.
+Role alone is not sufficient for sensitive access. Authorization should combine tenant membership, role, advisor/client/household relationship and applicable policy/feature rules.
+Collect and expose only the client information needed for the agreed MVP workflows, personalization, reminders and validated benchmarking.
+Professional and administrative access should follow least privilege; broader access must be explicitly justified and auditable.
+Sensitive values should not be placed in broad dashboards, email bodies, logs or support tooling when a less sensitive status/summary is sufficient.
+Security controls should support target firms with multiple professionals and hundreds to a few thousand client households without introducing unnecessary enterprise complexity.
+# 3. Tenant Boundary and Isolation Model
+Area
+Recommended MVP Approach
+Tenant definition
+One FirmTenant represents one independently administered RetirementTrack customer firm and is the top-level business, configuration and security boundary.
+Database strategy
+Shared Azure SQL database with TenantId on every tenant-owned record. Separate database/schema per tenant is not recommended for the MVP.
+Tenant resolution
+Tenant context is derived from authenticated membership / server-side context, not trusted from a client-supplied TenantId.
+Cross-tenant access
+Not permitted for tenant users. Platform-scoped operations must be explicit, privileged and auditable.
+Background processing
+Every reminder, communication, milestone and scheduled job must execute within an explicit TenantId scope.
+Caching
+Tenant-scoped cache keys and no shared cache entries that could expose client-specific data across tenants.
+Lifecycle
+Draft → Active → Suspended → Closed. Suspended/closed behavior must stop normal access and outbound workflows according to policy.
+# 4. Identity and Authentication
+RetirementTrack will use Clerk as the recommended managed external authentication provider for the MVP rather than implementing password and credential management inside the application. RetirementTrack application records will store the Clerk external identity linkage together with firm membership, roles and authorization relationships, while Clerk handles sign-in, password/recovery, session and MFA capabilities. A custom ASP.NET Core Identity implementation is retained as an alternative if a future business, compliance, pricing or portability requirement justifies bringing credential management into RetirementTrack.
+Identity Area
+Recommended Direction
+Identity provider
+Option 1 - Clerk (Recommended): managed customer authentication for the MVP. Option 2 - Custom ASP.NET Core Identity: retained as a fallback if direct ownership of credentials becomes necessary.
+Client
+Clerk-managed invitation/activation, secure sign-in, recovery, session handling and MFA where configured; RetirementTrack retains client profile and business authorization.
+Advisor
+Clerk-managed sign-in with MFA required/recommended for production; RetirementTrack determines tenant, advisor role and assigned-client access.
+Firm Administrator
+Clerk-managed sign-in with MFA mandatory; RetirementTrack controls tenant administration permissions.
+Platform Administrator
+Clerk-managed sign-in with MFA mandatory plus a separate privileged RetirementTrack platform role and tightly restricted support access.
+Account recovery
+Clerk handles password reset/recovery for the recommended option. RetirementTrack does not store passwords or recovery secrets when Clerk is used.
+Session handling
+Use Clerk session tokens/cookies and server-side JWT validation; RetirementTrack rechecks current tenant membership, role and relationship authorization on protected operations.
+## 4.1 Authentication Provider Options
+Two implementation options were evaluated for RetirementTrack authentication. The current Discovery recommendation is Option 1 (Clerk) because it reduces authentication-specific engineering and security responsibility while allowing RetirementTrack to retain full control of tenant membership, roles, advisor/client relationships and domain authorization.
+Option
+Approach
+Advantages / Fit for RetirementTrack
+Trade-offs / Decision
+Option 1RECOMMENDED
+Clerk managed authentication
+Fast React integration with prebuilt/customizable sign-in and profile components; managed passwords, account recovery, sessions and MFA; custom domain support; reduces the amount of authentication code RetirementTrack must design, secure and maintain. The ASP.NET Core API can validate Clerk-issued JWT session tokens using the Clerk issuer/JWKS. Clerk user identity maps to RetirementTrack User/UserExternalIdentity, while TenantId, roles, household access and AdvisorClientAssignment remain RetirementTrack-owned authorization data.
+Selected for the MVP. Keeps authentication concerns with a specialist provider and allows the team to focus on product workflows. Creates a third-party dependency and recurring cost; production pricing and feature limits should be reviewed before launch.
+Option 2
+Custom authentication using ASP.NET Core Identity
+Full ownership of authentication behavior, credential data and user lifecycle; can use Azure SQL and ASP.NET Core Identity for password hashing, lockout, email confirmation, recovery, MFA and secure cookies/tokens. Avoids dependency on an external authentication SaaS and may be appropriate if future requirements demand complete control.
+Not recommended for the MVP unless a validated requirement justifies it. RetirementTrack would own additional security engineering, credential protection, recovery/MFA flows, attack protection, testing, patching, monitoring and ongoing maintenance.
+Why Clerk is the current recommendation. RetirementTrack is a financial/retirement SaaS product where authentication is security-sensitive but not itself a differentiating product capability. Clerk provides the authentication layer while RetirementTrack continues to enforce the important business authorization rules: Firm/Tenant membership, Client/Advisor/Firm Administrator roles, household relationships, advisor-client assignments, feature controls and least-privilege access.
+Recommended Clerk integration boundary. React uses Clerk for sign-in/session UX. The ASP.NET Core API validates Clerk JWTs and maps the stable Clerk user identifier to a RetirementTrack UserExternalIdentity record. Clerk authentication proves who the user is; RetirementTrack remains the source of truth for what that user may access. For the MVP, do not rely on Clerk Organizations as the authoritative tenant/data-access model unless a later architecture decision explicitly adopts it.
+Clerk pricing reference :As of September 2026, Clerk lists a free Hobby tier with up to 50,000 Monthly Retained Users (MRUs) per app and a Pro tier starting at $20/month when billed annually. The Pro tier includes MFA, custom session lifetime and removal of Clerk branding, making it the more relevant baseline for a production RetirementTrack deployment that requires MFA. Use the official pricing page for the current terms: https://clerk.com/pricing
+# 5. Authorization Model
+Authorization rule
+A successful login does not imply access to a tenant or client. Authorization should evaluate active tenant membership + role + relationship/assignment + feature/policy rules for each sensitive operation.
+Actor / Scope
+Access Boundary
+Client
+Own permitted profile/household context, own activities/results/content/status and approved advisor/communication information.
+Advisor
+Only explicitly authorized/assigned clients within the same tenant; primary/secondary advisor rules apply where enabled.
+Firm Administrator
+Users, assignments, branding, feature/content/communication configuration. Sensitive client detail is not automatic.
+Platform Administrator
+Tenant operations, shared content/configuration and support metadata. Routine unrestricted client-data access is not allowed.
+Household
+Access to spouse/partner data must follow explicit shared/private data rules and relationship permissions.
+Feature control
+The requested capability must be enabled for the tenant and satisfy any supported client-specific rule.
+# 6. Advisor–Client and Household Access
+Advisor access requires same tenant + active advisor role + active AdvisorClientAssignment (or another explicitly approved path).
+Use one active primary advisor per client/household where applicable; additional advisor assignments remain explicit rather than inferred from firm membership.
+Reassignment ends the prior authorization period instead of overwriting history.
+Former advisors should not automatically retain active access after reassignment; historical visibility requires an explicit business rule.
+Household support should not imply that either spouse/partner can automatically read or edit every individual record.
+Classify household information as individual/private, household-shared or advisor-only where relevant.
+# 7. Firm Administrator and Platform Support Boundaries
+Area
+Recommended Boundary
+Firm Administrator baseline
+Manage users/advisors, assignments, branding, enabled features, content availability and communication settings.
+Sensitive client data
+Administrative role alone should not grant unrestricted financial, assessment or Planning Update detail.
+Platform Administrator baseline
+Manage tenant setup/status, shared content/configuration and operational support.
+Support access
+If client-specific access is required for troubleshooting, use reason-coded, time-bounded and audited access where practical.
+Impersonation
+Do not include unrestricted impersonation in the MVP. If later required, it needs explicit authorization, visible indication and audit history.
+Break-glass access
+Only if operationally required; tightly limited, logged and reviewable.
+# 8. Sensitive Data Classification and Handling
+Classification
+Handling Direction
+Operational
+Firm identity, branding, feature configuration, content metadata. Standard protected application data.
+Personal
+Name, email, phone, date of birth, household relationships. Limit exposure to authorized workflows.
+Sensitive financial/planning
+Income, savings, net worth, retirement data, assessment responses, Planning Update responses and benchmark inputs. Strong access controls and minimal exposure.
+Privileged/security
+Role assignments, support access, identity/security metadata, audit events. Restricted and monitored.
+Logging rule
+Do not log raw assessment answers, financial values, Planning Update details, tokens, secrets or full sensitive communication bodies.
+UI/support rule
+Prefer status/reason summaries over raw sensitive values when broader surfaces only need to signal that attention is required.
+# 9. Encryption, Secrets and Credentials
+HTTPS/TLS for all application traffic.
+Azure SQL, Azure Storage and backups encrypted at rest using platform encryption capabilities.
+Use Azure Key Vault for secrets/certificates that cannot be replaced by managed identity.
+Prefer Managed Identity for application-to-Azure-service authentication.
+Do not commit production connection strings, API keys, storage keys or communication-provider secrets to source control.
+Separate credentials/configuration by environment and ensure production assets are controlled by RetirementTrack.
+# 10. Auditability and Application Logging
+Area
+Recommended MVP Requirement
+Audit events
+Role/membership changes, advisor reassignment, tenant configuration changes, privileged support access, assessment/Planning Update completion, meaningful-change detection, communication approval, follow-up resolution and deletion/archive actions.
+Audit metadata
+TenantId, actor, action, entity type/id, timestamp and reason/context where relevant.
+Operational logs
+CorrelationId, TenantId, safe UserId/reference, operation, status/error category and technical diagnostics.
+Do not log
+Passwords/tokens, raw financial values, assessment answers, detailed Planning Update responses or unnecessary PII.
+Separation
+Operational logs and immutable/controlled business audit history should be distinct concerns.
+Access
+Restrict logs/audits to authorized operational roles and retain according to policy.
+# 11. Workflow-Specific Privacy Boundaries
+Workflow
+Privacy / Security Boundary
+Planning Updates
+Client sees own submission; assigned advisor sees approved review detail. Meaningful changes may create an exception, but every completion must not automatically create advisor work.
+Assessments
+Client sees approved result/context; assigned advisor sees result/detail required for review. Firm/platform admins do not receive detailed access automatically.
+Reminders / Email
+Use minimal sensitive detail in outbound messages. Prefer authenticated links back to RetirementTrack for sensitive information.
+Benchmarking
+Prefer curated external/reference data for MVP rather than peer calculations from RetirementTrack clients. Show methodology/source/caveat where appropriate.
+Education
+Platform content may be broadly available according to tenant settings; client-specific relevance state remains tenant/client scoped.
+Advisor exceptions
+Expose the reason attention is required without unnecessarily exposing detailed financial values in cross-client lists.
+# 12. Retention, Deactivation and Deletion
+The MVP should support lifecycle control without prematurely hard-deleting historical planning records. Exact retention periods remain a business/legal decision.
+Scenario
+Recommended Direction
+Client departure
+Deactivate access immediately; preserve required assessment, Planning Update, assignment, communication and audit history until retention/deletion policy permits removal.
+Advisor departure
+Deactivate membership/role, end assignments, reassign open work as defined and preserve historical attribution.
+Tenant suspension
+Block normal tenant access and outbound recurring workflows while preserving data according to policy.
+Tenant closure
+Archive/retain/export/delete according to confirmed policy and applicable obligations.
+Deletion
+Use soft-delete/status/end-date patterns where continuity/audit is required; hard deletion should follow an explicit retention/privacy process.
+Export
+Add only if policy/commercial need requires it; avoid creating a generalized export platform in MVP.
+# 13. API, Background Jobs and Environment Security
+Every API must enforce tenant ownership and object-level authorization server-side; changing an ID in a URL must never bypass access checks.
+Scheduled reminders, milestones, Planning Updates and communications should carry explicit tenant context and use idempotent/retry-safe processing.
+Dev, Test/Staging and Production must use separate secrets/configuration and appropriate access controls.
+Production client data should not be copied into lower environments for routine development or demos; use synthetic test data.
+Errors returned to clients should be useful without exposing stack traces, secrets, SQL or internal implementation details.
+Rate limiting / abuse controls should be added where appropriate for public authentication, invitation and API endpoints.
+# 14. Security Acceptance Criteria
+A tenant user cannot access records owned by another tenant.
+An advisor cannot access a client solely because both belong to the same firm; an active authorized relationship is required.
+Clients can access only their permitted individual/household context.
+Firm Administrator sensitive-data access follows explicit permissions rather than the admin role alone.
+Platform/support access to client-specific data is restricted and auditable.
+Sensitive data is encrypted in transit and at rest and secrets are kept outside source control.
+Security-critical administrative and business events are auditable.
+Operational logs exclude defined sensitive values.
+Suspended/deactivated accounts and tenants lose effective application access and recurring communications are stopped as defined.
+# 15. Final Recommended Security Boundary
+Recommended first-build boundary
+Shared multi-tenant Azure SaaS + strict TenantId isolation + managed authentication + tenant membership and role checks + explicit advisor/client/household relationship authorization + least-privilege Firm/Platform administration + encrypted storage/secrets + minimal sensitive logging + auditable privileged actions + policy-driven retention/deletion.

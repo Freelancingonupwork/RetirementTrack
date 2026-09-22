@@ -1,0 +1,553 @@
+RETIREMENTTRACK
+Domain & Data Model
+# 1. Purpose and Scope
+Define the initial RetirementTrack domain model, data ownership boundaries and key relationships required to support the first credible MVP.
+Task 4 outcome: a tenant-aware business model that clearly identifies the core entities, ownership, relationships, lifecycle, authorization boundaries and unresolved business decisions before detailed technical architecture is finalized.
+# 2. High-Level Domain Structure
+Platform → Firm/Tenant → Tenant Memberships & Configuration → Advisors / Clients → Assignments → Assessments / Planning Updates / Opportunities / Content / Reminders / Communications → Updated Client State / Advisor Exceptions
+The primary security and ownership boundary is the Firm/Tenant. Platform-level data may be shared across tenants only where explicitly designed as common platform content or configuration. Client-specific records remain tenant-scoped even when they originate from common definitions such as an assessment template or educational resource.
+Domain Layer
+Primary Entities
+Purpose
+Platform
+PlatformUserRole, PlatformContent, common configuration
+Operate tenants and shared platform resources without routine unrestricted client-data access.
+Firm / Tenant
+FirmTenant, TenantConfiguration, TenantUserMembership
+Own firm-specific users, settings, branding, controls and client relationships.
+People / Relationships
+User, RoleAssignment, ClientProfile, Household, HouseholdMember, AdvisorClientAssignment
+Represent identity, tenant membership, household relationships, roles and client/advisor authorization.
+Engagement
+AssessmentAssignment, AssessmentResult, PlanningUpdate, PlanningOpportunity, Reminder, Communication
+Drive recurring client activity and advisor attention.
+Content / Relevance
+ContentItem, ContentTag, ContentAvailability, ClientContentState
+Surface approved content based on known context and firm controls.
+Benchmarking
+BenchmarkDefinition, BenchmarkDataSet/Version, ClientBenchmarkResult
+Provide a bounded, explainable comparison when methodology is validated.
+Governance / History
+AuditEvent, ActivityHistory, configuration history
+Support traceability, continuity, security and operational support.
+# 3. Tenant / Firm Model
+## 3.1 Recommended MVP Definition
+For the initial model, one FirmTenant represents one independently administered RetirementTrack customer organization and is the top-level business, configuration and security boundary.
+Area
+Recommended MVP Model
+Boundary / Confirmation
+Tenant representation
+One FirmTenant represents one customer firm/organization using RetirementTrack.
+One tenant = one primary firm configuration and brand for MVP.
+Legal firm / multiple brands
+Keep one FirmTenant as the first-build customer/security boundary; do not add Office, Branch or multi-brand hierarchy unless a concrete pilot requires it.
+Current direction remains one primary firm configuration/brand per tenant for MVP; preserve extensibility for later.
+Tenant lifecycle
+Draft → Active → Suspended → Closed.
+Retention, reactivation and final deletion behavior still require policy confirmation.
+Firm configuration
+Feature enablement, communication modes, content visibility, branding/advisor identity and selected client-governance settings.
+Avoid a large inheritance/override system in MVP.
+Tenant ownership
+All client/advisor/workflow data belongs to one tenant unless explicitly platform-global.
+Shared platform definitions must not create cross-tenant client visibility.
+## 3.2 Core FirmTenant Data
+Field / Group
+Purpose
+FirmTenantId
+Stable tenant identifier used across all tenant-scoped records.
+Name / LegalName / DisplayName
+Firm identity and client-facing display context.
+Status
+Draft, Active, Suspended or Closed.
+Branding reference
+Logo and selected controlled brand settings.
+TimeZone / locale defaults
+Support due dates, reminders and communication timing.
+CreatedAt / ActivatedAt / SuspendedAt / ClosedAt
+Tenant lifecycle history.
+CreatedBy / UpdatedBy / UpdatedAt
+Administrative traceability.
+## 3.3 Tenant Configuration
+Configuration Area
+Examples for MVP
+Feature controls
+Planning Updates, assessments, benchmarking, education, reminders.
+Communications
+Automatic / Advisor Approval / Off by supported scenario; sender identity defaults.
+Content
+Availability of platform-provided content/resources.
+Branding
+Firm name/logo, selected colors and advisor identity behavior.
+Client governance
+Selected client-level overrides only where business value is confirmed.
+Advisor governance
+Assignment behavior and supported visibility rules.
+# 4. User and Role Model
+Identity, tenant membership, role and client assignment should be modeled separately. This prevents the application from treating a user role as proof of tenant or client access.
+Entity
+Recommended Responsibility
+User
+Platform identity record: name, email/login identity, user status and authentication linkage.
+TenantUserMembership
+Links a User to a FirmTenant and records membership status/effective dates.
+UserRoleAssignment
+Assigns one or more tenant-scoped roles to a membership.
+PlatformRoleAssignment
+Stores platform-level operational roles separately from firm membership.
+ClientProfile
+Holds client-specific profile/context separate from the authentication identity.
+AdvisorProfile
+Optional advisor-specific professional/contact attributes used by RetirementTrack.
+## 4.1 First-Build Roles
+Role
+Core Access
+Must Not Assume
+Client
+Own profile/experience; assigned activities; supported results/content/status.
+Access to other clients or administration.
+Advisor
+Authorized/assigned clients; assignment/recommendation, review, approvals, follow-up/history.
+Automatic access to every client in the firm.
+Firm Administrator
+Firm users, branding, feature/communication/content controls, assignment governance.
+Unrestricted access to sensitive client data by default.
+Platform Administrator
+Tenant/status/content/configuration and operational support.
+Routine unrestricted access to client financial/assessment data.
+## 4.2 Multiple Roles and Multiple Firms
+Question
+Recommended Data-Model Position
+Business Confirmation Needed
+Can one user have multiple roles?
+Yes at the data-model level. A membership may carry more than one role assignment.
+Confirm which combinations are permitted in MVP, e.g. Advisor + Firm Administrator.
+Can one user belong to multiple firms?
+Support multiple TenantUserMembership records technically.
+Confirm whether MVP workflows permit multiple active memberships, especially for clients.
+Can a Platform Administrator also belong to a firm?
+Technically possible, but platform authority should remain separately modeled.
+Confirm operational policy and support-access controls.
+# 5. Advisor–Client Relationship
+Advisor access should be based on an explicit tenant-scoped relationship, not merely on the Advisor role. The assignment record should support authorization, ownership, reassignment and history.
+Area
+Recommended MVP Model
+Relationship entity
+AdvisorClientAssignment links Advisor membership/profile to a Client within the same FirmTenant.
+Primary advisor
+Allow zero or one active PrimaryAdvisor assignment per client; use as default advisor identity and follow-up owner where applicable.
+Secondary advisors
+Keep the schema capable of additional assignments, but enable only if business need is confirmed.
+Reassignment
+End the prior assignment with EffectiveTo/Ended status and create a new assignment; do not overwrite history.
+Historical assignments
+Retain prior assignments for audit, communication context and historical workflow attribution.
+Visibility
+Advisor client access requires same tenant + active authorized assignment (or another explicitly approved permission path).
+Firm Admin visibility
+Firm Admin can manage relationships but should not automatically receive unrestricted sensitive client detail.
+Open work transfer
+Define whether reassignment transfers open exceptions/follow-up items to the new advisor or preserves prior ownership.
+## 5.1 AdvisorClientAssignment Data
+Field
+Purpose
+AdvisorClientAssignmentId
+Stable relationship identifier.
+FirmTenantId
+Explicit tenant boundary.
+AdvisorMembershipId / AdvisorProfileId
+Authorized advisor relationship.
+ClientId
+Client receiving advisor service.
+AssignmentType
+PrimaryAdvisor; optional additional types later.
+IsPrimary
+Supports one default advisor relationship where required.
+Status
+Active / Ended.
+EffectiveFrom / EffectiveTo
+Assignment history and authorization period.
+AssignedByUserId / Reason
+Administrative traceability.
+# 6. Clientand Profile Model
+Client identity remains person-based, while the MVP also supports household relationships for spouses/partners where client context is shared.
+Area
+Recommended MVP Position
+Confirmation Needed
+Client identity
+Client is an individual person with a ClientProfile linked to User/TenantMembership where login access exists; household membership is modeled separately.
+Non-login client records remain unconfirmed.
+Profile/context
+Store the minimum individual and household-related attributes required for onboarding, personalization, reminders, assessments, Planning Updates and validated benchmarking.
+Exact field inventory and data-minimization boundaries still require confirmation.
+Life stage
+Represent as derived/configured client context rather than a fixed identity attribute where possible.
+Confirm business definitions for retirement/life-stage categories.
+Consent/preferences
+Store communication/privacy consent and applicable preferences with effective history where required.
+Confirm policy and legal requirements.
+## 6.1 Household Model
+Household support is now part of the recommended MVP domain. The model should link spouses/partners without replacing each person’s individual identity, login, assessment history or permissions.
+Entity / Concept
+Recommended MVP Model
+Household
+Tenant-scoped relationship container for a spouse/partner household. Hold shared household context only where the business meaning is genuinely shared.
+HouseholdMember
+Links an individual ClientProfile to a Household with relationship type, effective dates and an optional primary/contact indicator.
+Individual identity
+Each spouse/partner remains a separate User/ClientProfile with independent authentication, consent, assessment results and activity history.
+Shared advisor relationship
+Household members may share an advisor, but advisor authorization should still resolve to explicit client assignments unless a future household-wide rule is deliberately introduced.
+Shared data boundary
+Use household-level fields only for data naturally defined at household level, such as household income/net worth when required for benchmarking; avoid duplicating personal data.
+MVP boundary
+Support spouse/partner linking and shared context. Defer complex household hierarchies, trusts/entities and advanced shared-workflow behavior.
+# 7. Assessments and Results
+Entity
+Purpose / First-Build Boundary
+AssessmentDefinition
+Defines an approved assessment type; use a small fixed first-build inventory. Current working examples include a fuller client questionnaire and a condensed Investment & Risk Assessment.
+AssessmentVersion
+Preserves question/scoring changes over time; completed assignments remain tied to their version.
+AssessmentQuestion / Option
+Structured questions and answer choices supported by the selected assessment.
+AssessmentAssignment
+Links an assessment/version to a client, assigning advisor, due state and status.
+AssessmentResponse
+Stores answers for the assigned assessment.
+AssessmentResult
+Stores calculated score/category/output where methodology is defined.
+AssessmentReviewCue
+Creates advisor attention when an approved result condition requires review; may map to the common exception/follow-up model.
+Assessment history rule: never reinterpret a historical client result against a newer assessment version unless an explicit recalculation policy is defined.
+# 8. Planning Update Model
+Planning Update should be modeled as a recurring first-build workflow rather than a generic form. The model must support cadence, due state, client completion, comparison with prior state, defined change detection, advisor follow-up and updated client history.
+Entity / Concept
+Recommended First-Build Model
+PlanningUpdateDefinition
+Fixed initial form/question set and version.
+PlanningUpdateInstance
+Client-specific scheduled/due occurrence with status, due date and completion date.
+PlanningUpdateResponse
+Client responses for the instance.
+Prior-state comparison
+Links relevant current values to prior completed state for defined change detection.
+PlanningUpdateDetectedChange
+Stores each defined change with change type, prior/current value or references, severity/reason, advisor-attention flag and source Planning Update instance.
+Follow-up link
+Only meaningful changes or explicit review conditions create an AdvisorException/FollowUp item. A completed Planning Update does not automatically create advisor work.
+Client state update
+Completion/change outcomes update history and may alter future priorities, content or reminders.
+# 9. Content, Personalization and Planning Opportunities
+## 9.1 Content Model
+Entity
+Purpose
+ContentItem
+Platform-provided article, video, resource or approved educational item.
+ContentTag
+Topic, age/life-stage, assessment relevance, milestone or other bounded classification.
+TenantContentAvailability
+Firm-level enable/disable/visibility for platform content.
+ClientContentState
+Tracks surfaced/viewed/completed/dismissed state where needed for continuity.
+AdvisorContentAssignment
+Optional advisor recommendation/assignment when supported by the MVP workflow.
+## 9.2 Personalization / Priority Model
+MVP personalization should be explicit and traceable. The model should capture the output/state needed for client relevance without introducing a generalized rules engine.
+Concept
+Recommended Boundary
+Relevance inputs
+Client context, life stage, assessment results, Planning Update changes, history/completion, firm controls and advisor assignments.
+Rule definition
+Fixed/configured business rules implemented by the product; no firm-authored rule builder in MVP.
+Priority item
+A bounded item representing what deserves attention now, with source, reason, priority, status and client/advisor visibility.
+Planning opportunity
+A type of priority/attention item representing a planning topic or educational opportunity, not individualized advice.
+State
+Open, resolved/completed, dismissed/suppressed as approved; retain reason and history.
+Traceability
+Every surfaced priority should be explainable by the originating rule, trigger or advisor assignment.
+# 10. Reminders and Communications
+## 10.1 Reminder Model
+Field / Concept
+Purpose
+ReminderType / TriggerSource
+Planning Update, assessment, age/date/event or other approved trigger.
+RelatedEntityId
+Links reminder to the originating workflow/activity.
+DueAt / NextAttemptAt
+Timing and scheduling.
+Recipient
+Client or advisor as defined by the scenario.
+Status
+Scheduled, queued, sent, cancelled, completed, failed.
+Noise control
+Stop after completion, avoid duplicate active reminders, bound repeat attempts.
+Tenant communication mode
+Automatic / Advisor Approval / Off determines send behavior where applicable.
+## 10.2 Communication Model
+Entity / Field
+Purpose
+Communication
+One outbound/in-app communication event tied to tenant, recipient and source workflow.
+CommunicationTemplate
+Approved template/version for supported scenarios.
+ApprovalState
+Pending approval, approved, rejected/not sent where Advisor Approval mode applies.
+SenderIdentity
+Firm, assigned advisor or supported platform identity according to configuration. Custom sender-domain identity remains conditional for MVP.
+DeliveryState
+Queued, sent, delivered where available, failed, cancelled.
+CommunicationHistory
+Retains outcome/status and linkage back to the business trigger without becoming a marketing automation platform.
+# 11. Benchmarking Model
+Benchmarking should be modeled as a small, credible first-build capability using curated reference data where the measure, source, cohort method, calculation and client-facing explanation are validated. Current working examples are median household income, median household net worth and median retirement savings by age; these are examples for evaluation, not automatically final production measures.
+Entity
+Purpose / Boundary
+BenchmarkDefinition
+Defines the benchmark measure, unit, comparison method and client-facing explanation/caveat.
+BenchmarkDataSource
+Records source provenance, maintainer, source type, publication/reference details and validation status.
+BenchmarkDataVersion
+Represents a versioned/effective snapshot of source data and methodology used for deterministic calculations.
+BenchmarkReferenceValue
+Stores curated reference values by benchmark definition, age/age band or other validated cohort dimension, percentile where applicable, effective year/version and source.
+BenchmarkCohort
+Defines explainable cohort logic such as age or retirement stage where a separate cohort abstraction is useful.
+ClientBenchmarkResult
+Stores the client comparison result or reproducible calculation reference, including client input snapshot/reference, benchmark version and generated date.
+BenchmarkVisibility
+Firm enablement and advisor/client visibility according to permissions and MVP configuration.
+Fallback state
+If required client inputs or validated benchmark data are unavailable, represent unavailable/not-calculable rather than fabricate a result.
+# 12. Tenant Configuration and Permissions
+## 12.1 Configuration Hierarchy
+Platform capability → Firm/Tenant setting → Role / advisor-client authorization → Client-specific state / approved override
+The MVP should keep this hierarchy small and predictable. Firm-disabled capabilities should not be silently re-enabled through a client override unless a specific exception is intentionally supported.
+## 12.2 Authorization Model
+Access Check
+Required Condition
+Tenant boundary
+Actor and target record belong to the same tenant unless the operation is explicitly platform-scoped.
+Role
+Actor has an active role that permits the capability.
+Advisor client access
+An active AdvisorClientAssignment or another explicitly approved authorization path exists.
+Firm Admin sensitive data
+Administrative role alone should not automatically imply unrestricted client financial/assessment access.
+Platform Admin
+Support access should be least-privilege, operationally justified and auditable.
+Feature/configuration
+Requested function is enabled for the tenant and any supported client-specific rule is satisfied.
+# 13. Audit, History, Lifecycle and Retention
+Area
+Recommended MVP Requirement
+Audit events
+Capture important administrative, security, configuration, assignment and support-access changes.
+Business history
+Retain completed assessments/results, Planning Updates, advisor assignments, priority/follow-up outcomes and communication history required for continuity.
+Created/updated metadata
+Major entities should include created/updated timestamps and responsible actor where meaningful.
+Soft delete / archive
+Prefer status/end-date/archive patterns where historical continuity or audit is required; exact deletion policy remains a privacy/retention decision.
+Tenant suspension
+Prevent normal use while retaining data and history according to policy.
+Client departure
+Define deactivation, access removal, retention and eventual deletion/export obligations.
+Advisor departure
+End membership/assignments, reassign open work as defined and preserve historical attribution.
+Support access
+Record privileged platform support access to tenant/client data where such access is permitted.
+# 14. Key Relationships and Cardinality
+Relationship
+Initial Cardinality / Rule
+FirmTenant → TenantUserMembership
+1 to many.
+User → TenantUserMembership
+1 to many technically; active multi-firm behavior requires product confirmation.
+TenantUserMembership → UserRoleAssignment
+1 to many; multiple roles supported by model.
+FirmTenant → ClientProfile
+1 to many.
+FirmTenant → AdvisorProfile
+1 to many.
+Advisor ↔ Client
+Many-to-many through AdvisorClientAssignment, with zero/one active primary advisor recommended for MVP.
+Client → AssessmentAssignment
+1 to many over time.
+AssessmentDefinition → AssessmentVersion
+1 to many.
+AssessmentAssignment → AssessmentResponse / Result
+1 to many responses; zero/one finalized result per completed assignment/version unless methodology requires otherwise.
+Client → PlanningUpdateInstance
+1 to many recurring occurrences.
+Client → Priority / PlanningOpportunity
+1 to many over time.
+Client → Reminder / Communication
+1 to many.
+ContentItem ↔ ContentTag
+Many-to-many.
+FirmTenant ↔ ContentItem
+Many-to-many availability through TenantContentAvailability.
+Client → ClientBenchmarkResult
+1 to many over benchmark versions/measures.
+FirmTenant → TenantConfiguration
+1 current configuration record or versioned configuration history, depending on implementation choice.
+FirmTenant → Household
+1 to many.
+Household ↔ ClientProfile
+Many-to-many through HouseholdMember over time; first build primarily supports spouse/partner membership.
+BenchmarkDefinition → BenchmarkReferenceValue
+1 to many across age/cohort/percentile/version dimensions.
+BenchmarkDataVersion → BenchmarkReferenceValue
+1 to many reference values per validated source/methodology version.
+# 15. Initial Entity Inventory
+Domain
+Initial Entities
+Tenant / identity
+FirmTenant, TenantConfiguration, User, TenantUserMembership, UserRoleAssignment, PlatformRoleAssignment
+People / relationships
+ClientProfile, Household, HouseholdMember, AdvisorProfile, AdvisorClientAssignment
+Assessments
+AssessmentDefinition, AssessmentVersion, AssessmentQuestion, AssessmentOption, AssessmentAssignment, AssessmentResponse, AssessmentResult
+Planning Updates
+PlanningUpdateDefinition/Version, PlanningUpdateInstance, PlanningUpdateResponse, PlanningUpdateDetectedChange
+Engagement / follow-up
+PriorityItem / PlanningOpportunity, AdvisorException/FollowUp, ActivityHistory
+Content
+ContentItem, ContentTag, TenantContentAvailability, ClientContentState, optional AdvisorContentAssignment
+Reminders / communications
+Reminder, Communication, CommunicationTemplate/Version, CommunicationDelivery/History
+Benchmarking
+BenchmarkDefinition, BenchmarkDataSource, BenchmarkDataVersion, BenchmarkReferenceValue, BenchmarkCohort, ClientBenchmarkResult
+Governance
+AuditEvent and selected configuration/history records
+## 15.1 Working Business Guidance Confirmed During Discovery
+Area
+Working Direction
+Target firm model
+Design for established independent wealth-management and CPA/advisory firms with multiple professionals and several hundred to a few thousand client households.
+Households
+Support household relationships, particularly spouses/partners, in the MVP domain model.
+Assessments
+Use a small fixed initial set. Current examples include a fuller client questionnaire and a condensed Investment & Risk Assessment; no generalized form builder.
+Planning Update
+Keep as a core recurring workflow. Completion updates client state; only meaningful changes or explicit review conditions create advisor attention.
+Personalization
+Favor a small number of clearly relevant priorities driven by life stage, activity, milestones, assessment/Planning Update state and firm/advisor context.
+Advisor control
+Provide practical review/approval/suppress/dismiss controls where needed, but avoid extensive configurable workflow or override capabilities.
+White labeling
+MVP baseline is firm logo, selected brand colors and advisor identity. Custom domains/sender identities remain conditional.
+Reporting
+No broad reporting engine. Keep useful client outputs and operational information advisors need to identify clients requiring attention.
+Benchmarking
+Evaluate a very small number of simple, credible benchmarks. Current examples are median household income, median household net worth and median retirement savings by age, subject to source/methodology validation.
+# 16. Remaining Business / Product Clarifications
+#
+Decision Area
+Question
+Why We Need It
+1
+Role Combinations
+Can the same person hold more than one role within a firm? For example, can an Advisor also be a Firm Administrator, or should each user have one role only?
+Determines permissions, navigation and role-based dashboards.
+2
+Multi-Firm Membership
+Should a user be able to belong to more than one firm in the initial MVP? This could apply to an advisor working with multiple firms or a client having relationships with multiple firms.
+Determines whether firm switching and multiple tenant memberships are needed in MVP workflows.
+3
+Advisor Assignment
+Should each client have one primary advisor in the MVP, or can a client have multiple advisors? If multiple advisors are allowed, what should distinguish primary from supporting/secondary advisors?
+Determines assignment model, visibility and client-facing advisor identity.
+4
+Advisor Visibility
+Should advisors see only clients specifically assigned to them, or are there circumstances where an advisor should be able to view other clients within the firm?
+Required for authorization and advisor dashboard design.
+5
+Advisor Reassignment
+If a client is reassigned, should open follow-ups, approvals, reminders and other outstanding work transfer automatically? Should the former advisor retain historical/read-only visibility?
+Determines ownership, workflow transfer and audit/history behavior.
+6
+Client Profile
+What is the minimum client information RetirementTrack should collect during onboarding and later profile completion for personalization, reminders and validated benchmarking?
+Defines data minimization and onboarding UX.
+7
+Profile Completion
+Must minimum profile information be complete before first dashboard access, or may the client enter with a partial profile and complete it over time?
+Determines onboarding-to-dashboard flow and progress behavior.
+8
+Assessment Assignment
+Should assessments only be assigned by an advisor/firm, or can RetirementTrack make selected fixed assessments available automatically based on client circumstances, milestones or prior activity?
+Affects personalization and dashboard behavior.
+9
+Planning Update Details
+What exact information should the initial Planning Update collect, what cadence should apply, and which changes should be classified as meaningful enough to require advisor attention?
+Finalizes the core recurring workflow and change-detection rules.
+10
+Priority / Attention Precedence
+When several items are relevant, what types should normally rank highest in “What Deserves Your Attention”?
+Needed to keep the personalized dashboard focused and traceable.
+11
+Advisor Contact
+Should clients contact their assigned advisor directly from RetirementTrack? If yes, should MVP show phone/email links, support in-platform messaging, or both?
+Determines the advisor card, communication model and UI.
+12
+Meeting Scheduling
+Should MVP include meeting scheduling? If yes, should it link to an existing advisor scheduling page or integrate with a calendar/scheduling system?
+Prevents introducing an unconfirmed scheduling domain/integration.
+13
+Communication Channels
+Which channels should MVP support: email, in-platform notifications/messages, SMS, or a selected combination?
+Finalizes communication entities, preferences and delivery behavior.
+14
+Communication Control
+Which scenarios should use Automatic, Advisor Approval or Off behavior?
+Defines communication workflow and tenant controls.
+15
+Sender Identity
+Should communications appear from the firm, assigned advisor, RetirementTrack, or vary by scenario? Are custom sender identities needed for pilot credibility?
+Important for white labeling, templates and delivery configuration.
+16
+Communication History
+Which communication history should clients and advisors see, including system-generated reminders and advisor-initiated communications?
+Determines visible history and retention requirements.
+17
+Reminders
+Which reminder triggers, timing/repeat rules and channels are essential for MVP?
+Defines a bounded reminder model without creating a campaign engine.
+18
+Education / Content
+Should MVP content remain platform-provided only, or may firms/advisors add or specifically assign content to clients?
+Determines content administration and advisor assignment scope.
+19
+Benchmark Presentation
+How should benchmark results be shown to clients versus advisors, and which of the working example measures should be evaluated first for MVP inclusion?
+Determines benchmark UX and the minimum validated dataset needed.
+20
+Retention / Closure
+When a client relationship ends or a firm leaves, what archive/export, retention and deletion behavior should apply to assessments, Planning Updates, communications and audit history?
+Required for lifecycle and privacy design.
+21
+Support Access
+Should platform support ever be allowed to view client-specific information, and if so, under what controlled and audited circumstances?
+Defines least-privilege support and privacy boundaries.
+# 17. Final Recommended Domain Boundary
+Recommended domain core: Firm/Tenant + membership/roles + clients/advisors + explicit advisor-client assignments + assessment/result history + recurring Planning Updates + explainable priority/opportunity state + relevant content + reminders/communications + advisor exceptions + tenant configuration + bounded benchmarking + audit/history.
+Include as First-Build Domain
+Keep Simple / Defer
+FirmTenant, tenant configuration, user membership, built-in roles, Household/HouseholdMember and advisor-client assignments
+No enterprise org hierarchy, complex household structures, brand tree or custom permission designer.
+Fixed assessment definitions/versions, assignments, responses and results
+No generalized assessment/form builder.
+Fixed Planning Update workflow with prior-state comparison, explicit detected changes and follow-up linkage
+No generalized workflow engine.
+Rules-based priorities/opportunities, client state and content relevance
+No AI/ML recommendation engine or firm-authored rule builder.
+Reminder/communication records, approval state and history
+No marketing automation/campaign platform.
+Benchmark definition/source/version/reference-value entities sufficient for a small validated age/cohort comparison
+No sophisticated cohort analytics, dynamic peer benchmarking or broad readiness scoring.
+Audit/history and tenant-scoped authorization metadata
+No unnecessary duplication of every business event into a large event-sourcing platform.

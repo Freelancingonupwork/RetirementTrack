@@ -70,6 +70,7 @@ import "./compact-density.css";
 import { FirmAdministration } from "./admin";
 import { AdvisorWorkspace } from "./advisor";
 import { PlatformWorkspace } from "./platform";
+import { Documentation } from "./documentation";
 import michaelCarterAvatar from "./assets/michael-carter-avatar.png";
 const Context = createContext<{
   s: State;
@@ -2039,6 +2040,7 @@ function App() {
           <Route path="/admin/*" element={<FirmAdministration />} />
           <Route path="/advisor/*" element={<AdvisorWorkspace />} />
           <Route path="/platform/*" element={<PlatformWorkspace />} />
+          <Route path="/documentation" element={<Documentation />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

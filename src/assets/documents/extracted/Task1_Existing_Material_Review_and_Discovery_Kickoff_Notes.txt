@@ -1,0 +1,447 @@
+RETIREMENTTRACK
+Existing Material Review & Discovery Kickoff Notes
+Purpose of this document
+Establish a shared starting point for Discovery by documenting the current product understanding, materials reviewed, preliminary MVP assumptions, stakeholder/decision needs, open questions, early risks, and the decisions that must be resolved before MVP development begins.
+# 1. Materials Reviewed
+Primary source reviewed for this activity:
+Material
+Review focus
+Current status
+RetirementTrack - Initial MVP Vision & Discovery Overview
+Product concept, client/advisor experience, firm controls, communications, Planning Updates, educational content, benchmarking, MVP framework and Discovery objective
+Reviewed
+# RetirementTrack MVP - Personalized Client Experience (UX Development Ideas)
+Personalization goals, first-login/return experience, life-stage relevance, assessment-driven personalization, prioritized attention items, dynamic education, advisor connection and architecture implications
+Reviewed - additional Discovery input
+# 2. Current Product Understanding
+RetirementTrack is currently envisioned as a multi-tenant retirement education, assessment and recurring-engagement platform for professional firms and their clients. The product is intended to combine planning status, assessments, educational resources, reminders, benchmarking and advisor follow-up into a coherent experience rather than operate as a collection of disconnected forms or content. The additional UX guidance strengthens this direction by stating that the client experience should feel personalized and evolving around the individual client, not like a generic library of retirement resources.
+The central product hypothesis is that the platform creates relevant reasons for clients to return, while giving advisors a scalable way to understand what has changed, what needs attention, and where human follow-up is valuable. The first credible MVP should therefore be intentionally focused but polished enough to demonstrate the actual RetirementTrack proposition: it should know enough about the client's stage, circumstances, assessments and history to surface relevant priorities, content and next actions without requiring sophisticated AI.
+Additional UX guidance impact: Personalization architecture and the first-login/client-return experience are now explicit MVP considerations. Assessment responses, client attributes, life stage, content tags, completion history and firm controls may all contribute to what is prioritized and displayed to the client.
+## Current Three-Layer Product Model
+Layer
+Current understanding
+Client Experience
+Personalized dashboard showing client name/context, retirement stage, planning status/progress, completed and outstanding items, a small set of prioritized items that deserve attention, opportunities, reminders, assessments, Planning Updates, dynamically relevant educational content, benchmarking, and relevant factoids. The experience should reinforce continuity: what was completed, what changed and what comes next.
+Advisor Experience
+Dashboard across clients showing invitations/communications, assigned and completed assessments, Planning Updates due/completed/overdue, changes, alerts, follow-up needs, tasks and communication history. Advisor interaction should remain visible in the client experience so RetirementTrack supports, rather than replaces, the professional relationship.
+Firm Control
+Firm-level control over features, client visibility, communications, content, templates, branding and advisor assignment, with communication modes such as Automatic, Advisor Approval and Off.
+## Recurring Engagement Model
+Client data / life stage / assessments / circumstances → rules & personalization → prioritized client experience → relevant content & actions → advisor interaction → updated client state → next relevant reason to return
+# 3. Current MVP Understanding
+Capability
+Current MVP position
+Needs confirmation during Discovery
+Client dashboard / strong UX
+Fundamental
+Define first-login and returning-client dashboard hierarchy, retirement-stage context, prioritized next action, personalization behavior and responsive/mobile experience.
+Planning status / progress / outstanding items
+Fundamental
+Define what constitutes status/progress and which items drive it.
+Planning opportunities / relevant content
+Fundamental
+Define rules and inputs that determine what deserves attention, how a small prioritized set is selected, and how relevant content/actions are surfaced.
+Planning Update
+Fundamental
+Define form structure, frequency, change detection, follow-up rules and automation.
+Assessments and results
+Fundamental
+Define initial assessment set, assignment, scoring, outputs, advisor review, and which assessment responses influence personalized client content/actions.
+Benchmarking
+Fundamental in current vision
+Define measures, cohorts/data sources, calculation, caveats and display controls.
+Reminders / advisor-driven engagement
+Fundamental
+Define triggers, communication channels, approval behavior, templates and history.
+Advisor dashboard / follow-up
+Fundamental
+Define portfolio-of-clients view, alerts, work items and follow-up lifecycle.
+Firm feature / communication controls
+Fundamental
+Define toggle hierarchy, defaults, permissions and client-level overrides.
+Basic white-label / advisor identity
+Fundamental
+Define minimum logo/colors/contact/sender identity requirements.
+Educational content / personalization
+Fundamental
+Define content types, tagging, targeting, dynamic relevance, recommendation/assignment behavior, and how age/life stage/assessment/client state affect what is shown.
+# Personalization / prioritized experience
+Fundamental
+Define minimum client data, life-stage categories, rule inputs, prioritization logic, client-specific state/history, advisor/firm controls, and first-login vs return behavior.
+# 4. Existing Concept Review & Key Observations
+Area
+Current understanding
+Gap / observation
+Discovery decision needed
+Assessments & Forms
+Assigned assessments are part of the client dashboard and advisor workflow; Risk Assessment is explicitly shown as an illustrative firm-controlled feature. Additional UX guidance states that assessment responses should influence the client experience rather than simply remain in a stored form or PDF.
+The initial assessment inventory, questions, answer types, assignment rules, versioning/repeat frequency, and which responses affect personalization are not defined.
+Confirm initial assessment set, content ownership, and the assessment-to-personalization mapping required for MVP.
+Scoring / Results / Outputs
+Assessments and results are fundamental to MVP; results are expected to contribute to planning status, opportunities and advisor review.
+No scoring formula, weighting, category thresholds, output layout or historical comparison rules are defined in the overview.
+Define scoring methodology, client-visible output and advisor-visible interpretation.
+Planning Updates
+A core recurring-engagement process: Due → Invitation → Client Completion → Changes Identified → Advisor Follow-Up → Dashboard Updated.
+Form fields, cadence, due-date rules, change-detection rules, follow-up thresholds and client/advisor edit rights are not yet defined.
+Define Planning Update business rules and workflow states.
+Educational Content
+Content should be surfaced because it is relevant, not only stored in a static library. Initial personalization may use age, life stage, client attributes, assessment responses, advisor assignments, client state/history and content tagging.
+Content types, authoring ownership, taxonomy/tags, relevance rules, ranking, assignment/recommendation behavior, publishing lifecycle and firm-specific controls are not defined.
+Define the MVP content model, tagging taxonomy, relevance rules and the simplest dynamic-content approach that demonstrates personalization.
+Reminders & Engagement
+Examples include Planning Update invitations/reminders, age/milestone reminders, educational communications and general planning reminders. Firm can use Automatic, Advisor Approval or Off.
+Exact triggers, channels, timing, preferences, retry/failure behavior and template ownership are not defined.
+Define minimum reminder/communication engine and approval model.
+Benchmarking
+Clients may compare selected measures such as retirement savings, income or net worth with age/cohort benchmarks; firm/advisor controls visibility.
+Data source, cohort methodology, privacy thresholds, calculations, refresh frequency, explanatory caveats and supported measures are unresolved.
+Confirm whether benchmarking is calculated from RetirementTrack data, external data, curated reference data, or a combination.
+Client Experience
+The dashboard should immediately help the client understand where they stand, what has been completed, what changed, what needs attention, what comes next and what is newly relevant. The UX guidance adds retirement-stage context, a prioritized set of attention items, dynamic content, progress continuity and a visible advisor connection.
+Detailed first-login and return journeys, navigation, prioritization logic, life-stage definitions, personalization rules, empty states, minimum data requirements and client-level controls are not yet defined.
+Validate the end-to-end personalized client journey and define the dashboard information/prioritization hierarchy for first login and subsequent returns.
+Advisor Experience
+Advisor dashboard should surface client activity, Planning Updates, changes, follow-up needs, tasks, alerts and communication history.
+Client assignment model, advisor roles, task lifecycle, notification behavior and cross-client prioritization are not defined.
+Validate advisor workflows and define the minimum actionable dashboard.
+Firm / Tenant Controls
+Firm control is central: feature toggles, client-level assignment/show-hide behavior, content, communications, branding and advisor identity.
+Default settings, permission to change settings, inheritance/override behavior, tenant lifecycle and audit requirements are not defined.
+Define configuration hierarchy and tenant-level governance.
+Communication History
+Basic history is expected to show invitation/reminder/completion/follow-up events.
+Retention, event types, delivery status, advisor notes, filtering and export requirements are not defined.
+Define MVP communication/audit history scope.
+# Personalization & Prioritization
+The preferred product model uses client data, life stage, assessments and circumstances as inputs to rules/personalization that produce a prioritized experience, relevant content/actions and advisor interaction.
+The MVP rule model, life-stage categories, priority selection, state/history, missing-data behavior and advisor/firm override controls are not defined.
+Define a simple rules-based MVP personalization model and the minimum architectural capabilities required to support it without introducing sophisticated AI.
+# 5. Discovery Priorities & Success Criteria
+## Recommended Discovery Priorities
+Priority
+Discovery objective
+P1
+Define the minimum compelling personalized MVP experience across client, advisor and firm-control layers.
+P2
+Define first-login and returning-client journeys, including retirement-stage context, priority items, progress/continuity and next actions.
+P3
+Define the minimum personalization model: client inputs, life-stage categories, rules, state/history, prioritization and firm/advisor controls.
+P4
+Validate the Planning Update as a core recurring-engagement workflow and define its business rules and personalization/follow-up effects.
+P5
+Define the initial assessment set, scoring/output expectations, assessment-driven personalization and advisor follow-up behavior.
+P6
+Define what planning status/progress and planning opportunities mean in measurable MVP terms.
+P7
+Resolve benchmarking methodology, source data and privacy/caveat requirements.
+P8
+Define communication/reminder triggers, approval modes, delivery channels, templates and communication history.
+P9
+Define tenant/firm controls, client-level overrides, advisor assignment and basic white-label/advisor identity scope.
+P10
+Confirm the minimum client data required for personalization, benchmarking, assessments and Planning Updates.
+P11
+Translate validated workflows and personalization requirements into a scalable Azure/.NET architecture and domain model.
+P12
+Produce a prioritized implementation backlog, build sequence, estimate, risks and handoff-ready documentation.
+# 6. Stakeholder & Decision Mapping
+Decision area
+Primary stakeholder / owner
+Input expected
+Product vision / MVP boundary
+Product Owner
+Final scope priorities, value proposition, deferral decisions
+Retirement planning domain
+Business / financial subject-matter expert - to identify
+Planning logic, terminology, client relevance, benchmark interpretation
+Assessments & scoring
+Assessment owner / financial SME - to identify
+Questions, scoring methodology, result interpretation
+Planning Updates
+Product owner + financial SME
+Form purpose, cadence, change detection, follow-up thresholds
+Educational content
+Content owner - to identify
+Content inventory, taxonomy, publishing, tagging and personalization
+Compliance / privacy
+Legal/compliance stakeholder - to identify
+Permitted data collection, notices, retention, benchmark/privacy constraints
+Advisor workflow validation
+Representative advisor/firm user - to identify
+Practical workflow, communication approval, follow-up and dashboard priorities
+Technical architecture
+Technical Architect
+Azure/.NET architecture, tenancy, security, integration and operational design
+Budget / sequencing
+Product Owner
+Prioritization, delivery tradeoffs and implementation approval
+# Personalization / client experience
+Product Owner + representative advisor/firm user
+Life-stage definitions, priority logic, first-login/return experience, acceptable automated relevance, advisor controls and client value validation
+# 7. Current Assumptions Requiring Validation
+ID
+Assumption
+A-01
+The MVP serves professional firms/advisors and their clients rather than a direct-to-consumer model.
+A-02
+The client dashboard is the primary client entry point and must consolidate status, actions, opportunities, education and reminders.
+A-03
+Planning Updates are a core MVP workflow and an important recurring-engagement mechanism.
+A-04
+Firms retain control over which features and communications are enabled for their clients.
+A-05
+Some controls may also be applied at the individual client level.
+A-06
+Communications may support Automatic, Advisor Approval and Off modes.
+A-07
+MVP personalization can begin with explicit rules using age/life stage, client attributes, assessment results, Planning Update state, advisor assignments and content tags; sophisticated AI is not required to demonstrate the concept.
+A-08
+Benchmarking is important to the proposed value proposition but its methodology is not yet finalized.
+A-09
+Basic white-label branding and assigned-advisor identity are sufficient for the first release unless Discovery identifies a stronger requirement.
+A-10
+Advanced integrations, analytics, AI and highly configurable themes can be deferred unless required to validate the core product.
+# A-11
+Personalization architecture and first-login/client-return behavior are part of the MVP baseline and should not be postponed entirely to a later phase.
+# A-12
+The MVP should present a concise prioritized experience (for example, a small number of items deserving attention) rather than a long generic list of resources/tasks.
+# A-13
+Assessment responses and client history/state are expected to influence what is surfaced to the client, subject to business rules defined during Discovery.
+# 8. Initial Open Questions / Decision Log
+ID
+Area
+Open question / decision
+Type
+Q-01
+MVP
+Which exact capabilities must be present at launch to make the first product compelling?
+Product
+Q-02
+Assessments
+Which assessments are included in MVP, beyond the Risk Assessment example?
+Product/SME
+Q-03
+Assessments
+Who owns/provides assessment questions, answer options and methodology?
+Business
+Q-04
+Scoring
+How are assessment results scored/categorized, and what does the client versus advisor see?
+Business/Product
+Q-05
+Planning Update
+What questions/data are included in a Planning Update and how often is it due?
+Product/SME
+Q-06
+Planning Update
+What constitutes a meaningful change and what automatically creates an advisor follow-up?
+Product/SME
+Q-07
+Progress
+How is planning status/progress determined without becoming a complex planning score?
+Product
+Q-08
+Opportunities
+What rules create a planning opportunity, and who can dismiss/resolve it?
+Product
+Q-09
+Benchmarking
+Which financial measures are benchmarked in MVP?
+Product/SME
+Q-10
+Benchmarking
+What is the benchmark source and cohort methodology?
+Data/SME
+Q-11
+Benchmarking
+What privacy thresholds, caveats or minimum cohort sizes are required?
+Privacy/Data
+Q-12
+Content
+What content exists today, and who owns publishing/tagging/maintenance?
+Product/Content
+Q-13
+Personalization
+Which client attributes can drive content, factoids and opportunities in MVP?
+Product/Data
+Q-14
+Reminders
+Which reminder triggers and delivery channels are required in MVP?
+Product
+Q-15
+Communications
+When is advisor approval required versus automatic sending?
+Product/Firm
+Q-16
+Communications
+Should outbound messages appear from the firm, assigned advisor, or RetirementTrack?
+Product/Firm
+Q-17
+Users
+Can a client have multiple advisors or belong to more than one firm?
+Product
+Q-18
+Firm controls
+Which settings are firm-wide, and which can be overridden per client?
+Product
+Q-19
+White label
+Are custom domains, sender domains or only basic logo/colors/advisor identity required for MVP?
+Product/Technical
+Q-20
+Data/privacy
+What exact client financial/personal data is required and what should deliberately not be stored?
+Business/Privacy
+Q-21
+Admin
+What platform-level tenant setup, status, audit and support capabilities are required in MVP?
+Product/Operations
+Q-22
+History
+Which communication and workflow events need to be retained and visible to advisors?
+Product/Compliance
+Q-23
+Success
+What measurable outcomes will indicate the MVP is valuable to advisors and clients?
+Product/Business
+Q-24
+Integrations
+Are any third-party integrations actually required for MVP, or only architectural readiness?
+Product/Technical
+# Q-25
+Personalization
+Which client attributes are required to drive personalization in MVP?
+Product/Data
+# Q-26
+Life stage
+Which retirement/life-stage categories are required, and how are they determined?
+Product/SME
+# Q-27
+Prioritization
+How are the small set of items that "deserve attention" selected and ordered?
+Product
+# Q-28
+Assessments
+Which assessment responses should change dashboard priorities, content, reminders or planning opportunities?
+Product/SME
+# Q-29
+Content
+How should content be tagged for age, life stage, topic, assessment relevance and other client circumstances?
+Product/Content
+Q-30
+Client state
+What client-specific completion/change/history state must be stored to support continuity and personalization?
+Product/Data
+# Q-31
+First login
+What should a new client see before enough data exists to personalize the experience?
+Product/UX
+# Q-32
+Return experience
+What should change when a client returns after completing an assessment, Planning Update or other activity?
+Product/UX
+# Q-33
+Advisor control
+Can an advisor pin, suppress, dismiss, reorder or override system-generated priorities/recommendations?
+Product/Firm
+# Q-34
+Firm controls
+Which personalization features/rules can a firm enable, disable or restrict?
+Product/Firm
+# Q-35
+Rules architecture
+Should MVP use fixed/configured business rules, and what degree of rule configurability is actually required at launch?
+Product/Technical
+# 9. Initial Risks / Concerns
+ID
+Risk / concern
+Why it matters
+Initial Discovery response
+R-01
+MVP scope expansion
+The current vision contains many attractive capabilities; collectively they can become a large first release.
+Prioritize the core engagement loop and explicitly simplify/defer secondary depth during Discovery.
+R-02
+Assessment/scoring ambiguity
+Assessment questions, scoring, categories and outputs are not yet defined.
+Identify content/methodology owner and define the minimum assessment model before technical design is finalized.
+R-03
+Planning Update complexity
+This core workflow could expand into configurable forms, workflow automation and task management.
+Define a narrow MVP state model, fixed initial form/rules and specific follow-up behavior.
+R-04
+Benchmark methodology
+Benchmarking can be differentiated value but depends on credible source data, cohort definitions and privacy/caveats.
+Validate source/methodology early and consider a curated/reference-data approach if live cohort analytics is not MVP-ready.
+R-05
+Communication complexity
+Automatic/approval/off plus multiple triggers/channels/templates can become a notification platform.
+Start with limited channels/triggers and a clear approval model; preserve extensibility.
+R-06
+Privacy / client data
+Personalization, assessments and financial benchmarks may require sensitive client data.
+Use data minimization; identify required fields, retention, access, logging and deletion rules during Discovery.
+R-07
+Tenant configuration complexity
+Firm and client-level toggles can create inheritance/override and support complexity.
+Define a small configuration hierarchy with clear defaults and auditability.
+R-08
+Advisor dashboard overload
+Trying to surface every alert/task/client metric can make the first advisor experience noisy.
+Prioritize actionable exceptions and follow-up states over broad analytics.
+R-09
+White-label scope growth
+Custom domains, deep themes and branded messaging can materially increase implementation/testing.
+Confirm a minimal white-label package for MVP.
+R-10
+Future integration pressure
+CRM/email/calendar/planning-system integrations may distract from validating the core product.
+Design stable integration seams, but defer integrations unless required to operate the MVP.
+# R-11
+Personalization scope expansion
+Personalization can quickly expand into recommendation engines, AI, segmentation and complex ranking logic.
+Constrain MVP to explicit, understandable rules and a limited set of inputs/outputs that demonstrate the client-specific experience.
+# R-12
+Rules / prioritization complexity
+Independent rules across assessments, content, opportunities and reminders could become inconsistent and difficult to maintain.
+Define one coherent MVP relevance/prioritization model with clear precedence and ownership before implementation.
+# R-13
+Insufficient client context
+A personalized first-login experience may be weak when the platform has limited client data.
+Define minimum onboarding/profile inputs, sensible empty/default states and progressive personalization as more information becomes available.
+# R-14
+Advisor trust and control
+System-generated priorities or content may conflict with an advisor's judgment or firm preferences.
+Define advisor/firm visibility, suppression/override and approval controls for the MVP where needed.
+# 10. Decisions Required During Remaining Discovery Activities
+Decision area
+Outcome required
+Product / MVP
+Final in-scope, simplified and deferred capabilities; measurable MVP success criteria.
+Client UX
+First-login and returning-client dashboard hierarchy, retirement-stage context, prioritized attention items, status/progress, next actions, dynamic relevance, continuity and advisor connection.
+Advisor UX
+Cross-client dashboard, follow-up states, alerts/tasks, communication history and client assignment model.
+Assessments
+Initial assessment catalog, assignment model, versioning, scoring/result outputs, and rules for how assessment responses affect the personalized experience.
+Planning Updates
+Form/data model, cadence, due logic, change detection, advisor follow-up and dashboard updates.
+Benchmarking
+Metrics, data sources, cohort definitions, calculations, caveats, privacy and firm controls.
+Content & personalization
+Content types, taxonomy/tags, publishing/assignment model, relevance rules, dynamic surfacing, personalization inputs and firm/advisor controls.
+Reminders / communications
+Triggers, channels, templates, branding, automatic/approval/off behavior, preferences and history.
+Firm / tenant controls
+Feature toggles, client-level overrides, defaults, advisor assignment, branding and permissions.
+Data / privacy
+Minimum client data, classification, access, retention, deletion, audit and backup requirements.
+Technical architecture
+Tenant-isolation model, .NET/Azure topology, data/domain model, async/background processing, APIs and integration seams.
+Delivery / operations
+Source control, CI/CD, environments, observability, testing, deployment, ownership and infrastructure expectations.
+Implementation plan
+Prioritized backlog, build phases, team composition, timeline, estimate and risks/dependencies.
+# Personalization model
+Minimum client inputs, life-stage model, rule/prioritization logic, client state/history, missing-data behavior, first-login/return behavior, and advisor/firm override controls.
