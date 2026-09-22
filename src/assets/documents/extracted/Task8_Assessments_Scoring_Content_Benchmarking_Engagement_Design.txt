@@ -1,0 +1,496 @@
+RETIREMENTTRACK
+Task 8 – Assessments, Scoring, Content, Benchmarking & Engagement Design
+Discovery deliverable defining the functional and technical approach for client assessments, scoring/results, Planning Updates, educational-content personalization, tagging, benchmarking, reminder rules, advisor-controlled communications, and the recurring engagement model.
+# 1. Purpose & Design Principles
+Task 8 converts the product direction established in Discovery into a defined engagement design that can be implemented consistently across the client experience, advisor experience, domain model, and technical architecture.
+Principle
+Recommended Direction
+Self-directed client experience
+RetirementTrack should surface appropriate activities, reminders, milestones, assessments, Planning Updates and education without requiring routine advisor assignment.
+High advisor visibility, low routine workload
+Advisor dashboards must separate Engagement/Accomplishments, Outstanding Client Items and Advisor Attention/Exceptions.
+Explainable personalization
+MVP recommendations and priorities should be deterministic, rules-based and traceable. No AI recommendation engine for MVP.
+Versioned business logic
+Assessments, scoring, Planning Updates, benchmark data/methodology, templates and important engagement rules must retain version history.
+Data minimization
+Collect only the client/household information necessary for approved workflows, calculations, personalization and benchmarking.
+Professional judgment boundary
+RetirementTrack identifies topics, changes and conditions but does not provide individualized financial or investment recommendations.
+MVP discipline
+Build a focused, credible engagement loop now while preserving clean extension points for future analytics, proprietary benchmarks, integrations and richer content management.
+# 2. Recurring Engagement Model
+Recommended engagement loopReminder or Milestone → Client Returns → Action / Review / Learning → Progress Updates → Relevant Next Content or Action → Advisor Visibility → Advisor Exception only when defined conditions justify professional attention.
+Stage
+System Behavior
+Advisor Impact
+Trigger
+Age/date milestone, due Planning Update, assessment availability, prior activity, household/life-stage change, or advisor request.
+No action by default.
+Client return
+Dashboard explains what deserves attention and why.
+Visibility only.
+Client action
+Complete update/assessment/checklist, view content, review benchmark, or acknowledge milestone.
+Recorded as accomplishment.
+Progress update
+Outstanding item closes; status/progress and relevant content refresh.
+Advisor sees updated engagement state.
+Exception evaluation
+Defined rules evaluate whether advisor attention is appropriate.
+Creates AdvisorException only when threshold/condition is met.
+Follow-up
+Client may contact advisor or advisor acts on true exception.
+Professional involvement where it adds value.
+# 3. Assessment Framework
+Recommendation: use a small, fixed and versioned assessment inventory for the MVP. Current working examples are a fuller client questionnaire and a condensed Investment & Risk Assessment. Do not build a generalized form/assessment builder.
+Area
+Recommended MVP Design
+Definition
+AssessmentDefinition identifies the stable assessment type; AssessmentVersion contains the exact questions, scoring and outputs for a release.
+Question types
+Single choice, multiple choice, yes/no, numeric/range, date, and limited free text where business value is clear.
+Conditional logic
+Support simple predefined branching; avoid arbitrary scripts or visual rule builders.
+Availability
+Firm may enable approved assessment types. RetirementTrack may automatically surface selected assessments based on defined rules; advisors may also recommend/assign supported assessments.
+Lifecycle
+Available → Assigned/Started → In Progress → Submitted → Scored → Completed; optional Reviewed state for advisor workflow.
+Save/resume
+Support save and resume for longer assessments.
+Repeatability
+Allow repeat assessments where the assessment definition permits it. Each completion remains tied to its original version.
+History
+Never silently reinterpret a historical result using a newer assessment version.
+# 4. Assessment Versioning
+Versioned Item
+Rule
+Assessment questions/options
+Published completions remain tied to the original AssessmentVersion.
+Scoring logic
+ScoringVersion or equivalent immutable version reference is stored with result.
+Client result text
+Result explanation/template is versioned so historical outputs remain reproducible.
+Advisor threshold rules
+Review/exception thresholds are versioned separately where appropriate.
+Recalculation
+No automatic historical recalculation. Recalculation, if ever supported, must be an explicit business action with audit history.
+# 5. Scoring & Results
+Do not force all assessments into one scoring shape. Each assessment may produce a numeric score, category/band, flags, educational result, or a combination of these.
+Output
+Client Experience
+Advisor Experience
+Numeric/category result
+Simple, understandable explanation with caveats and next relevant action/content.
+Score/category plus important context and comparison to prior result where meaningful.
+Flags / areas of attention
+Explain topic without diagnosing or recommending individualized financial action.
+Show defined review reason if threshold is met.
+No-score assessment
+Completion/accomplishment and relevant learning can still be shown.
+Visibility without forced advisor task.
+Historical comparison
+Show trend only where methodology makes comparison valid.
+Can highlight material change, not every difference.
+# 6. Advisor Review / Exception Rules
+Structural distinctionAssessment completion is an Engagement/Accomplishment. Incomplete or overdue assessment is an Outstanding Client Item. Only a defined review condition becomes an Advisor Attention/Exception.
+Condition
+Recommended Outcome
+Normal completion
+Record accomplishment; update client state; surface relevant education if appropriate.
+Overdue/incomplete
+Keep as outstanding client item; RetirementTrack manages routine reminders.
+Defined score/result threshold
+Create AdvisorException with reason, severity/priority and source assessment.
+Client requests help
+Create client-initiated AdvisorException/FollowUp.
+Advisor explicitly assigns follow-up
+Create advisor-owned task with clear reason and due state.
+# 7. Planning Update Design
+Planning Update is a core recurring workflow, not a generic form. It should minimize re-entry by showing prior known information and asking the client to confirm or update it.
+Step
+Recommended Behavior
+Due generation
+Temporal workflow creates/activates the due instance according to cadence.
+Invitation
+Client receives platform-led notification with secure link back to RetirementTrack.
+Prior state
+Previously provided values are shown where appropriate; client confirms or changes them.
+Save/resume
+In-progress state persists safely.
+Submission
+Current responses are committed as a versioned PlanningUpdateInstance.
+Reminder stop
+Submission/completion immediately ends remaining routine reminder sequence.
+Comparison
+Defined fields are compared to the prior completed state.
+Change evaluation
+PlanningUpdateDetectedChange records relevant differences and whether advisor attention is warranted.
+Dashboard refresh
+Outstanding item closes; progress, priorities and relevant content can change.
+Advisor visibility
+Advisor sees completion and meaningful changes; advisor work is created only for true exceptions.
+# 8. Meaningful Change Detection
+Change Class
+Examples
+Recommended Handling
+Informational
+Minor update with no professional-review significance.
+History only; no advisor task.
+Relevant
+Life-stage/context change that should alter dashboard/content/reminders.
+Update personalization and client state.
+Meaningful
+Retirement timing/status change, household change, material income/balance movement, estate/beneficiary/insurance signal, or other defined review condition.
+Create AdvisorException only if approved rule threshold is met.
+Private individual change
+Information explicitly classified Individual Private.
+Respect household visibility boundary; expose only to authorized user/advisor according to policy.
+Recommended implementation: rules are explicit and versioned. Store source field/reference, prior/current value or references where needed, rule/version, reason, severity, and AdvisorAttentionRequired flag. Avoid exposing detailed sensitive values on broad advisor dashboards; show concise status/reason and require authorized drill-down.
+# 9. Educational Content Model
+Education is a meaningful long-term engagement pillar, not merely a small dashboard section. The MVP should support direct browsing plus contextual surfacing while keeping content administration bounded.
+Content Type
+MVP Use
+Video
+Short professional education tied to milestones/topics.
+Guide / Brochure
+Downloadable deeper explanation.
+One-pager
+Concise planning reference/action summary.
+Infographic
+Visual explanation of milestone, rule or trade-off.
+Article / Brief Insight
+Useful planning observation or timely topic.
+Factoid / Did You Know?
+Lightweight discovery/freshness item.
+Checklist
+Action-oriented educational aid, e.g. retirement preparedness.
+Benchmark explanation
+Educational interpretation of a validated comparison.
+# 10. Content Taxonomy & Tagging
+Tag Dimension
+Examples
+Design Rule
+Topic
+Medicare, Social Security, RMD, taxes, estate, beneficiaries, insurance, retirement income, investments.
+Controlled vocabulary.
+Life stage
+Pre-retirement, approaching retirement, recently retired, established retirement.
+Business-defined values.
+Age/milestone
+50, 55, 59½, 62, 64½, 65, 67, 70, 72–73, 80+.
+Used only where age relevance is valid.
+Workflow relevance
+Planning Update, assessment, benchmark, advisor recommendation.
+Supports contextual surfacing.
+Content type
+Video, guide, article, checklist, infographic, factoid.
+Supports browse/filter UX.
+Firm availability
+Enabled/disabled for tenant.
+Firm Admin may control availability within approved platform content.
+Avoid uncontrolled free-form tags in the MVP. ContentItem ↔ ContentTag remains many-to-many because one resource may be relevant to multiple topics, milestones and life stages.
+# 11. Personalization Rules
+Input
+Typical Use
+Age / date milestone
+Surface Medicare, Social Security, RMD or catch-up contribution education.
+Retirement status / target date
+Prioritize retirement-transition topics and Planning Update prompts.
+Assessment result
+Surface relevant educational context or approved next action.
+Planning Update changes
+Adjust priorities, content and reminders; possibly create advisor exception.
+Household context
+Select household-relevant resources while respecting Individual Private classification.
+Completion history
+Avoid repeatedly surfacing completed/dismissed items and suggest next logical content.
+Firm configuration
+Respect enabled features/content and communication modes.
+Advisor recommendation
+Allow explicit content/activity recommendation where supported.
+# 12. Client Content Engagement Tracking
+State/Event
+Recommended Tracking
+Surfaced
+Optional system state when a resource is actively recommended.
+Opened / Viewed
+Record meaningful client engagement.
+Completed
+Use for videos/checklists/resources where completion has product meaning.
+Downloaded
+Useful for guides/one-pagers.
+Dismissed / Not interested
+Use selectively to reduce repeated surfacing.
+Related navigation
+Track only where it supports product relevance, not exhaustive clickstream analytics.
+Advisor dashboards should show meaningful content engagement such as “Viewed RMD Guide” or “Completed Medicare Checklist,” not every click or page view.
+# 13. Related Content Paths
+Example pathwayRMD milestone → RMD video → downloadable guide → checklist / related article → “questions to discuss with your advisor.”
+RelatedContent relationships should be curated or rules-based and bounded. The MVP does not need a recommendation graph or AI ranking engine.
+# 14. Benchmarking Model
+MVP benchmarking should use a very small number of credible, easy-to-understand external/reference benchmarks. Current working examples are median household income, median household net worth and median retirement savings by age, subject to source and methodology validation.
+Entity / Concept
+Recommended Responsibility
+BenchmarkDefinition
+Measure name, unit, comparison method and client-facing caveat.
+BenchmarkDataSource
+Source provenance, publisher/maintainer, validation status.
+BenchmarkDataVersion
+Version/effective period of reference dataset and methodology.
+BenchmarkReferenceValue
+Reference value by age/age band or other validated cohort dimension.
+BenchmarkCohort
+Optional explicit cohort definition where a separate abstraction improves clarity.
+ClientBenchmarkResult
+Stores/references reproducible client input, benchmark version, calculated output and generated date.
+BenchmarkVisibility
+Firm enablement and role/client visibility.
+# 15. Benchmark Calculation & Presentation
+Area
+Recommended MVP Rule
+Calculation
+Deterministic calculation against a validated versioned reference dataset.
+Input
+Use only the minimum approved high-level household/client data required for the measure.
+Unavailable state
+If required inputs or validated reference data are missing, show unavailable/not-calculable rather than fabricate.
+Client presentation
+Simple comparison, source/year, educational explanation and caveat. Avoid judgmental “good/bad” labels.
+Advisor presentation
+May include slightly more context but should remain explainable and avoid unnecessary sensitive detail on summary dashboards.
+Future proprietary benchmarks
+Support later aggregated/de-identified RetirementTrack platform data in a separate analytics pipeline with privacy/legal controls. No live cross-firm identifiable queries.
+# 16. Reminder & Milestone Rules
+Rule Area
+Recommended MVP Design
+Triggers
+Planning Update due, assessment due/incomplete, age/date milestone, retirement timing, household/life-stage event, approved planning opportunity.
+Age milestones
+Support selected milestones such as Medicare preparation, Social Security windows and RMD preparation based on validated rules/content.
+Scheduling
+Temporal Cloud durable workflows/timers manage due dates, delays, retries and stop conditions.
+Repeat sequence
+Use bounded sequences, e.g. invitation → reminder 1 → reminder 2/final, configurable by supported workflow.
+Stop condition
+Completion/acknowledgment cancels remaining routine reminders for that item.
+Noise control
+Prevent duplicate active reminders; avoid too many simultaneous items; prioritize what deserves attention.
+Advisor involvement
+Routine reminders are platform-led. Advisor involvement is reserved for client requests or true exceptions.
+# 17. Advisor-Controlled Communications
+Mode
+Recommended Meaning
+Typical MVP Use
+Automatic
+RetirementTrack sends without advisor approval when an approved workflow rule is met.
+Routine Planning Update reminders, assessment reminders, milestone education.
+Advisor Approval
+System prepares communication but waits for advisor approval.
+Selected personalized or more sensitive scenarios.
+Off
+Communication disabled for that supported workflow.
+Firm-specific suppression where allowed.
+Recommended MVP channels: email plus in-app notifications where confirmed. SMS/push remain future adapters. Sender identity should be resolved from firm/advisor configuration without hard-coding the communication provider into domain logic.
+# 18. Communication History
+Stored State
+Purpose
+Intent/source workflow
+Explain why communication was created.
+Template/version
+Reproduce what was intended to be sent.
+Approval state
+Pending, Approved, Rejected/Not Sent where applicable.
+Delivery state
+Queued, Sent, Delivered where available, Failed, Cancelled.
+Recipient/sender identity
+Operational traceability without exposing unnecessary message-body detail.
+Related entity
+Assessment, Planning Update, reminder, milestone, exception or other approved source.
+Timestamps
+Created/approved/sent/delivered/failed as available.
+# 19. Retirement Journey & Visible Progress
+RetirementTrack should present client progress as a coherent retirement journey rather than only as a list of completed and outstanding activities. The experience should help the client understand what has been addressed, what remains, which milestones are approaching, and where additional attention may be useful.
+Journey View
+Recommended Design
+MVP Boundary
+Addressed
+Summarize meaningful accomplishments such as completed assessments, Planning Updates, checklists, reviewed milestones and other relevant engagement.
+Use existing engagement/accomplishment state; no separate scoring engine required.
+Remaining
+Show important outstanding Planning Updates, assessments, milestones or planning areas without turning every item into advisor work.
+Prioritized, bounded presentation rather than a comprehensive task inventory.
+Approaching
+Surface upcoming age/date, retirement-stage and recurring planning milestones with an explanation of why they matter.
+Rules-based and based on validated milestone definitions.
+Attention useful
+Identify areas where client review, education, advisor contact or an approved AdvisorException may be appropriate.
+Professional judgment remains with the advisor; no individualized recommendation.
+Future progress/readiness view
+Allow the above signals to support richer journey/readiness presentation over time.
+A comprehensive Retirement Preparedness Score is not required for MVP.
+Implementation direction: derive the journey/progress presentation from existing versioned engagement, assessment, Planning Update, milestone and outstanding-item state. Preserve an extension point for richer progress/readiness presentation later without introducing a new generalized scoring engine in the MVP.
+# 20. Pre-Retirement & Post-Retirement Engagement
+The recurring engagement model must remain useful on both sides of retirement. Before retirement the client question is “Am I prepared?” During retirement it becomes “Am I staying on track?” RetirementTrack should support both through the same bounded, rules-based engagement architecture.
+Stage / Trigger
+Illustrative Engagement
+Recommended Handling
+Before retirement
+Preparedness activities, retirement timing, Medicare/Social Security preparation, assessments, Planning Updates and approaching milestones.
+Surface priorities, education and progress; create advisor attention only for approved exceptions or client requests.
+During retirement - withdrawals
+Periodic withdrawal/draw-rate evaluation prompts and coordination of RMD distributions with annual portfolio cash-flow needs.
+Identify a review consideration; surface education or encourage advisor discussion rather than calculate an individualized recommendation.
+During retirement - RMD
+RMD preparation, reminders, completion and related annual planning prompts.
+Use validated age/calendar rules, bounded reminders and completion tracking.
+During retirement - tax / Medicare
+Year-end consideration of tax-loss opportunities in non-qualified brokerage accounts; Medicare and IRMAA-related planning considerations.
+Present timely planning observations/education; professional review when an approved rule warrants it.
+During retirement - giving / protection
+QCD or charitable-giving opportunities where applicable; beneficiary, estate and insurance reviews.
+Surface relevant education/checklists and optional advisor contact or approved exception.
+During retirement - circumstances
+Changes in income or spending needs and other age-, calendar-, market-, tax- or circumstance-driven retirement considerations.
+Update priorities/content/reminders; create AdvisorException only when an explicit approved rule is met.
+These interactions identify issues, considerations or planning opportunities. They may direct the client to educational material, prompt a review, encourage advisor contact, or create an AdvisorException under an approved rule; they do not provide individualized financial, investment, tax or legal recommendations.
+## Freshness / Discovery Engagement
+RetirementTrack should continue to provide discovery value even when the client has no required task or immediate milestone. Curated educational resources, timely planning observations, factoids and similar content may be surfaced using controlled tags and deterministic rules based on appropriate client context and prior activity. This remains bounded engagement logic - not a broad marketing-automation platform or AI recommendation engine.
+# 21. Client Priority Model
+The client dashboard should show a small number of clearly relevant priorities, not a large feed of everything the platform knows.
+Priority Class
+Working Precedence
+Urgent advisor/client-requested action
+Highest when a professional action or client request is time-sensitive.
+Time-sensitive milestone
+Regulatory/age/date event such as Medicare/RMD preparation.
+Overdue core workflow
+Planning Update or required assessment overdue.
+Due core workflow
+Planning Update / assessment currently due.
+Relevant planning opportunity
+Context-driven topic or milestone.
+Recommended education
+Useful but not urgent.
+General fact/content
+Lowest; used for freshness/discovery.
+Exact precedence remains a business confirmation item, but the system should support explicit priority values and reason/source traceability.
+# 22. Advisor Visibility Model
+Category
+Examples
+Creates Advisor Work?
+Client Engagement / Accomplishments
+Completed Planning Update, completed assessment, viewed RMD guide, completed checklist, reviewed benchmark.
+No by default.
+Outstanding Client Items
+Planning Update due/overdue, assessment incomplete, milestone action outstanding.
+No by default; platform manages routine follow-up.
+Advisor Attention / Exceptions
+Material change, defined assessment threshold, client contact request, specific professional-review condition.
+Yes, where rule/client request requires action.
+# 23. Versioning & Traceability
+Versioned Area
+Traceability Requirement
+Assessment
+Definition/version/question/scoring/result explanation.
+Planning Update
+Definition/version and meaningful-change rule version.
+Personalization
+Rule/version responsible for surfaced priority or content.
+Benchmarking
+Source, data version, cohort method and calculation version.
+Communications
+Template/version and approval/send outcome.
+Content
+Content version or publish metadata where material changes affect historical experience.
+Every significant personalized output should be explainable: what source/rule triggered it, when, under which version, and what client/tenant context was used.
+# 24. Data Requirements / Data Minimization
+May Be Collected Where Needed
+Explicitly Out of Scope
+DOB/age, retirement status/timing, household relationship, selected profile attributes.
+Account numbers or login credentials.
+High-level account type, ownership and approximate/current balance where needed for approved calculations/personalization.
+Individual holdings/securities.
+High-level income, savings and net worth where needed for validated benchmarking/planning workflows.
+Transactions or brokerage statements.
+Assessment responses/results and Planning Update responses/changes.
+Account aggregation feeds for MVP.
+Content engagement and reminder/communication states.
+Unnecessary clickstream or surveillance-style tracking.
+# 25. Admin & Configuration Boundaries
+Role
+Recommended Controls
+Platform Admin
+Manage approved assessment definitions/versions, platform content library, benchmark reference datasets, global configuration and platform operations.
+Firm Admin
+Enable/disable supported assessments/features/content, manage communication mode, firm branding and operational firm configuration.
+Advisor
+Recommend/assign supported content or activities where enabled; review exceptions; approve communications where workflow requires it.
+Client
+Self-directed completion, browsing, progress review and advisor contact where supported. No configuration authority.
+Do not build generalized firm-authored assessment builders, rule builders, workflow designers or broad content-management customization into the MVP.
+# 26. Failure / Fallback States
+Scenario
+Required Behavior
+Missing DOB / retirement date
+Do not fabricate milestone; request/flag missing profile information where needed.
+Benchmark inputs missing
+Show benchmark unavailable/not-calculable.
+Benchmark source/version invalid
+Disable result generation until validated source/version is active.
+Assessment scoring failure
+Preserve submitted responses; show processing/retry state; alert operations if persistent.
+Planning Update comparison failure
+Preserve completed update; retry change evaluation durably through Temporal.
+Communication delivery failure
+Bounded retry; record failed state; alert where operationally significant.
+Content removed/unpublished
+Do not break historical activity; show unavailable or replacement path.
+Rule conflict
+Use explicit precedence and log/trace source decision; never silently produce contradictory priorities.
+# 27. Confirmed Business Rules
+Grant confirmed the following business/product rules for the MVP. These decisions close the six open confirmation items while preserving versioned, rules-based implementation.
+#
+Decision
+Recommended Default for MVP
+1
+Assessment retake / repeat policy
+Allow repeat assessments according to the defined cadence for that assessment, by advisor request, or following an appropriate material client change. Avoid unrestricted retakes.
+2
+Historical assessment comparison
+Advisor sees meaningful prior/current comparison; client receives a simpler change indication where useful.
+3
+Assessment exception rules
+Only explicitly configured material results or threshold changes create an Advisor Attention/Exception. Thresholds are defined appropriately for each assessment.
+4
+Content completion semantics
+Use content-specific completion: video = watched threshold; checklist = explicit completion; article/guide = viewed/opened unless richer tracking is later justified.
+5
+Benchmark recalculation
+Preserve each historical result using the dataset and methodology applicable at that time; calculate a new current comparison against a newly validated benchmark dataset.
+6
+Dismiss / snooze behavior
+Informational and educational items may generally be snoozed or dismissed. Core required Planning Updates and assessments remain outstanding until completed or administratively removed.
+# 28. Final Recommended Engagement Boundary
+Recommended first-build boundaryBuild a versioned, deterministic engagement system that supports an ongoing retirement relationship before and during retirement: surface a small number of relevant client priorities; run Planning Updates and fixed assessments; record accomplishments and outstanding items; present visible retirement-journey progress; surface contextual education and freshness/discovery content from a growing library; evaluate age/date and retirement-stage milestones; deliver bounded reminders and communications through Temporal Cloud; calculate a small validated set of external benchmarks; and create advisor exceptions only when professional attention is truly warranted. Post-retirement examples define supported extension patterns and do not make every illustrative workflow mandatory for the MVP.
+Include in MVP
+Keep Simple / Defer
+Fixed/versioned assessments and result logic
+No generalized assessment/form builder.
+Planning Update with prior-state comparison and meaningful-change rules
+No generic workflow designer.
+Rules-based client priorities and content relevance
+No AI recommendation engine.
+Growing platform-curated Learning Library with controlled tags
+No full multi-tenant CMS/theme marketplace.
+Age/milestone reminders and bounded follow-up sequences
+No broad marketing automation platform.
+Advisor visibility across engagement, outstanding items and true exceptions
+No task creation for routine client activity.
+Small external-reference benchmark set
+No live proprietary cross-tenant benchmarking in MVP.
+Email/in-app communications with approval modes
+SMS/push only if specifically confirmed.
+Versioning and traceability across core rules
+No unnecessary event-sourcing platform.
+End of Task 8 Discovery Deliverable

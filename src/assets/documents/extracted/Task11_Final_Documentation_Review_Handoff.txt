@@ -1,0 +1,1040 @@
+Task 11 - Final Documentation, Review & Handoff
+RetirementTrack MVP Discovery
+# 1. Discovery Summary
+RetirementTrack is a white-label B2B SaaS platform for retirement-planning and advisory firms. The MVP is designed to create an ongoing retirement relationship rather than a one-time assessment or collection of forms. It combines client self-service, recurring planning activity, educational content, reminders, benchmarking, and advisor visibility while intentionally minimizing routine advisor workload.
+Operating Model: RetirementTrack guides and engages -> the client learns and acts -> the platform records progress and follows up -> the advisor sees engagement and true exceptions -> professional help is brought in where it adds value.
+Product Dimension
+MVP Direction
+Client experience
+Self-directed, personalized and recurring. A client should quickly understand where they are, what deserves attention, and what to do next.
+Advisor experience
+High visibility with low routine workload. Routine completion and reminders are platform-managed; advisors focus on client requests and defined professional-attention conditions.
+Retirement lifecycle
+Before retirement: "Am I prepared?" During retirement: "Am I staying on track?" Retirement is a stage transition, not an endpoint.
+Education
+A growing library is a core engagement mechanism, available through direct browsing and contextual surfacing.
+Progress
+Show visible planning/engagement progress, completed areas, upcoming milestones and outstanding items without claiming comprehensive financial readiness.
+MVP boundary
+No account aggregation, trading, portfolio management, generalized form/workflow builders, broad analytics engine or individualized automated financial/investment/tax/legal advice.
+# 2. Functional Requirements
+The MVP must implement the following end-to-end functional capabilities as a coherent experience rather than isolated modules.
+Capability
+Implementation Requirement
+Firm setup & branding
+Create/activate a firm tenant, configure logo and selected brand colors, establish firm administrators/advisors, and apply supported feature/content/communication settings.
+Invitation & activation
+Invite clients/advisors, activate accounts through Clerk, complete MFA and required acknowledgements, handle expired/resend/failure states, and map identity to tenant membership.
+Client onboarding
+Capture minimum profile, retirement context, household relationship, authorized household sharing acknowledgement, advisor assignment and initial personalization inputs.
+Household experience
+Support spouses/partners as separate authenticated users linked to one household. Maintain separate identity and consent for each person; share household-level information by default only after household-sharing acknowledgement; support a bounded Individual/Private classification for selected information without field-by-field permission complexity. Present one Primary Advisor to the client while the underlying model supports additional advisor relationships.
+Client dashboard
+Show a small, visually clear set of personalized priorities, accomplishments, milestones, retirement-journey/progress indicators, relevant education, Planning Update/assessment availability, benchmark entry points, notifications and Request Advisor Follow-Up. The dashboard should evolve as the client completes activities and should not feel like a dense task-management system.
+Retirement journey
+Present what has been addressed, what needs attention, what is coming next and what is relevant now across pre-retirement and post-retirement stages.
+Planning Update
+Periodically offer a lightweight, versioned opportunity for the client to report whether anything meaningful has changed. A No Change response must be fast; a Yes response branches only into relevant sections. Support save/resume for branched updates, prior/current comparison, history, event-triggered offers and optional advisor request. Only defined material conditions or explicit client requests create advisor-attention items; do not make the workflow a mandatory annual questionnaire by default.
+Assessments
+Provide a RetirementTrack-maintained, versioned catalog of approved assessments. Firms choose which approved assessments are available; advisors may recommend/assign supported assessments where enabled. Each assessment may have its own scoring/result model, history, retake rules and material-threshold logic. Do not create a single overall financial-readiness score and do not build a firm-authored assessment builder in MVP.
+Education library
+Provide a RetirementTrack-curated Learning Library containing approved videos, guides, one-pagers, infographics, articles/insights, factoids and checklists. Firms may select which platform-approved items/categories are available. Support browse/search/filter, contextual surfacing through controlled metadata/rules and meaningful engagement tracking. Do not build a full firm content-management system in MVP; preserve clean extension points for firm-specific content later.
+Personalization
+Use deterministic, explainable rules based on age, retirement stage, milestones, assessments, Planning Update changes, household context, completion history, enabled content/features and advisor recommendations. Rules should produce a bounded set of useful priorities/opportunities and contextual content, not a continuously expanding task list or AI recommendation engine.
+Milestones & reminders
+Use durable Temporal workflows for age/date milestones, retirement-stage considerations, Planning Update/assessment prompts and selected planning opportunities. Keep sequences bounded, avoid duplicate/noisy reminders, stop or suppress reminders when the item is completed/acknowledged/dismissed as allowed, and reserve advisor work for client requests or true exceptions.
+Communications
+Support email plus in-app notifications for MVP. Use Automatic / Advisor Approval / Off control patterns only where applicable, maintain intent/template/delivery history, and keep routine communication platform-led. Provide a simple Request Advisor Follow-Up action; do not include direct calendar integration in MVP.
+Advisor visibility
+Provide searchable assigned-client visibility separated into Engagement & Accomplishments, Outstanding Client Items, and Advisor Attention / Exceptions.
+Advisor exceptions
+Create advisor work only when a defined material condition, client request or approved rule warrants professional attention. Support acknowledge/review/resolve lifecycle.
+Benchmarking
+Use validated external/reference datasets only after source, methodology, cohort logic and usage rights are approved. The exact initial benchmark measures are not predetermined. Version the source/methodology, preserve historical reproducibility, present neutral caveats and an unavailable/not-calculable state when inputs or data are insufficient. Proprietary cross-client/cross-firm benchmarking remains outside MVP.
+Firm administration
+Manage supported firm users, invitations, advisor/client assignments, branding, enabled assessments/content, communication modes and bounded tenant configuration.
+Platform administration
+Manage tenants, approved assessment versions, platform content, benchmark datasets/versions, platform configuration and tightly controlled support operations.
+Portability & offboarding
+Support authorized export and a default transition window when a firm exits, followed by controlled deletion subject to legal/regulatory/backup/required exceptions.
+## 2.1 Core Client Workflow
+Invitation -> Account Activation -> MFA -> Consent / Household Sharing Acknowledgement -> Minimum Profile -> Household / Advisor Context -> First Personalized Dashboard -> Planning Update / Assessment / Education -> Progress & Milestones -> Reminders -> Advisor Contact or Exception when needed -> Returning Dashboard with updated state.
+## 2.2 Planning Update Workflow
+Periodic offer / approved event trigger / optional advisor request -> client opens -> asks whether anything meaningful changed -> No Change: confirm quickly, record result, refresh engagement state and stop applicable reminder sequence -> Yes: branch only into relevant sections, show prior values where useful, allow save/resume, submit versioned responses -> compare prior/current -> apply explicit material-change rules -> update progress/priorities/content -> create AdvisorException only for a configured material condition or explicit client request -> preserve history/version.
+## 2.3 Assessment Workflow
+Approved assessment is enabled by the firm and becomes available / is recommended / assigned -> client starts -> save/resume -> submit -> deterministic scoring/result logic for that published assessment version -> client-friendly result with caveats and relevant education -> preserve original version/history -> optional prior/current comparison where meaningful -> AdvisorException only for explicitly configured material result/threshold change or client request -> retake only according to that assessment cadence, advisor request, or appropriate material client change.
+## 2.4 Advisor Workflow
+Advisor signs in -> sees assigned-client summaries -> reviews Engagement & Accomplishments / Outstanding Client Items / Advisor Attention separately -> searches/filters households -> opens authorized client detail -> reviews relevant Planning Update/assessment changes -> acknowledges or resolves true exceptions -> responds to client-requested contact -> does not receive routine completion as a task.
+## 2.5 Post-Retirement Engagement Workflow
+Age/calendar/retirement-stage/client-context trigger -> evaluate approved deterministic rule -> surface education, priority, reminder or review prompt -> optionally encourage advisor contact -> create AdvisorException only if the approved rule warrants professional attention. Examples include RMD preparation/completion, withdrawal/draw-rate review, Medicare/IRMAA considerations, QCD opportunities, beneficiary/estate/insurance reviews, and income/spending changes.
+## 2.6 Detailed Module Implementation Specifications
+The following module specifications consolidate the final Discovery direction and latest product decisions into implementation-ready behavior. They define what another delivery team should build while preserving the approved Azure/.NET architecture and MVP boundaries.
+### 2.6.1 Assessments
+Assessments are a RetirementTrack-owned engagement capability. The MVP must support a defined, versioned catalog maintained by the platform; each firm controls which approved assessments are available to its clients. The catalog should remain extensible without introducing a generalized assessment/form builder.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Ownership & availability
+Platform Admin manages approved AssessmentDefinition/AssessmentVersion records. Firm Admin enables/disables approved assessments for that tenant. An enabled assessment may be surfaced by deterministic eligibility rules or recommended/assigned by an authorized advisor.
+Scoring model
+Each assessment owns its own scoring/output contract: numeric score, category/band, flags, educational result or no-score completion. Persist the exact scoring/version reference with the result. Do not aggregate assessment outputs into one RetirementTrack financial-readiness score.
+Lifecycle & history
+Support available/recommended/assigned, started/in-progress, submitted, scored/completed and optional reviewed context as appropriate. Longer assessments support save/resume. Every completion remains tied to the exact published version used at that time; do not silently recalculate historical results after a version change.
+Repeat / retake rules
+Retakes are allowed only according to the cadence defined for that assessment, by authorized advisor request, or after an appropriate material client change. Avoid unrestricted repeated submissions.
+Advisor impact
+Normal completion is an Engagement/Accomplishment. Incomplete/due items remain client-facing/outstanding where applicable. Create AdvisorException only for assessment-specific configured material results/threshold changes or an explicit client request for help.
+API / service responsibility
+Expose tenant-authorized APIs for firm-enabled catalog, start/resume, response save, submit, result/history and advisor-authorized context. Scoring and threshold evaluation execute server-side against immutable/versioned definitions; UI must not be the source of scoring or authorization truth.
+Failure / fallback
+If scoring fails after submission, preserve submitted responses and submission version, show a processing/retry state, retry safely where appropriate, and alert operations if persistent. Never discard the client submission or fabricate a result.
+Acceptance criteria
+A firm can enable an approved assessment; an authorized client can complete it; the same inputs produce the deterministic versioned result; history remains reproducible after a newer version is published; cross-tenant access is blocked; configured material thresholds create an advisor exception and normal completions do not.
+Out of scope
+Firm-authored assessment builder, arbitrary rule scripting, unrestricted retakes, cross-assessment readiness engine, AI scoring/recommendations and automated individualized financial/investment advice.
+### 2.6.2 Planning Updates
+Planning Updates are a recurring engagement mechanism for detecting meaningful client changes with minimal friction. They are not a mandatory annual questionnaire by default and should not routinely depend on an advisor starting the process.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Trigger model
+The platform periodically offers a change-check based on approved cadence/rules; appropriate life-stage/context events may also prompt an update. An advisor may request an update when useful, but advisor initiation is optional rather than the normal mechanism.
+Fast No Change path
+The first interaction should ask whether anything meaningful has changed. If the client selects No Change, record the confirmation/version/source/time, complete that offered interaction quickly, update engagement/progress state and stop any reminders associated with that offer.
+Yes Change branching
+If the client reports a change, route only to relevant sections/topics instead of forcing the entire questionnaire. Show prior known values where useful, permit safe save/resume for branched sections, validate server-side and persist the submitted version.
+Comparison & materiality
+Compare approved fields/topics to the relevant prior completed state and create explicit PlanningUpdateDetectedChange records. Separate informational/relevant changes from configured material conditions. A change may update personalization/priorities/content without creating advisor work.
+Advisor impact
+Completion/no-change is visible as engagement. Create AdvisorException only when an explicitly configured material rule is met or the client asks for advisor help. Do not create routine advisor tasks merely because an update was offered or completed.
+API / service responsibility
+Provide APIs for current offer/status, prior-value context, section responses, save/resume, submit/no-change confirmation, history and authorized advisor summary. Business services own trigger source, comparison, versioning, materiality and exception creation; Temporal owns durable timing/reminder behavior.
+Failure / fallback
+If comparison/materiality evaluation fails after a valid submission, preserve the completed update, mark evaluation pending/retryable, retry durably and avoid duplicate exceptions. The client should not need to resubmit because a downstream evaluation failed.
+Acceptance criteria
+No Change can be completed with minimal steps; Yes branches only to relevant sections; history/version is preserved; prior/current comparison is reproducible; reminders stop after completion; ordinary changes update the client experience without advisor work; only configured material conditions or client requests create exceptions.
+Out of scope
+Mandatory full annual questionnaire by default, generic workflow/form designer, advisor-required initiation, arbitrary scripting and automatic individualized financial/tax/legal recommendations.
+### 2.6.3 Client & Household Structure
+The MVP should support a household-oriented retirement experience while preserving individual identity, consent and bounded privacy. Keep the model simple enough for implementation and user comprehension.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Identity model
+Each spouse/partner is a separate authenticated User with their own identity, contact information, acknowledgements and activity attribution. Household membership links authorized individuals without merging identities.
+Minimum profile
+Collect only information necessary to establish the first personalized experience and approved workflows, such as name, DOB/age, retirement status/timing, household relationship, advisor context and limited high-level planning information. Collect additional financial context only when a specific approved workflow requires it.
+Sharing model
+After explicit household-sharing acknowledgement, household-level planning information is generally shared among authorized household participants. Support a bounded Shared vs Individual/Private classification for selected information. Do not implement field-by-field spouse permission matrices in MVP.
+Advisor relationship
+Present one Primary Advisor in the client experience. The underlying AdvisorClientAssignment model may support additional advisor relationships/types and effective dates so the architecture does not require redesign later.
+Authorization boundary
+Every client/household API must verify authenticated tenant membership plus household membership or active advisor assignment. Tenant role alone is insufficient for access. Individual/Private data must be excluded from household responses and advisor views unless the requesting user is explicitly authorized.
+Data minimization
+Do not collect account credentials, account numbers, transactions, individual holdings or statement-vault data. High-level account type/ownership, approximate/current balance, income, savings or net-worth context may be stored only when needed by an approved workflow/benchmark.
+Acceptance criteria
+Two spouses can have separate logins linked to one household; shared information is available only after acknowledgement; Individual/Private information does not leak through household/client/advisor APIs; one Primary Advisor is shown; an advisor without an active assignment cannot access the household.
+Out of scope
+Complex per-field spouse permissions, unrelated-person household structures unless later approved, account aggregation, brokerage credential storage and unrestricted Firm Admin access to sensitive client information.
+### 2.6.4 Educational Content
+Education is a core recurring-engagement mechanism. RetirementTrack curates the master library; firms select which approved content is available. The MVP should support direct discovery plus deterministic contextual surfacing without becoming a full content-management product.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Content inventory
+Support approved videos, guides/brochures, one-pagers, infographics, articles/brief insights, factoids/Did You Know items, checklists and benchmark explanations. Store type, title/summary, publish/availability metadata and controlled content references/assets.
+Taxonomy
+Use controlled tags for topic, life stage, age/milestone, workflow relevance and content type. Keep ContentItem-to-ContentTag many-to-many. Avoid uncontrolled free-form tagging that would make personalization inconsistent.
+Firm availability
+Platform Admin owns the master RetirementTrack library. Firm Admin may enable/disable approved content/categories for its tenant. MVP does not require firms to author/upload/manage a separate content library.
+Contextual surfacing
+Use deterministic rules based on age, retirement stage, milestones, Planning Update changes, assessment results, household context, prior completion and firm availability. Surface a bounded number of relevant resources; do not use AI ranking/recommendation in MVP.
+Engagement tracking
+Track meaningful states only: surfaced where useful, opened/viewed, downloaded, content-specific completed state and selectively dismissed/not interested. Do not collect exhaustive clickstream behavior. Advisor views should show meaningful engagement summaries rather than every page interaction.
+Completion semantics
+Use content-specific completion rules: e.g., watched threshold for a video when configured, explicit completion for checklist, opened/viewed for article/guide unless richer tracking is justified. Historical engagement should remain understandable if content is later unpublished.
+Failure / fallback
+If content is unpublished/removed, do not break historical engagement records; show unavailable/replacement behavior where appropriate. If a contextual rule references unavailable content, omit it and continue with other eligible items rather than failing the dashboard.
+Acceptance criteria
+Clients can browse/search/filter enabled content; firms can select availability from the platform catalog; contextual rules never surface disabled content; meaningful engagement is persisted; historical activity remains readable after content changes; no cross-tenant exposure occurs.
+Out of scope
+Full firm CMS, arbitrary firm-authored content workflows, theme marketplace, AI recommendation engine, marketing automation and exhaustive behavioral tracking.
+### 2.6.5 Benchmarking
+Benchmarking is an optional educational comparison capability using validated external/reference data. The exact measures are a product decision and must not be hard-coded around income, net worth or retirement savings simply because those were earlier examples.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Definition model
+Implement BenchmarkDefinition, BenchmarkDataSource, BenchmarkDataVersion, optional Cohort/reference values, ClientBenchmarkResult and visibility/availability metadata. The model must support different future measures without schema redesign.
+Activation criteria
+Do not activate a benchmark until the source, methodology, cohort rules, effective period, legal/usage rights and client-facing explanation/caveat are approved. Exact initial benchmark measures remain TBD by product/domain review.
+Calculation
+Use deterministic server-side calculation against the active validated data version and only the minimum client/household inputs required for that measure. Persist enough source/version/method references to reproduce the historical result.
+Presentation
+Show a neutral comparison with source/year or effective period, methodology/caveat and educational explanation. Avoid judgmental good/bad labels and avoid implying financial readiness or professional advice.
+History & updates
+Preserve historical results with the dataset/methodology that applied when generated. A newly validated data version may generate a new current comparison; do not silently rewrite old results.
+Unavailable state
+If required client inputs, a validated source/version or cohort value are missing, return unavailable/not-calculable with a clear reason rather than fabricating or extrapolating a result.
+Tenant / privacy boundary
+Firm enablement and client/advisor visibility remain tenant-scoped. Do not query or expose identifiable data from other RetirementTrack firms/clients to build MVP comparisons.
+Acceptance criteria
+A product-approved benchmark can be loaded/versioned/activated; calculation is reproducible; historical results survive source updates; invalid/inactive source versions cannot produce new results; missing inputs show unavailable; presentation includes provenance/caveat.
+Out of scope
+Proprietary cross-client/cross-firm benchmarking, live identifiable peer comparisons, unvalidated scraped data, hard-coded specific initial measures and broad analytics/reporting engine.
+### 2.6.6 Client Priorities
+Client priorities should guide attention without turning RetirementTrack into a task manager. The dashboard should show a small number of useful items drawn from milestones, opportunities, current engagement context and explicit client/advisor needs.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Priority sources
+Allow priority candidates from client-requested/advisor-attention conditions, time-sensitive milestones, offered/current Planning Updates or assessments, relevant planning opportunities, recommended education and freshness/discovery content.
+Selection behavior
+Use deterministic, explainable business rules with explicit priority/urgency/date and source/reason metadata. Apply a bounded display limit so lower-value items do not crowd the experience. Exact weighting/tie-break values remain configurable/product-approved rather than embedded permanently in UI code.
+Consumer framing
+Use language such as relevant now, coming up, worth reviewing, learn or discuss where appropriate. Reserve required/due wording for items explicitly configured as such. Milestones and opportunities should coexist with actionable items.
+State changes
+Re-evaluate priorities after meaningful client activity, Planning Update changes, assessment outcomes, milestone changes, content completion/dismissal and advisor/client actions. The dashboard should visibly evolve after progress.
+Traceability
+Every surfaced priority should carry enough internal metadata to explain which rule/source produced it and why. Do not expose sensitive underlying values on broad screens when a concise reason is sufficient.
+Acceptance criteria
+The same client state/rule version yields the same bounded priority set; completing/dismissing an eligible item updates subsequent results; disabled content/features cannot generate priorities; conflicting rules follow explicit precedence/configuration and are traceable.
+Out of scope
+Infinite task feed, AI-generated priorities, opaque ranking, generalized rules builder and advisor task creation for every client interaction.
+### 2.6.7 Reminders & Milestones
+Reminders should support useful recurring engagement, not create recurring chores. Temporal Cloud should provide durable timers/retries while business rules control what is worth surfacing and when.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Trigger inventory
+Support approved age/date milestones, retirement-stage events, offered Planning Updates, enabled assessment prompts, selected post-retirement considerations and other product-approved planning opportunities. Do not assume every possible retirement topic is a mandatory workflow.
+Workflow execution
+Temporal workflows/activities should carry TenantId plus stable business identifiers, load authoritative data at execution time, schedule due/next times, retry idempotently and support cancellation/stop conditions. Avoid carrying unnecessary sensitive payloads inside workflow state.
+Bounded sequences
+Where repeated reminders are appropriate, use a bounded sequence with frequency caps. Prevent duplicate active reminders for the same source and avoid too many simultaneous client prompts.
+Stop / dismiss behavior
+Completion/acknowledgement stops applicable routine reminders. Informational/educational items may be snoozed or dismissed when allowed. Planning Update prompts follow the lightweight offer model rather than being universally mandatory; any hard-required state must be explicitly configured.
+Advisor impact
+Routine reminder delivery remains platform-led. Advisors should not receive tasks for normal reminder activity. Create advisor work only for a configured professional-attention condition or client-requested follow-up.
+Failure / fallback
+Delivery/workflow failures use bounded retries and record operational status. Idempotency must prevent duplicate communication or duplicate advisor exceptions. Persistent failures should be observable through monitoring without losing the underlying client state.
+Acceptance criteria
+Timers survive worker restarts; completion cancels remaining reminder steps; duplicate triggers do not create duplicate active reminders; tenant context is preserved; informational snooze/dismiss works where configured; routine reminders do not create advisor tasks.
+Out of scope
+Broad marketing automation, high-frequency campaign sequencing, mandatory completion of every reminder, unmanaged cron jobs and advisor-created custom workflow designer.
+### 2.6.8 Communications & Advisor Follow-Up
+MVP communication channels are email plus in-app notifications. Communications should be traceable, provider-abstracted and mostly platform-led, with advisor approval only where a supported scenario specifically requires it.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Channels
+Implement email and in-app notification delivery for MVP. Use Twilio SendGrid as the production transactional email provider behind an application abstraction so domain logic stores intent/template/status identifiers rather than coupling business rules directly to SendGrid.
+Control modes
+Where applicable, support Automatic, Advisor Approval and Off. Routine operational reminders generally use Automatic; selected sensitive/advisor-specific scenarios may require Advisor Approval; firms may disable supported categories where product policy allows.
+History
+Persist intent/source workflow, template/version, approval state, SendGrid message/provider reference where applicable, delivery status, recipient/sender identity references, related entity and timestamps. Avoid storing/logging unnecessary sensitive message payloads.
+Request Advisor Follow-Up
+Provide a simple client action to request advisor contact/follow-up. Create a trackable client-initiated request/exception visible to the assigned advisor, with acknowledge/resolve state as appropriate. The action should not require calendar integration.
+Sender identity
+Use a RetirementTrack-controlled Twilio SendGrid account and authenticated sending domain. Resolve RetirementTrack/approved firm branding and sender configuration through tenant/application settings. Sender-domain behavior remains controlled configuration rather than hard-coded logic.
+Failure / fallback
+On SendGrid delivery failure, bounce, block or deferred event, use bounded retry where appropriate, record delivery state and surface operational alerts when significant. Process SendGrid event/webhook callbacks idempotently and do not duplicate sends on retries. In-app state remains independently available when email delivery fails where the workflow supports it.
+Acceptance criteria
+Routine eligible communications send automatically once through Twilio SendGrid; approval-required items do not send before approval; Off suppresses the supported communication; SendGrid delivery/approval history is auditable; client follow-up requests reach the correct assigned advisor; cross-tenant recipients cannot be selected.
+Out of scope
+Direct calendar scheduling/integration, SMS/push for MVP, marketing campaign automation, arbitrary free-form advisor blasts and provider-specific business logic embedded in domain services.
+### 2.6.9 Client Dashboard, Retirement Journey & Progress
+The client dashboard is the primary engagement surface, not a generic collection of widgets. It must feel like an engaging consumer product and visibly evolve as the client completes activities, reaches milestones, reports changes and engages with education.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Dashboard composition
+Provide first-login and returning-client states with a bounded set of relevant-now priorities, retirement-journey/progress visualization, age/retirement timeline, milestones, recent accomplishments, Planning Update and assessment availability/status, relevant education, benchmark entry points where enabled, notifications and Request Advisor Follow-Up.
+Journey behavior
+Show what has been addressed, what remains relevant, what is approaching and where attention may be useful. Use completed assessments, Planning Updates, milestones, checklists/content engagement and outstanding-item state as inputs. Do not present the dashboard as a comprehensive financial plan or task backlog.
+State evolution
+Recompute dashboard state after meaningful client actions, detected Planning Update changes, assessment results, milestone changes, content completion/dismissal and advisor/client follow-up actions. Completion must visibly affect accomplishments, progress and what is surfaced next.
+Consumer framing
+Use plain language such as relevant now, coming up, worth reviewing, learn and discuss. Reserve required/due language for explicitly configured core items. Avoid dense financial-services tables as the default client experience.
+API / service responsibility
+Expose one client-dashboard aggregation endpoint/use case that composes authorized profile/household context, progress state, priority candidates, milestones, enabled content, workflow status and advisor contact information. Do not make the React client independently reproduce business prioritization logic.
+Security / privacy
+Return only data authorized for that client/household. Individual/Private information must not leak through household-level cards, progress summaries, search, notifications or advisor-facing summaries.
+Failure / fallback
+If one optional source such as benchmark/content data is unavailable, render the rest of the dashboard and show a bounded unavailable state instead of failing the page. Missing profile data should produce a clear prompt only when needed.
+Acceptance criteria
+First-login and returning states differ appropriately; completing a supported activity visibly updates the dashboard; only a small bounded priority set is displayed; disabled content/features do not appear; household/private boundaries are preserved; the dashboard remains useful before and during retirement.
+Out of scope
+Comprehensive financial-planning dashboard, portfolio/account aggregation, unlimited task feed, AI-generated advice, trading/account performance views and generalized dashboard-builder functionality.
+### 2.6.10 Advisor Dashboard & Exception Management
+The advisor experience should maximize visibility while minimizing routine work. Normal client engagement, incomplete client items and true professional-attention conditions must remain structurally separate.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Assigned-client scope
+Show only clients/households for which the advisor has an active authorized assignment in the current tenant. Advisor role alone must not grant firm-wide client access.
+Primary views
+Provide separate Engagement & Accomplishments, Outstanding Client Items and Advisor Attention / Exceptions views. Client completion belongs in engagement; due/incomplete routine activity belongs in outstanding items; only material conditions or client requests belong in advisor attention.
+Search / filters
+Support bounded server-side search/filtering by client/household, status, exception reason/priority, recent activity and advisor assignment where appropriate. Lists should be paginated and tenant-scoped.
+Client drill-down
+Allow authorized drill-down to relevant profile/household summary, progress, Planning Update changes, assessment result/history context, milestones, content engagement and exception history. Broad list views should avoid unnecessary sensitive values.
+Exception lifecycle
+AdvisorException supports source, reason, severity/priority, created time, status, acknowledgement/review/resolution, concise notes and related client/workflow identifiers. Material/high-risk conditions remain visible until resolved or appropriately closed.
+Advisor follow-up
+Client Request Advisor Follow-Up creates a clearly identifiable client-initiated item. Advisor can acknowledge and resolve it; no scheduling/calendar integration is required for MVP.
+Failure / fallback
+If an underlying client item becomes unavailable or authorization changes, preserve audit/history while preventing stale unauthorized drill-down. Duplicate rule evaluation must not create duplicate active exceptions.
+Acceptance criteria
+Normal client completions never automatically become advisor tasks; defined material rules and client follow-up requests do; unauthorized clients cannot be opened by URL/API manipulation; exception transitions are auditable; advisor summaries remain usable without exposing excess sensitive data.
+Out of scope
+Advisor CRM replacement, broad case-management platform, generalized task/workflow builder, calendar scheduling integration and automatic individualized financial/investment/tax/legal recommendations.
+### 2.6.11 Firm Administration & White-Label Configuration
+Firm Admin should have enough control to operate a tenant without turning RetirementTrack into a fully configurable platform. Administration is tenant-scoped and should not automatically expose sensitive client planning data.
+Implementation Area
+Required MVP Behavior / Developer Direction
+User administration
+Manage supported firm users, invitations, advisor/client assignments, activation/deactivation and practical role combinations such as Advisor + Firm Admin where explicitly allowed.
+Branding
+Configure firm logo, selected brand colors, firm display identity and the client-visible Primary Advisor presentation. Branding must use bounded validated settings rather than arbitrary theming/CSS.
+Assessment / content availability
+Enable or disable approved RetirementTrack assessments and approved platform content/categories for the tenant. Firm Admin selects from platform-maintained catalogs; it does not create assessments or operate a full content-management system.
+Communication settings
+Manage supported Automatic / Advisor Approval / Off modes and approved sender/firm identity settings where applicable. Firm settings cannot bypass global safety/security boundaries.
+Sensitive-data boundary
+Firm Admin is an operational role, not an implicit permission to read all assessment responses, financial-planning data or Individual/Private household information. Any broader business visibility requires an explicit authorized role/policy.
+Auditability
+Role changes, assignments, invitation actions, branding/configuration changes and enable/disable decisions must create appropriate AuditEvents with tenant, actor, timestamp and target identifiers.
+Acceptance criteria
+Firm Admin can operate users/assignments/branding/catalog availability within one tenant; cannot manage another tenant; cannot create unsupported assessments/content/workflows; sensitive client detail is not broadly exposed solely because of Firm Admin status.
+Out of scope
+Full CMS, form builder, workflow designer, custom rules scripting, arbitrary theme editor, broad reporting engine and unrestricted support-style access to client data.
+### 2.6.12 Platform Administration
+Platform Admin controls RetirementTrack-owned master catalogs and tenant lifecycle. This is a privileged operational capability outside normal tenant membership and must be tightly controlled and audited.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Tenant lifecycle
+Create/activate/suspend supported firm tenants, manage bounded platform configuration and support controlled operational transitions without granting default client-data browsing.
+Master catalogs
+Manage approved AssessmentDefinition/Version records, platform-curated content, validated benchmark data/source versions and other centrally controlled configuration required by the MVP.
+Publishing / versioning
+Published assessment/content/benchmark versions that support historical results must remain reproducible. Platform changes should use explicit active/effective states rather than silently modifying historical definitions.
+Privileged operations
+Require named identities, MFA, least privilege, explicit authorization and AuditEvents for platform operations. Break-glass/support access is exceptional and purpose-limited.
+Failure / safety
+Prevent activation of invalid benchmark versions or incomplete assessment definitions; use confirmation/guardrail patterns for destructive or cross-tenant-impacting operations; preserve audit history.
+Acceptance criteria
+Platform Admin can manage master catalogs and tenant lifecycle without being a default super-user for client data; privileged actions are auditable; published historical behavior remains reproducible; invalid/inactive versions cannot be used for new production results.
+Out of scope
+Unrestricted production database browsing, tenant impersonation as a normal workflow, generalized no-code platform builder and bulk cross-tenant analytics on identifiable client data.
+### 2.6.13 Identity, Invitations & Onboarding
+Clerk provides managed authentication, but RetirementTrack owns tenant membership, application roles, advisor/client relationships and business authorization. Onboarding should collect only enough information to create the first useful personalized experience.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Invitation lifecycle
+Support secure invite creation, intended tenant/role context, expiry, resend/revoke, already-used/invalid invite states and activation completion for client, advisor and supported admin roles.
+Identity mapping
+Map Clerk external user identity to internal User/UserExternalIdentity and TenantUserMembership records. Clerk Organizations are not the authoritative tenant model.
+MFA
+Require production MFA for clients and privileged users using supported Clerk capabilities; enforce privileged-route checks server-side and provide recoverable enrollment/account-recovery behavior.
+Client onboarding
+Collect minimum profile and retirement context, household relationship, household-sharing acknowledgement, advisor context/Primary Advisor and initial personalization inputs. Additional information should be gathered later only when a supported workflow requires it.
+Authorization after activation
+Every authenticated request resolves active tenant membership and user identity server-side. Browser-supplied TenantId/role values are never accepted as proof of authorization.
+Failure / fallback
+Handle expired invitations, duplicate identity, disabled account, failed activation, missing membership, incomplete MFA and stale session states with clear user-facing recovery paths and auditable operational diagnostics.
+Acceptance criteria
+A new invited user activates into the intended tenant/role, completes required MFA/acknowledgements and reaches the correct onboarding/dashboard path; invalid/expired invites fail safely; duplicate identities do not create duplicate tenant users; cross-tenant identity manipulation is blocked.
+Out of scope
+Custom-built authentication provider, password storage by RetirementTrack, automatic trust of identity-provider organization membership and collection of unnecessary financial information during initial signup.
+### 2.6.14 RetirementTrack Progress / Preparedness Meter
+A simple visible progress indicator in the MVP, but it must measure coverage/completion of the client's applicable retirement-planning journey - not whether the client has enough money to retire.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Meaning
+Represent the portion of applicable planning/engagement areas that have been addressed, together with accomplishments, remaining areas and approaching milestones. The label and explanatory text must avoid implying comprehensive financial readiness.
+Inputs
+Use existing versioned states such as completed assessments, Planning Updates, applicable milestones/checklists, selected educational activities and configured engagement/outstanding states. Only inputs explicitly designated as progress-relevant should contribute.
+Applicability
+Determine which journey areas apply based on retirement stage, age/milestones, household/profile context and enabled product configuration. A non-applicable area must not reduce the client's progress.
+Calculation
+Use a bounded deterministic calculation with versioned configuration/weights if weighting is needed. The same applicable-state snapshot and rule version must produce the same result. Preserve enough metadata to explain contributing areas.
+Presentation
+Show a simple percentage/progress indicator plus addressed/remaining/approaching areas. Before retirement it supports the question Am I prepared?; during retirement it supports Am I staying on track? without answering either as a financial adequacy conclusion.
+Advisor visibility
+Advisor may see the same journey coverage and underlying areas, but progress alone must not create an AdvisorException. Exceptions continue to come only from explicitly configured material rules/client requests.
+Acceptance criteria
+Progress changes when designated applicable areas are completed; non-applicable areas are excluded; historical or current state can be explained; no screen/text claims RetirementTrack has determined financial readiness; no generalized scoring engine is introduced.
+Out of scope
+Retirement income sufficiency calculation, Monte Carlo analysis, portfolio success probability, individualized retirement advice and a universal readiness score across assessments/financial data.
+### 2.6.15 Personalization & Rule Evaluation
+Personalization should make the experience feel relevant while remaining deterministic, explainable and testable. It is a controlled product-rule layer, not an AI recommendation engine or generalized rules platform.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Inputs
+Use approved client/household profile fields, age/date milestones, retirement stage, enabled assessments/results, Planning Update changes, milestone state, content engagement/completion, outstanding items, firm configuration and explicit advisor recommendations.
+Outputs
+Generate bounded priority candidates, relevant content, milestone/reminder prompts, workflow availability and context labels. Professional-attention output is allowed only when an explicitly approved exception rule is met.
+Rule model
+Store controlled rule definitions/version references and a constrained application vocabulary. Avoid arbitrary scripts/expression execution. Each surfaced output should carry source/reason/rule-version metadata.
+Precedence / conflicts
+Use explicit precedence/tie-break handling when multiple rules compete. Avoid contradictory simultaneous priorities and suppress duplicates. Exact product weighting can remain configuration, but behavior must be deterministic.
+Tenant / availability
+Rules must respect firm-enabled features/content and tenant boundaries. Disabled content/assessment or unavailable data cannot generate a user-facing recommendation.
+Failure / fallback
+If a rule references missing/inactive data, omit or degrade that output safely and record a diagnostic reason. A rule failure must not prevent unrelated dashboard content from loading.
+Acceptance criteria
+Given the same authorized client state and rule versions, the same outputs are generated; each output is explainable; conflicts resolve consistently; disabled resources never surface; no opaque AI-generated advice is produced.
+Out of scope
+LLM/AI recommendation engine, generalized no-code rule builder, arbitrary tenant-authored scripts, hidden behavioral scoring and automated individualized financial/investment/tax/legal advice.
+### 2.6.16 Audit, Activity History & Explainability
+RetirementTrack needs two distinct histories: business/client engagement history for product experience and AuditEvent records for security, administration and accountability. Diagnostic telemetry is a third separate concern.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Engagement history
+Record meaningful accomplishments and workflow state changes such as completed Planning Updates/assessments, milestone acknowledgements, meaningful content completion and benchmark reviews where product value exists.
+Audit events
+Record significant administrative/security/lifecycle actions such as role/assignment changes, privileged access, configuration changes, tenant lifecycle, export/deletion requests, exception transitions and release-sensitive operations where applicable.
+Explainability
+For personalized outputs, assessment results, benchmark comparisons and advisor exceptions, retain source identifiers, version references and reason metadata sufficient to explain why the system produced the outcome.
+Sensitive data
+Do not duplicate raw assessment responses, detailed financial fields, credentials, tokens or sensitive payloads into diagnostic logs. Audit/engagement records should use safe identifiers and concise reason/status metadata.
+Retention / access
+Access to audit history is role/purpose limited. Final retention periods are a production policy decision, but the model should support retention/deletion requirements without relying on immutable unrestricted logs.
+Acceptance criteria
+A support/security investigation can identify who changed a key configuration and when; a developer/advisor can trace the source/version of a material system outcome; logs do not contain prohibited sensitive payloads; tenant boundaries apply to all histories.
+Out of scope
+Full event-sourcing architecture, surveillance-style clickstream analytics and storing every UI interaction as an audit event.
+### 2.6.17 Data Lifecycle, Export & Firm Offboarding
+The MVP must preserve RetirementTrack ownership/control and provide a bounded path for authorized export and firm exit without enabling cross-firm data exposure or uncontrolled retention.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Export
+Support authorized tenant/client data export in a documented format appropriate to the approved MVP data set. Export authorization must be explicit and tenant-scoped; export generation/download should be audited and protected.
+Offboarding window
+Use the established default 30-day transition window after firm termination for authorized export/portability unless a later business/legal decision overrides it.
+Deletion orchestration
+After the transition window, begin controlled deletion/deactivation subject to legal/regulatory/audit/backup/required-retention exceptions. Track request, approval/authority, status, timestamps and completion evidence.
+Cross-firm boundary
+Do not automatically transfer a client/household to another firm or expose data across firms. Any future portability/transfer workflow requires explicit authorization and separate product/legal rules.
+Backups / historical systems
+Deletion semantics must account for managed backup lifecycle and documented exceptions rather than promising immediate removal from every backup copy. Restore procedures must not inadvertently re-enable deleted access.
+Acceptance criteria
+Authorized export is tenant-scoped and auditable; offboarded users lose active access appropriately; deletion lifecycle can be tracked; cross-tenant data is never included; documented retention exceptions are respected.
+Out of scope
+Automatic cross-firm client migration, indefinite retention by default, data-broker style reuse and undocumented manual database exports.
+### 2.6.18 Monitoring, Recovery & Operational Readiness
+The product should launch as an operable SaaS application rather than a technical demo. Monitoring, recovery evidence and production ownership are part of the MVP completion definition.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Health / telemetry
+Instrument API, React-backend dependencies and Temporal Worker with Application Insights/OpenTelemetry, safe correlation identifiers, structured logs and health/readiness checks.
+Alerts
+Create actionable alerts for API failure/latency, Temporal worker/workflow failures, SQL/resource health, Twilio SendGrid delivery/bounce failures and other launch-critical signals. Assign named operational owners/escalation paths before production.
+Backup / restore
+Configure Azure SQL PITR/backups and Blob recovery/lifecycle as approved, document configured recovery capabilities and execute an isolated restore test before launch. Exact contractual RPO/RTO values remain to be finalized before production.
+Runbooks
+Maintain deployment, migration recovery, rollback/forward-fix, backup/restore, incident triage, secret rotation and critical account-recovery procedures in RetirementTrack-controlled documentation.
+Production ownership
+RetirementTrack controls production-critical Azure, Git, Clerk, Temporal, Twilio SendGrid, domain/DNS and related account/recovery paths. Developers/vendors receive least-privilege role-based access.
+Independent validation
+Before launch, a qualified reviewer independent from the implementation team verifies the deployed implementation against the approved architecture/security/operational controls and revalidates material remediation.
+Acceptance criteria
+Critical failures are observable; restore evidence exists; named production/recovery owners are defined; deployment/rollback paths are documented; independent material findings are remediated or formally accepted before launch.
+Out of scope
+Formal SOC 2 certification, broad enterprise compliance audit and full penetration-testing program unless separately required by commercial/insurer/regulatory needs.
+### 2.6.19 UI/UX Design & Frontend Handoff
+High-fidelity UI/UX is a defined Phase 1 deliverable. Significant frontend implementation should follow an approved visual and interaction model so developers are implementing an established consumer experience rather than designing it while coding.
+Implementation Area
+Required MVP Behavior / Developer Direction
+Role coverage
+Provide implementation-ready principal experiences for Client, Advisor, Firm Admin and Platform Admin, with the deepest consumer-design emphasis on the client dashboard/journey/progress experience.
+Client design emphasis
+Use strong visual progress indicators, age/retirement timelines, milestones, accomplishments and priority/opportunity cards. The interface should visibly evolve with activity and avoid a dense traditional financial-services look.
+Required outputs
+Provide role journeys/information architecture, shared design system/component specifications, high-fidelity principal screens, responsive/accessibility states, clickable prototype, developer annotations/assets and bounded stakeholder review/revision.
+Implementation gate
+Principal flows/components should be approved before significant frontend development. Backend/foundation work may proceed in parallel where it does not depend on unresolved interaction design.
+Design / development responsibility
+UI/UX designer owns visual/interaction definition. Engineers own production implementation, API/data integration, validation, accessibility behavior, responsive fidelity and technical edge states using the approved system.
+Acceptance criteria
+Developers can implement principal screens without inventing product UX; all four MVP roles are represented; client dashboard/progress/timeline states are clear; responsive/accessibility behavior is specified; design decisions align with confirmed module rules.
+Out of scope
+Full enterprise design system for every future feature, unlimited revision cycles, marketing-site redesign and exhaustive design of post-MVP integrations/customization.
+# 3. User Roles & Permissions
+Role
+Primary Capabilities
+Permission Boundary
+Client
+Own onboarding/profile, authorized household experience, Planning Updates, assessments, education, progress, benchmarks, notifications and advisor contact.
+May access own authorized client/household data only. Separate identity/consent is maintained for each spouse/partner.
+Advisor
+Assigned-client dashboard, client detail, assessment/Planning Update context, exception handling, approved content recommendations and selected communication approvals.
+Same tenant plus active assignment/authorization. Advisor role alone does not grant access to every client in the firm.
+Firm Administrator
+Firm users/invitations, advisor-client assignments, basic branding, supported content/assessment availability, communication modes and bounded firm configuration.
+Tenant-scoped administration. Sensitive client information should not be broadly visible solely because a user is a firm administrator.
+Platform Administrator
+Tenant lifecycle, approved platform assessment/content/benchmark/configuration management, tightly controlled operational support.
+Outside normal tenant membership. Least privilege, audited access, and no default unrestricted client-data browsing.
+## 3.1 Authorization Principles
+Authentication answers who the user is; RetirementTrack authorization determines what tenant, role, relationship and data the user may access.
+Client/advisor access requires same-tenant plus relationship-aware authorization; role checks alone are insufficient.
+TenantId is established from authenticated membership/context on the server and is never trusted from a request query string, route, header or DTO as proof of authorization.
+Household access is shared by default only among authorized household participants after acknowledgement; selected information may be Individual/Private.
+Platform and support access is exceptional, least-privilege and audited rather than an implicit super-user path.
+# 4. Architecture Overview
+Layer / Service
+Recommended Technology
+Responsibility
+Web client
+React + TypeScript + Vite
+Responsive client, advisor and administration experiences; calls secured APIs; no trusted business authorization in browser.
+Application API
+ASP.NET Core Web API on .NET 10 LTS
+Application/use-case boundary, authorization, validation, tenant context, orchestration, API contracts.
+Domain
+Pure .NET domain layer
+Core entities, value objects, rules and domain services independent of Azure, Clerk, EF Core and UI.
+Infrastructure
+EF Core + Azure SDK integrations
+Persistence, external services, storage, telemetry, authentication adapter and infrastructure concerns.
+Database
+Azure SQL
+Shared multi-tenant relational store with TenantId on tenant-owned data, constraints/indexes and selected RLS.
+Durable workflows
+Temporal Cloud + Azure-hosted .NET Worker
+Reminders, milestones, recurring engagement, retries, timers, communications and future long-running integrations.
+Authentication
+Clerk Pro
+Managed user authentication, MFA, invitations/session capabilities. Authorization remains application-owned.
+File/content storage
+Azure Blob Storage
+Approved media/documents and platform content assets as applicable.
+Secrets
+Azure Key Vault + Managed Identity
+Production secret/credential storage and service-to-service secret access.
+Observability
+Application Insights + Azure Monitor + Log Analytics / OpenTelemetry
+Logs, metrics, traces, alerts and operational diagnostics while excluding sensitive payloads.
+Infrastructure as Code
+Bicep
+Repeatable client-controlled Azure environment provisioning/configuration.
+Delivery
+CI/CD + deployment slots
+Automated build/test/deploy, approvals, staged production release and rollback/forward-fix support.
+# 5. Architecture Decisions
+Decision
+Selected Direction
+Reason / Boundary
+Application shape
+Modular monolith for MVP
+Reduces operational complexity while preserving clear modules and future extraction seams.
+Tenant persistence
+Shared Azure SQL database with mandatory TenantId
+Supports MVP scale/economics while layered application/database controls enforce isolation.
+Authentication
+Clerk Pro
+Accelerates production-ready authentication/MFA; RetirementTrack remains source of truth for tenant authorization.
+Workflow engine
+Temporal Cloud
+Durable timers/retries/state fit recurring reminders and long-running engagement workflows better than ad-hoc background jobs.
+Personalization
+Deterministic rules
+Explainable and testable. No AI recommendation engine or generalized rules builder in MVP.
+Assessment model
+Fixed, versioned inventory
+Preserves repeatability and avoids building a generalized form-builder product.
+Benchmarking
+Curated external/reference data
+Production methodology can be validated and versioned; proprietary cross-tenant benchmarking remains future.
+Financial data
+High-level planning data only
+No account numbers, bank/brokerage credentials, holdings, transactions or statement vault.
+Environment strategy
+Separate Dev, Staging/UAT and Production
+Production data/secrets/access remain isolated from lower environments.
+Ownership
+RetirementTrack-controlled production assets/accounts
+Avoids vendor lock-in and enables handoff to another qualified team.
+IaC & deployment
+Bicep + CI/CD + deployment slots
+Repeatable, reviewable infrastructure and controlled releases.
+Admin scope
+Bounded administration only
+Avoids generalized workflow/form/CMS/reporting engines in MVP.
+# 6. Multi-Tenancy
+For MVP, one Firm equals one Tenant conceptually. The system should not introduce office/branch/business-unit hierarchy until a concrete product requirement exists. Tenant ownership is explicit on every tenant-owned record and is enforced at multiple layers.
+Control Layer
+Required Enforcement
+Authenticated tenant context
+Resolve TenantId/UserId server-side from active membership/identity. Do not accept client-provided TenantId as proof.
+EF Core read isolation
+Apply centrally defined global query filters for tenant-owned entities. Normal services must not use IgnoreQueryFilters().
+Write enforcement
+SaveChanges interception/service validation sets/verifies TenantId, blocks cross-tenant references and prevents TenantId mutation.
+Authorization policies
+Combine tenant + role + relationship/assignment checks for advisor/client operations.
+Database constraints
+Use TenantId-aware unique/composite indexes and foreign-key patterns so cross-tenant relationships cannot be created accidentally.
+Selected SQL RLS
+Use SQL Server Row-Level Security with session context for additional defense in depth where practical.
+Raw SQL
+Restricted, code-reviewed and required to explicitly preserve tenant scope.
+Background workflows
+Every Temporal workflow/activity carries TenantId plus stable business identifiers and re-establishes tenant context before data access.
+Automated testing
+Cross-tenant negative tests are mandatory for APIs, administrative operations and background workflows.
+# 7. Identity & Security
+Area
+Implementation Direction
+Authentication
+Clerk Pro for production MVP. Development/non-production may use appropriate lower-cost Clerk environments. Keep external identity behind an abstraction such as UserExternalIdentity.
+MFA
+Required for production clients and privileged users; implementation may choose lower-friction secure authentication options during onboarding while maintaining the required security level.
+Authorization
+Application-owned, tenant-aware and relationship-aware. Clerk Organizations are not the authoritative tenant model.
+Secrets
+Azure Key Vault and Managed Identity. No production secrets in source code, repository variables that are avoidable, or checked-in configuration files.
+Azure access
+Named identities, MFA, Azure RBAC and least privilege. Break-glass access is exceptional, controlled and audited.
+Sensitive logging
+Do not log raw assessment responses, detailed financial fields, credentials, tokens or sensitive payloads. Log safe identifiers/context for diagnostics.
+Environment data
+Do not copy raw production data into Dev/Staging. Use synthetic or approved anonymized data.
+Audit
+Maintain application/business AuditEvent records separately from diagnostic logs for security and key operational actions.
+Support access
+No default unrestricted support browsing. Any elevated access should be purpose-limited and auditable.
+Independent validation
+Complete an implementation-level security/architecture review before production launch, including tenant isolation and deployed Azure controls.
+# 8. Data Model
+Domain Area
+Core Entities / Concepts
+Important Rules
+Identity & tenancy
+User, UserExternalIdentity, FirmTenant, TenantUserMembership, UserRoleAssignment, PlatformRoleAssignment
+Identity, tenant membership and role are separate concerns. UNIQUE(TenantId, UserId) membership constraint.
+Client / advisor
+ClientProfile, AdvisorProfile, AdvisorClientAssignment
+Assignment stores tenant, advisor, client/household relationship, primary/status/effective dates and reassignment history.
+Household
+Household, HouseholdMember
+Separate identities and consent. Shared household-level experience only after acknowledgement; simple Shared vs Individual/Private classification. No field-by-field spouse permission engine. One Primary Advisor may be presented while additional relationship records remain supported.
+Financial planning context
+Profile/account summary fields
+High-level account type/ownership, approximate balance, income, savings, net worth and planning context only. No account credentials/transactions/holdings.
+Planning Update
+PlanningUpdateDefinition/Version, Instance, Responses, PlanningUpdateDetectedChange
+PlanningUpdateDefinition/Version, PlanningUpdateInstance, responses/section data, PlanningUpdateDetectedChange, trigger/source metadata and history. Instances may represent a quick No Change confirmation or a branched update. Material-change evaluation is explicit/versioned and does not create advisor work unless configured criteria are met.
+Assessments
+AssessmentDefinition, AssessmentVersion, Question, Option, Assignment/Instance, Response, Result, ReviewCue
+AssessmentDefinition, AssessmentVersion, Question, Option, Assignment/Instance, Response, Result, ReviewCue. RetirementTrack owns the approved catalog; tenant availability is configuration. Historical results remain tied to the published version/scoring used at completion; scoring is assessment-specific and no overall readiness score is implied.
+Engagement
+EngagementActivity, OutstandingItem, AdvisorException
+Accomplishment, client outstanding work and advisor professional-attention work are separate concepts.
+Content
+ContentItem, ContentTag, junctions, availability/recommendation metadata
+ContentItem, ContentType, ContentTag, controlled taxonomy/junctions, tenant availability, contextual-relevance metadata and engagement events. Platform-curated content is primary; firms select availability. Future firm-specific content should fit the same model without requiring MVP CMS features.
+Personalization
+PersonalizationRule / versioned rule definition
+Controlled JSON/application vocabulary if configuration is data-driven; no arbitrary expression engine.
+Benchmarking
+BenchmarkDefinition, DataSource, DataVersion, Cohort, ReferenceValue, ClientBenchmarkResult, Visibility
+BenchmarkDefinition, DataSource, DataVersion, Cohort/reference values, ClientBenchmarkResult and Visibility. Exact measures remain configurable/product-approved rather than hard-coded. Source/method/version are preserved with each result; unavailable state when required inputs/source are absent.
+Communications
+CommunicationIntent/Template/History/Delivery status
+CommunicationIntent, Template/Version, ApprovalState, DeliveryStatus/History, SendGrid provider/message reference where appropriate, and related source entity. Email + in-app only for MVP; routine sends are platform-led, with Advisor Approval/Off only for supported scenarios and Request Advisor Follow-Up tracked separately.
+Operations
+AuditEvent, export/offboarding/deletion records
+Audit and lifecycle records support accountability, portability and controlled deletion.
+# 9. API & Integration Design
+The API should expose business-oriented resources rather than database tables directly. All protected endpoints execute under authenticated tenant/user context, authorize the intended relationship, validate request data, and return only the fields needed by the calling experience.
+API / Integration Area
+Recommended Boundary
+Client APIs
+Profile/household summary, dashboard state, Planning Update, assessments, content, notifications, benchmark results and advisor contact/request.
+Advisor APIs
+Assigned-client search/summary, authorized client detail, accomplishments/outstanding/exception views, exception lifecycle and selected recommendation/approval actions.
+Firm Admin APIs
+Invitations, memberships, advisor-client assignments, branding, enabled content/assessments and bounded tenant settings.
+Platform Admin APIs
+Tenant lifecycle, platform assessment/content/benchmark configuration and controlled support/operations.
+Clerk integration
+Webhook/API adapter as needed for identity lifecycle; validate signatures/claims; map external user identity to internal User/membership.
+Temporal integration
+API/application services start/signal/cancel workflows using stable IDs and TenantId. Worker activities load authoritative data at execution time rather than carrying sensitive payloads.
+Twilio SendGrid integration
+Use a provider abstraction around Twilio SendGrid for transactional outbound email. Store template/intent/status and provider message identifiers rather than unnecessary message payloads; validate SendGrid event-webhook authenticity, process delivery/bounce events idempotently, and keep sender identity/branding configurable.
+Blob storage
+Use controlled signed access/streaming patterns for approved content assets. Do not expose storage account credentials.
+Benchmark source ingestion
+Admin/import process records source, version, methodology, effective dates and reference values before dataset activation.
+## 9.1 API Design Standards
+Use versioned, explicit DTOs/contracts rather than exposing EF entities.
+Validate authorization before returning or mutating tenant-owned data.
+Use idempotency for operations that may be retried by workflows or external callbacks.
+Return stable error codes/messages suitable for UI behavior without leaking sensitive system details.
+Apply pagination/search/filtering for advisor and administration lists expected to grow.
+Keep large files outside API/database payloads; store references to controlled Blob assets.
+# 10. UI/UX Handoff
+Experience
+Required Screens / States
+Client onboarding
+Login; invitation acceptance; activation; MFA; consent/notices; household-sharing acknowledgement; minimum profile; first-login transition.
+Client dashboard
+First-login and returning dashboard; visual progress/retirement journey; accomplishments; age/retirement timeline and milestones; small number of priorities/opportunities; Planning Update/assessment cards; relevant education/freshness; notifications; Request Advisor Follow-Up. Dashboard visibly evolves after meaningful activity.
+Planning Update
+Offer / relevance state; quick No Change confirmation; Yes-change section selection/branching; prior-value review where useful; save/resume for branched flow; review/submit; completion/history; material-change explanation where surfaced.
+Assessments
+Firm-enabled assessment list; available/recommended/assigned states; start/resume; question flow; review/submit; per-assessment result; history/comparison where useful; relevant education/advisor-contact cue; never a single overall readiness score.
+Education
+Learning Library; browse/search/filter; content detail/player/download; related content; contextual recommendations; freshness/discovery items; content-specific completion/engagement; tenant availability behavior.
+Benchmarking
+Benchmark summary/detail only for product-approved external/reference measures; source/year/methodology/caveat; neutral comparison; unavailable/not-calculable state; no proprietary cross-firm ranking.
+Progress / activity
+Accomplishments/history, outstanding areas, coming milestones, relevant-now items.
+Advisor
+Dashboard; assigned-client search/filter; client summary/detail; separate accomplishments/outstanding/exceptions; exception review/resolve; client-requested contact.
+Firm Admin
+Users/invitations; advisor/client assignments; branding; enable/disable approved RetirementTrack assessments and content; supported communication modes/configuration. No assessment builder or full firm CMS.
+Platform Admin
+Tenant management; assessment versions; content library management; benchmark dataset/version management; controlled operational configuration.
+## 10.1 UX Principles
+Differentiate first-login from returning-client experience.
+Dashboard state must visibly change after meaningful activity so clients see progress.
+Use a small number of relevant priorities rather than a dense task list.
+Use planning/engagement progress wording; do not imply financial readiness unless a validated methodology is introduced later.
+Connect milestones, assessment outcomes and Planning Update changes to relevant education.
+Advisor UX must keep routine activity distinct from items actually requiring professional attention.
+All primary workflows should be responsive and meet the agreed accessibility baseline.
+# 11. Azure Infrastructure
+Azure / External Resource
+Recommended Use
+Azure subscription/resource groups
+RetirementTrack-controlled subscription and environment-specific resource groups. Separate production from lower environments.
+Azure App Service / managed compute
+Host React/API as appropriate and the .NET Temporal Worker on Azure-managed compute. Use deployment slots where supported.
+Azure SQL
+Primary relational database with automated backups/PITR and tenant-aware design.
+Azure Blob Storage
+Approved content/file assets, lifecycle controls and secure access.
+Azure Key Vault
+Secrets/certificates/keys not handled through managed identity; access via RBAC/Managed Identity.
+Application Insights
+Application tracing, request/dependency telemetry, exception monitoring and diagnostics.
+Azure Monitor / Log Analytics
+Operational dashboards, alerts and centralized analysis.
+Managed Identity
+Preferred application-to-Azure authentication without embedded secrets.
+Bicep
+Version-controlled repeatable infrastructure definition per environment.
+Clerk Pro
+Externally hosted authentication account controlled by RetirementTrack.
+Temporal Cloud
+Externally hosted workflow orchestration account controlled by RetirementTrack; namespaces/environment separation as practical.
+## 11.1 Environment Model
+Environment
+Purpose
+Data / Access Boundary
+Development
+Developer integration and feature validation.
+Synthetic/test data; developer access; non-production credentials only.
+Staging / UAT
+Production-like validation, client UAT and release candidate checks.
+Production-like configuration but isolated credentials/data; restricted access.
+Production
+Live RetirementTrack service.
+RetirementTrack-controlled accounts; named users/MFA/RBAC; production data/secrets only.
+# 12. CI/CD & Deployment
+All environments should be deployable from version-controlled source and infrastructure definitions. Manual portal changes that materially affect production should be minimized, documented and reconciled back into Infrastructure as Code where applicable.
+Stage
+Required Controls
+Pull request
+Branch protection, peer review, automated build, unit tests, lint/static analysis and security/dependency checks.
+Build
+Produce versioned React/API/Worker artifacts and infrastructure changes from a known commit.
+Integration validation
+Run integration/architecture tests, tenant-isolation tests and workflow tests appropriate to the change.
+Lower environment deploys
+Automated deployment to Dev; apply environment-specific configuration from controlled sources.
+Database migration
+EF migrations reviewed with the code change; forward-compatible/expand-contract patterns where needed; migration execution controlled per environment.
+Staging/UAT
+Deploy release candidate, execute smoke/regression/UAT acceptance checks and operational validation.
+Production approval
+Named release authority approves production release; use deployment slot/staged approach where practical.
+Production validation
+Smoke tests, telemetry/health verification, migration checks and Temporal worker health.
+Rollback / forward fix
+Prefer rapid forward-fix where schema/data changes make binary rollback unsafe; maintain a documented rollback strategy for deployable components.
+Release record
+Record version, commit, migrations, approver, deployment time, notable config changes and incidents.
+# 13. Cross-Cutting Engineering Standards
+Standard
+Required Practice
+Code organization
+Modular boundaries and dependency direction; Domain independent of UI/EF/Azure/Clerk.
+Tenant safety
+Tenant-aware repository/service patterns, relationship authorization and automated negative isolation tests.
+Validation
+Server-side validation for all commands/requests; do not rely on client validation alone.
+Versioning
+Preserve version references for assessments, Planning Updates, benchmark datasets/methodology, personalization rules and communication templates where behavior must be reproducible.
+Idempotency
+Workflow activities, webhook processing and retryable commands must tolerate duplicate delivery/execution.
+Observability
+Structured logs, correlation IDs, safe tenant/user identifiers, metrics/traces, actionable alerts and no sensitive payload dumping.
+Testing
+Unit tests for rules, integration tests for persistence/API, architecture tests for boundaries, E2E/regression for critical flows, cross-tenant security tests.
+Accessibility
+Keyboard/navigation semantics, labels, focus handling, contrast and responsive behavior across primary workflows.
+Security
+Least privilege, secure defaults, dependency scanning, secret hygiene, authorization review and independent pre-production validation.
+Documentation
+Keep architecture decisions, setup, local development, deployment, migrations, operations, troubleshooting and ownership/recovery procedures current with code.
+# 14. Non-Functional Requirements
+Category
+MVP Requirement / Direction
+Security
+Strong tenant isolation, MFA, least privilege, managed secrets, relationship-aware authorization and security review before production.
+Privacy
+Data minimization; bounded household private data; no brokerage/bank credentials/transactions/holdings; controlled support access.
+Reliability
+Durable Temporal workflows for recurring activities; idempotent retries; health checks; operational monitoring.
+Recoverability
+Azure SQL PITR/backups, Blob recovery/lifecycle as appropriate, restore testing, documented recovery runbooks. Final RPO/RTO values require business confirmation.
+Scalability
+Architecture supports multiple firms, professionals and hundreds-to-thousands of households per target firm without introducing premature microservices.
+Performance
+Responsive dashboard/list/search behavior at expected pilot scale; pagination/filtering; practical load checks before release.
+Accessibility
+Primary client/advisor/admin workflows should meet the agreed accessibility baseline and be validated before release.
+Maintainability
+Modular monolith, documented boundaries, IaC, CI/CD, automated tests and client-controlled ownership.
+Auditability
+Security/business AuditEvents for significant administrative, access, lifecycle and exception actions.
+Portability
+Source, Azure, Clerk, Temporal, DNS and other production-critical accounts controlled by RetirementTrack so another qualified team can take over.
+Data lifecycle
+Authorized export, default transition window on firm exit, controlled deletion subject to legal/backup/required exceptions.
+Explainability
+Assessment scoring, personalization, benchmark calculations and advisor-exception rules should be deterministic and auditable for MVP.
+# 15. External Integrations & Dependencies
+Dependency
+MVP Role
+Ownership / Dependency Notes
+Clerk Pro
+Authentication, MFA, invitations/session lifecycle
+RetirementTrack-controlled account. Authorization remains internal.
+Temporal Cloud
+Durable workflow orchestration
+RetirementTrack-controlled account. Dedicated Azure-hosted .NET worker executes activities.
+Azure
+Hosting, SQL, Blob, Key Vault, monitoring, identity
+RetirementTrack-controlled subscription/resources.
+Twilio SendGrid
+MVP transactional outbound email delivery
+RetirementTrack-controlled SendGrid account and authenticated sending domain. Use for invitations, reminders, notifications and other approved application-generated email. Keep integration behind an application abstraction; exact sender-domain/branding configuration is finalized during implementation.
+DNS / domains / certificates
+Public application and email/domain ownership
+RetirementTrack-controlled registrar/DNS/recovery contacts.
+Benchmark data sources
+Validated external/reference benchmark datasets
+Source/methodology/legal usage must be approved before production activation.
+Educational content assets
+Videos/guides/one-pagers/etc.
+Initial content inventory and rights are a product/content dependency.
+Retirement domain decisions
+Assessment questions/scoring, Planning Update fields, exception thresholds, reminder inventory
+RetirementTrack/domain SME input required before corresponding workflow is finalized.
+# 16. Confirmed Decisions & Final Implementation Guardrails
+The following decisions should be treated as the current product source of truth for implementation. They are not reasons to reopen the approved architecture; they clarify how the MVP should behave and where the first-build boundary sits.
+Confirmed Decision
+Implementation Direction
+Assessment catalog
+RetirementTrack develops and maintains a defined/versioned assessment catalog. Firms choose which approved assessments are available. Do not hard-limit the catalog to exactly 2–3 and do not build a firm-authored assessment builder.
+Assessment scoring
+Individual assessments may have their own score/category/flags. Do not create one overall score that claims RetirementTrack has determined whether a person is financially ready to retire.
+Visible progress
+Show client progress, addressed areas, accomplishments, remaining areas and approaching milestones. A bounded RetirementTrack Progress/Preparedness Meter may measure applicable journey coverage, not financial adequacy.
+Planning Updates
+Use periodic lightweight change-check opportunities rather than a mandatory annual questionnaire. No Change should be fast; Yes branches only into relevant sections. Event prompts are allowed; advisor requests are optional.
+Advisor attention
+Only explicitly defined material conditions or client-requested follow-up create advisor-attention work. Routine completion, reminders and ordinary outstanding client items remain platform-managed.
+Client / household
+Use a relatively simple initial profile, separate spouse/partner identities and consent, shared household information after acknowledgement, bounded Individual/Private classification and no complex field-by-field spouse permissions.
+Advisor relationship
+Present one Primary Advisor to the client while the underlying model supports additional advisor relationships/types for future growth.
+Priorities
+Keep priority rules flexible and consumer-oriented. The experience should mix milestones, opportunities, education and relevant planning considerations rather than becoming an always-on required-task list.
+Reminders / communications
+Email plus in-app is sufficient for MVP. Twilio SendGrid is the selected transactional email provider. Routine communication is platform-led; support bounded reminders and Automatic / Advisor Approval / Off modes where appropriate. Informational items can be snoozed/dismissed when configured. Keep SendGrid behind a provider abstraction so the product is not tightly coupled to one vendor.
+Advisor follow-up
+Provide a simple Request Advisor Follow-Up capability. Do not include direct calendar/scheduling integration in MVP.
+Benchmarking
+Use only validated external/reference data. Do not preselect income, net worth or retirement savings as mandatory initial benchmarks. Activate only comparisons with clear retirement-planning value, validated methodology/source and approved usage rights. Proprietary cross-client/cross-firm benchmarking remains outside MVP.
+Content
+RetirementTrack curates the core educational library; firms select which approved content is available. No full firm content-management system is required in MVP, but the architecture should support future firm-specific content without major redesign.
+Consumer UX
+The client experience should feel like an engaging consumer platform, using visual progress, age/retirement timelines, milestones, accomplishments and priority/opportunity cards that visibly evolve with activity.
+High-fidelity design first
+Complete high-fidelity UI/UX designs/prototypes for the principal Client, Advisor, Firm Admin and Platform Admin experiences before significant frontend development.
+Architecture
+The overall Azure/.NET/React/Clerk/Temporal modular-monolith direction is accepted and does not need to be reopened because of these product refinements.
+Independent validation
+Include an independent pre-production implementation-level security/architecture review by someone separate from the implementation team, covering tenant isolation, access controls, Azure configuration, secrets, logging, backup/recovery, release controls and other material controls.
+Operations still to finalize
+Specific business-approved RPO/RTO, production support expectations and detailed retention periods may be finalized before production; implementation should preserve the documented operational direction and extension points.
+Commercial MVP objective
+Completion means more than a technical/internal pilot: after approved UI/UX, implementation, QA/UAT, production hardening, independent review/remediation and launch readiness, the MVP should be polished and secure enough to demonstrate and sell to outside advisory firms, while still excluding later enterprise capabilities such as broad integrations, advanced reporting and deep customization.
+# 17. Implementation Backlog
+The current professional-delivery framework totals 980 hours: 100 hours for Phase 1 UI/UX Design & Development, 834 engineering implementation hours, and 46 hours for an independent pre-production security/architecture reviewer. Developer-level unit/feature testing remains included within the relevant engineering items; formal validation, independent review and production launch remain explicit.
+#
+Implementation Workstream
+Hours
+Phase 1
+UI/UX Design & Development - all four MVP roles
+100
+1
+Foundation, Repo, IaC & Environments
+36
+2
+Clerk Pro Identity & MFA
+46
+3
+Tenancy, Firm, Roles & Advisor Assignment
+56
+4
+Household, Client & Privacy Model
+42
+5
+White-Label & Firm Configuration
+16
+6
+Onboarding & Invitations
+26
+7
+Client Dashboard, Personalization, Journey & Progress Meter
+48
+8
+Planning Updates
+46
+9
+Assessments, Scoring & History
+48
+10
+Engagement, Outstanding Items & Advisor Exceptions
+46
+11
+Advisor Dashboard & Exception Handling
+38
+12
+Education Library & Contextual Surfacing
+42
+13
+Milestones, Reminders, Communications & Temporal Cloud
+74
+14
+Benchmarking MVP
+30
+15
+Firm / Platform Administration Basics
+22
+16
+Audit, Security, Data Lifecycle & Portability
+56
+17
+Monitoring & Operational Readiness
+56
+18
+QA, UAT, Accessibility, Security & Performance
+60
+19
+Production Launch & Handoff
+46
+External
+Independent Pre-Production Security & Architecture Reviewer
+46
+Total Professional Delivery
+980
+# 19. Development Phases & Estimates
+Phase
+Scope
+Hours
+Phase 1 - UI/UX Design & Development
+Implementation-ready UX for Client, Advisor, Firm Admin and Platform Admin: role journeys, shared design system, high-fidelity dashboards/primary workflows, responsive/accessibility states, clickable prototype, stakeholder review and developer handoff.
+100
+Phase 2 - Foundation, Identity & Tenancy
+Foundation/repo/IaC/environments; Clerk Pro identity/MFA; tenancy/roles/advisor assignment.
+138
+Phase 3 - Client, Household & Onboarding
+Household/privacy model; white-label configuration; onboarding/invitations.
+84
+Phase 4 - Core Client Journey & Engagement
+Dashboard/journey/progress; lightweight Planning Updates; platform assessment catalog/scoring; engagement/outstanding/exception model.
+188
+Phase 5 - Advisor, Education & Automation
+Advisor experience; curated education/contextual surfacing; milestones/reminders/email + in-app/Temporal.
+154
+Phase 6 - Benchmarking, Admin, Security & Operations
+Validated external benchmarking; bounded administration; audit/security/data lifecycle/portability; monitoring/operational readiness.
+164
+Phase 7 - Engineering Validation & Launch
+QA/UAT/accessibility/security/performance plus production launch/handoff.
+106
+Independent Review - Phase 7
+Independent pre-production full implementation verification and targeted revalidation.
+46
+Total Professional Delivery
+100 UI/UX + 834 Engineering + 46 Independent Reviewer.
+980
+# 20. Independent Validation
+Before production release, an independent qualified reviewer who is separate from the implementation team should validate the implementation against the agreed architecture and operational controls.
+Validation Area
+Expected Review
+Tenant isolation
+Attempt cross-tenant access across APIs, admin paths and background workflows; review TenantContext/filter/write enforcement and database controls.
+Authentication & authorization
+Review Clerk integration, MFA, session/identity mapping, RBAC and relationship-aware policies.
+Azure configuration
+Review environment separation, networking/exposure as applicable, Key Vault, Managed Identity, deployment identities and production access.
+Secrets & credentials
+Verify no production secrets are embedded in source/artifacts and recovery/rotation paths are controlled.
+Logging & privacy
+Verify sensitive payloads are excluded from logs and telemetry while operational diagnostics remain sufficient.
+Backup & recovery
+Review Azure SQL/Blob recovery controls, restore test evidence and operational runbooks.
+CI/CD & release controls
+Review branch/release protections, approvals, migration process, rollback/forward-fix approach and artifact traceability.
+Findings closure
+Document findings, severity and remediation; revalidate material/high-risk findings before launch.
+# 21. Final Handoff Checklist
+Handoff Area
+Completion Condition
+Product scope
+MVP north star, role boundaries and post-MVP exclusions understood.
+Workflows
+Client onboarding/household, evolving dashboard, lightweight Planning Update change-check, platform-maintained assessments, curated education, priorities, reminders, communications, advisor exceptions/follow-up, external benchmarking and admin flows are documented with developer-ready rules and boundaries.
+Roles
+Client, Advisor, Firm Admin, Platform Admin and operational/support boundaries documented and testable.
+Architecture
+Selected modular monolith, Azure SQL multi-tenancy, Clerk, Temporal, Azure services and ownership direction understood.
+Data model
+Core entities/relationships/versioning, household privacy, platform assessment/content ownership, benchmark provenance and communication traceability are documented together with financial-data minimization boundaries.
+Security
+Tenant isolation, authorization, MFA, secrets, logging and support-access requirements included in acceptance criteria.
+UI/UX
+Principal Client, Advisor, Firm Admin and Platform Admin experiences have an explicit Phase 1 design/prototype/handoff requirement before significant frontend development.
+DevOps
+Environments, IaC, CI/CD, migrations, monitoring, backup/recovery, access and ownership approach documented.
+Business decisions
+Remaining product inputs are limited to concrete inventories/content/rules (e.g., exact assessment questions/scoring, benchmark selection, reminder inventory and final operational targets);
+Backlog
+980-hour professional-delivery framework is aligned to 100 UI/UX + 834 Engineering + 46 Independent Reviewer and the final module decisions.
+Validation
+Formal stage/UAT and independent pre-production security/architecture review included.
+Ownership
+RetirementTrack controls source, Azure, Clerk, Temporal, domains/DNS and other production-critical accounts.
+Documentation
+Runbooks, setup, recovery and operational knowledge are complete enough for another qualified team.
+Launch readiness
+UAT acceptance, monitoring/alerts, restore test, production access review and release authority confirmed before go-live.
+## 22.1 Final Review Agenda
+Confirm the consolidated product scope, lifecycle framing and user-role boundaries.
+Close remaining business decisions that materially block implementation.
+Confirm the assessment, Planning Update, benchmark, reminder and initial content dependencies and owners.
+Confirm production account ownership, release authority, RPO/RTO targets and incident/support expectations.
+Review the 980-hour implementation backlog and dependencies as the execution companion to this handoff.
+Confirm the documentation is sufficiently self-contained for another qualified Azure/.NET team to implement and operate the MVP.
+Final Implementation Boundary: The first RetirementTrack release should establish a secure, scalable and maintainable foundation for an ongoing retirement relationship. It should deliver a consumer-oriented experience with visible progress, a platform-maintained assessment catalog, lightweight recurring Planning Updates, curated education, validated external benchmarking, useful milestones/priorities and bounded communications. Household privacy and tenant boundaries remain explicit; routine engagement is platform-driven; advisors receive client requests and true exceptions rather than routine activity. The completed MVP is intended to be polished and operationally ready for demonstration and sale to outside advisory firms, while advanced integrations, broad customization, proprietary benchmarking and enterprise-scale extension modules remain post-MVP.

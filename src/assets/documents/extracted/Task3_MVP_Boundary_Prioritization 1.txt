@@ -1,0 +1,397 @@
+RETIREMENTTRACK
+MVP Boundary & Prioritization
+# 1. Prioritization Principles
+Protect the core value proposition: A capability may be simplified, but the MVP should not remove personalization, recurring engagement, advisor exception management or the branded firm/client experience.
+Relevant before comprehensive: Prefer a small number of useful priorities, content items and follow-up conditions over broad feature inventories or generic dashboards.
+Rules before sophistication: Use explicit, understandable business rules for MVP personalization, relevance and follow-up rather than AI/ML, generalized rule builders or complex configurable engines.
+Exceptions before monitoring: The advisor experience should surface clients who require attention and why, rather than require advisors to inspect every client or activity.
+Professional judgment stays with the advisor: RetirementTrack can identify conditions, changes, planning topics and educational opportunities, but should not make individualized professional recommendations.
+Credibility before differentiation claims: Benchmarking should be included only where the measure, source, cohort method, privacy treatment and explanatory caveats can be supported credibly.
+Fixed first-build workflows before platforms: Use a narrow Planning Update, assessment and follow-up model before considering generalized form builders, workflow builders or campaign engines.
+Architect for growth without building future scope: The data model, tenancy, permissions and integration seams should support future expansion, while implementation remains constrained to first-build needs.
+# 2. Core MVP Value Proposition
+Core proposition: RetirementTrack gives professional firms a branded, scalable way to keep retirement clients meaningfully engaged over time, while helping advisors quickly understand which clients need attention and why.
+• For clients: a personalized experience that continually answers: Where am I? What deserves my attention? What should I do next?
+• For advisors: an exception-driven view of meaningful changes, review needs, overdue items and defined follow-up conditions.
+• For firms: a controlled, branded client experience with firm-level feature, communication, content and advisor/client governance.
+• For the product: assessments, Planning Updates, reminders, relevant education, personalization and advisor follow-up work together as one recurring-engagement system rather than disconnected features.
+# 3. MVP Engagement Loop
+The first build should prove one coherent loop from client context to relevant action and back to updated client state.
+First-build engagement loop: Firm / Advisor Setup  →  Client Invitation & Minimum Context  →  Personalized Dashboard  →  Relevant Activity or Trigger  →  Client Action  →  Advisor Attention Only When Needed  →  Updated Client State  →  Next Relevant Reason to Return
+• Relevant activity or trigger may include a Planning Update, assessment, age/life-stage milestone, advisor-assigned item, reminder, newly relevant education or defined change/opportunity.
+• Routine completion should update history and continuity without automatically creating advisor work.
+• Meaningful changes or defined review conditions should create an advisor exception/follow-up item with a clear reason.
+• The returning-client experience should change as state, completed work, assessments, milestones or advisor inputs change.
+# 4. Capability Prioritization Matrix
+Capability
+Priority
+First-Build Boundary
+Client onboarding
+Must Have
+Invitation, activation, minimum profile/context, consent, firm/advisor relationship and useful starting state.
+Personalized client dashboard
+Must Have
+Personalized opening, life-stage context, status/progress, small priority set, next action, relevant content, reminders and advisor connection.
+Planning status / progress
+Must Have, Simplified
+Completion/status indicators only; avoid implying a comprehensive retirement-readiness score.
+Priority / attention model
+Must Have
+Small rules-based set of items that deserve attention; explicit precedence and missing-data behavior.
+Assessments
+Must Have
+Small fixed initial set with assignment, completion, readable result and defined advisor cue.
+Assessment scoring / outputs
+Must Have, Simplified
+Defined categories/thresholds for selected assessments; no broad scoring/report engine.
+Planning Update
+Must Have
+Core recurring workflow with fixed initial form/state model, change detection and defined advisor follow-up.
+Recurring engagement
+Must Have
+Defined reasons to return across Planning Updates, assessments, milestones, education and reminders.
+Educational content
+Must Have
+Platform-provided approved content with basic tags and relevance behavior.
+Platform content administration
+Must Have, Simplified
+Manage platform-provided articles, videos and resources with basic tags, availability/status and firm visibility; no full CMS or firm authoring in the first build.
+Personalization rules
+Must Have, Simplified
+Explicit rules using validated client context, life stage, assessments, state/history and firm/advisor inputs.
+Reminders
+Must Have, Simplified
+Limited Planning Update, assessment and selected age/date/event reminders with duplicate/noise controls.
+Communications
+Must Have, Simplified
+Automatic / Advisor Approval / Off for supported scenarios; limited templates/channels and basic history.
+Advisor dashboard
+Must Have
+Exception-driven needs-attention view, Planning Updates, assessments, follow-up, approvals and searchable assigned clients.
+Advisor follow-up
+Must Have, Simplified
+Simple open/review/complete-or-dismiss lifecycle; not a CRM/task-management platform.
+Firm administration
+Must Have
+Users/advisors, enabled features, communications, content visibility, client governance and supported overrides.
+Platform administration
+Must Have, Simplified
+Tenant/firm creation and status, initial firm administrator setup, platform configuration/content oversight and limited operational/audit support.
+Basic white label
+Must Have
+Firm identity, logo and selected branding/advisor identity sufficient for a credible firm-branded experience.
+Benchmarking
+MVP Target – Validation Required
+Include one or more simple measures only if credible data, method, privacy and caveats are validated.
+Reporting
+Simplified
+Only operational/status views or exports required for first-build workflows.
+Analytics
+Post-MVP
+Defer broad engagement, trend, funnel and business intelligence analytics.
+External integrations
+Post-MVP
+No integration assumed required for Task 3; preserve stable seams for later CRM/calendar/planning systems.
+AI / advanced recommendations
+Longer-Term
+Defer sophisticated AI/ML recommendations and individualized automated advice.
+Generalized form/workflow builders
+Longer-Term
+Use fixed MVP forms and workflows; defer no-code/generalized builders.
+# 5. Initial MVP - Must Have
+Must-Have Capability
+First-Build Outcome
+Secure firm/client structure
+Multi-tenant firm boundary with Client, Advisor, Firm Administrator and Platform Administrator responsibilities, plus correct advisor-client relationships.
+Client invitation & onboarding
+Invitation, activation, minimum context/consent and a useful first dashboard even when personalization data is initially limited.
+Personalized client dashboard
+Personalized opening, life-stage context where supported, simple status/progress, a small attention list, next action, relevant content, reminders and advisor identity.
+Planning Update
+A core recurring workflow from due/invitation through completion, change detection, advisor follow-up when warranted and updated client state.
+Assessments
+A small fixed assessment set with assignment/completion, understandable output, educational context and advisor review cue where business rules require it.
+Recurring engagement model
+Legitimate reasons to return driven by Planning Updates, assessments, milestones, relevant content, reminders and changing circumstances.
+Reminders / communications
+Limited but reliable reminder and communication capability for Planning Updates, assessments and selected age/date/event triggers, using defined Automatic / Advisor Approval / Off behavior and basic delivery/history tracking.
+Advisor exception management
+A cross-client view that surfaces meaningful changes, overdue or review-needed items, approvals and follow-up conditions with a clear reason.
+Relevant education
+Approved content surfaced because it is relevant to known client context rather than only through a static content library.
+Platform content administration
+A controlled platform-side capability to manage approved articles, videos and resources, including basic tags, availability/status and firm visibility.
+Firm controls
+Firm-level control over supported features, communications, content availability, users/advisors and basic client governance.
+Platform administration
+Basic tenant/firm creation and status, initial firm administrator setup, common platform configuration and limited operational/audit visibility.
+Basic white label / advisor identity
+Enough firm/advisor branding that the experience can credibly be presented as part of the firm’s client service.
+Basic history / continuity
+Retain enough activity, workflow and communication history to show what was completed, what changed and what comes next.
+Security / privacy foundation
+Tenant isolation, least-privilege access, data minimization and basic audit/operational controls appropriate to the selected MVP data.
+# 6. Initial MVP - Simplified
+The following capabilities should be included, but their first-build implementation should be intentionally narrow. Simplification should reduce implementation complexity without removing the characteristic itself.
+Capability
+Simplified MVP Boundary
+Personalization
+Rules-based relevance using a limited set of inputs and clear precedence. No AI/ML recommendation engine, complex segmentation or firm-authored rule builder.
+Status / progress
+Simple completion and current-state indicators. No broad retirement-readiness score unless a defensible methodology is separately defined.
+Priority selection
+A small number of high-value items selected through explicit business rules. No generalized ranking/recommendation platform.
+Assessment model
+Small fixed inventory and defined scoring/category logic. No general-purpose assessment builder, dozens of assessments or broad report engine.
+Planning Update
+Fixed first form, cadence and state/change model. No configurable workflow engine or arbitrary form designer.
+Advisor follow-up
+Simple review lifecycle tied to defined exceptions. No full CRM, task-management suite or arbitrary advisor workflows.
+Reminders
+Limited trigger inventory, timing and repeat/noise controls. No campaign automation or extensive notification orchestration.
+Communications
+Limited supported scenarios with Automatic / Advisor Approval / Off. Start with only the delivery channels needed to validate MVP.
+Content personalization
+Basic tagging and rules to surface relevant platform-provided content. No sophisticated recommendation engine or large taxonomy management system.
+Platform content administration
+Basic platform-managed content records, tags, availability/status and firm visibility. Defer firm-authored content, rich publishing workflows and a generalized CMS.
+White labeling
+Firm name/logo, selected visual identity and advisor identity. Defer deep themes and advanced customization unless a pilot requirement makes them essential.
+Reporting
+Operational views/status counts only where required for advisor or firm workflows. Defer generalized reporting and analytics.
+Platform administration
+Basic tenant setup/status, initial firm-admin assignment and operational visibility only. Defer advanced enterprise administration, delegated support models and complex tenant tooling.
+Permissions
+Clear built-in roles and assignment boundaries. Defer custom role designers and highly granular permission matrices.
+# 7. Validation-Required / Conditional MVP Capabilities
+These capabilities should remain candidates for the first build, but final inclusion depends on whether Discovery can validate a credible, bounded implementation without destabilizing the core MVP.
+Capability
+Position
+Decision Rule
+Benchmarking
+MVP Target – Validation Required
+Include one or more simple, credible measures in the first build. Final inclusion requires validated data source, cohort definition, calculation, privacy treatment and explanatory caveats; otherwise preserve the architecture and defer the live feature.
+Selected client-level overrides
+Conditional
+Include only where a clear business need exists. Keep firm defaults authoritative and avoid a complex inheritance model.
+Custom domain / sender identity
+Conditional
+Include only if required to make a credible pilot/commercial offering. Basic branding remains mandatory even if custom domains are deferred.
+Exports / reports
+Conditional
+Include only specific launch-critical outputs identified by advisors/firms; do not introduce a generalized reporting engine.
+Additional reminder channels
+Conditional
+Add SMS or other channels only if the product/business case requires them. Do not broaden channel scope by default.
+External integration required for pilot
+Conditional
+Implement only if a specific MVP customer or operating workflow cannot function without it; otherwise maintain integration readiness only.
+# 8. Post-MVP
+These capabilities can add meaningful value after the first credible product is validated, but are not required to prove the initial RetirementTrack engagement model.
+Post-MVP Capability
+Reason for Deferral / Later Value
+Broader analytics
+Engagement trends, adoption, completion trends, advisor/firm operational analytics and business intelligence views.
+Expanded reporting
+Configurable reports, broader exports, scheduled reporting and richer client/advisor reporting outputs.
+Additional assessments
+Expanded assessment library, more complex scoring and broader outcome/report formats.
+Expanded content management
+Firm-specific uploads/authoring, richer publishing lifecycle, larger taxonomy and advanced content controls.
+Richer benchmarking
+More measures, more cohort options, historical comparisons and deeper benchmark analysis after methodology is proven.
+Additional communication capabilities
+More channels, richer templates, preferences, sequences and communication analytics.
+Broader white-labeling
+Custom domains, sender-domain options, richer themes and additional branding controls as commercial requirements justify them.
+Selected integrations
+CRM, calendar, email, financial-planning or other systems based on customer demand and validated workflows.
+Richer advisor workflows
+Additional assignment, queue, delegation and collaboration capabilities without turning RetirementTrack into a general CRM.
+# 9. Longer-Term Platform
+These capabilities may be strategically valuable as RetirementTrack matures, but should not shape the first-build implementation beyond preserving sensible architectural seams and data-model extensibility.
+Longer-Term Capability
+Future Direction
+AI-assisted personalization
+More sophisticated recommendation, summarization or relevance support after rules, data quality, advisor controls and compliance boundaries are proven.
+Configurable rules / decision platform
+Firm-configurable prioritization, trigger and personalization logic if later market demand justifies the complexity.
+Generalized workflow builder
+Custom workflows, states, task patterns and automation beyond the fixed RetirementTrack engagement model.
+Generalized assessment / form builder
+No-code authoring, firm-custom forms, advanced versioning and configurable scoring across many assessment types.
+Advanced analytics platform
+Cross-firm trends, sophisticated engagement analytics, cohort intelligence and executive dashboards.
+Deep integration ecosystem
+Multiple CRM, planning, data, identity and communication integrations with reusable connector management.
+Advanced enterprise administration
+Custom organizational hierarchies, granular permission designers, advanced support tooling and enterprise tenant options.
+Advanced white-label / distribution models
+Extensive theming, partner/reseller models, multi-brand structures and more complex deployment/customization options.
+# 10. Benchmarking Decision Framework
+Benchmarking is prioritized as a targeted MVP capability. The MVP should aim to include at least one simple, useful benchmark where Discovery validates a credible measure, data source, cohort method, privacy treatment and explanatory caveats. If those conditions cannot be met reliably, the architecture should preserve benchmarking readiness while implementation is deferred.
+MVP rule: include a benchmark only when the measure, source, cohort logic, calculation, privacy treatment and client-facing caveat can all be validated during Discovery.
+Decision Test
+MVP Inclusion Standard
+Client value
+The comparison helps a client understand context or relative position and is understandable without specialist interpretation.
+Measure
+Use one or a small number of clearly defined measures; avoid a composite retirement-readiness score unless methodology is defensible.
+Data source
+Use a credible, maintainable source such as curated public/reference data or another validated source. Do not depend on an unproven internal cohort.
+Cohort definition
+Cohorts should be simple and explainable, for example age band or retirement stage, with enough data to avoid misleading precision.
+Privacy
+No benchmark should expose another client or permit inference about small groups. Minimum cohort/privacy thresholds must be defined if platform data is ever used.
+Calculation
+Calculation and refresh logic must be deterministic, testable and documented.
+Caveat / interpretation
+Present comparison as educational context, not a professional recommendation or prediction.
+Firm control
+Firm can enable/disable the benchmark; advisor/client visibility should follow agreed permissions.
+Fallback
+If required inputs or a validated benchmark are unavailable, show an unavailable/educational state rather than fabricate a comparison.
+# 11. Personalization Boundary
+The boundary is to prove that the experience changes meaningfully with known client context without introducing a large decision platform or AI recommendation engine.
+Include in MVP
+Boundary / Defer
+Personalized opening using known client context, firm and advisor identity.
+No open-ended generative personalization or AI-generated advice.
+Age / life-stage relevance where rules are defined.
+No complex segmentation framework across dozens of personas.
+Assessment-driven relevance for selected responses/results.
+No generalized rules authoring environment for firms.
+Planning Update changes can alter priorities, follow-up or relevant content.
+No arbitrary workflow orchestration or dynamic journey builder.
+Small “what deserves attention” list using explicit precedence.
+No opaque ranking model or machine-learned prioritization.
+Relevant educational content based on tags, context and firm controls.
+No large recommendation engine or campaign personalization platform.
+Completion/history affects what is shown on return visits.
+No attempt to model every possible retirement circumstance in MVP.
+Advisor/firm control where needed to suppress or govern system output.
+Avoid large override/configuration matrices unless a clear business need is validated.
+Personalization test: if two clients at materially different life stages or with different completed activities log in, the MVP should be capable of presenting meaningfully different priorities, content or next actions using understandable rules.
+# 12. Advisor Automation vs Professional Judgment Boundary
+RetirementTrack should automate detection, status, reminders and workflow cues while leaving individualized professional judgment with the advisor. The product should help the advisor know where attention is needed, not act as the advisor.
+RetirementTrack may automate
+Keep advisor-controlled
+Due dates, status transitions and completion tracking.
+Individualized financial, tax, investment, retirement-income or planning recommendations.
+Reminder scheduling and approved communication modes.
+Interpretation of complex client circumstances where professional judgment is required.
+Detection of defined Planning Update changes.
+Decision about the advice or action to recommend to the client.
+Assessment scoring/category output where methodology is defined.
+Professional interpretation beyond the approved assessment result/context.
+Creation of review/follow-up cues when a business rule is met.
+Whether and how to conduct client follow-up in judgment-sensitive situations.
+Rules-based surfacing of educational topics and content.
+Positioning educational material as individualized professional advice.
+Exception queues that explain why attention is required.
+Automatic execution of professional decisions on behalf of the advisor.
+# 13. White-Label Boundary
+Basic white labeling is part of the initial value proposition because firms should be able to offer RetirementTrack as a credible extension of their own client experience. The MVP should provide enough branding and identity to support that proposition without becoming a theme or site-building platform.
+MVP baseline
+Conditional / Later
+Firm name and logo.
+Custom domains if a pilot/commercial requirement is validated.
+Selected brand colors within a controlled design system.
+Custom sender domains if required and operationally justified.
+Assigned advisor name/identity/contact context where appropriate.
+Deep per-firm theme customization.
+Firm-branded invitation and supported communication templates.
+Custom layouts, navigation or component-level design control.
+Firm feature/content/communication settings.
+Firm-authored themes or page builders.
+Consistent RetirementTrack product structure underneath branding.
+Completely independent branded product variants per tenant.
+# 14. Reporting / Analytics Boundary
+The MVP should include only reporting and analytics needed to operate the client/advisor workflow, understand exceptions and support basic administration. Broad analytics should not compete with the core engagement experience for first-build scope.
+Include / simplify for MVP
+Defer
+Operational counts/status needed by advisor and firm dashboards.
+General analytics dashboard or BI suite.
+Client activity/status context needed for review and follow-up.
+Advanced cohort trends, engagement segmentation and predictive analytics.
+Basic communication/workflow history.
+Custom report builder and scheduled report distribution.
+Search/filtering for assigned-client operational use.
+Large export/report library.
+Specific launch-critical export only if a concrete business need is confirmed.
+Sophisticated PDF generation and highly configurable report layouts.
+Platform operational/audit visibility required to support tenants.
+Commercial analytics beyond essential operational needs.
+# 15. MVP Success Criteria
+The MVP should be considered successful when it demonstrates the actual RetirementTrack proposition to a client, advisor and firm without depending on the deferred platform capabilities.
+Success Area
+First-Build Success Criterion
+Client relevance
+A client can quickly understand where they are, what deserves attention and what to do next from a personalized dashboard.
+Personalization
+Known life stage, assessments, activity/history or advisor/firm inputs can cause relevant differences in priorities, content or next actions.
+Recurring engagement
+Planning Updates, assessments, reminders, milestones or relevant content create legitimate reasons to return and update client state over time.
+Advisor efficiency
+An advisor can identify clients requiring attention and understand why without reviewing every client individually.
+Professional boundary
+System output remains educational/contextual and workflow-oriented; individualized professional recommendations remain with the advisor.
+Assessments / Planning Update
+A small assessment set and Planning Update workflow can move from assignment/due through completion, result/change and appropriate follow-up.
+Education
+Relevant approved content can be surfaced using defined tags/context rather than operating only as a static library.
+Reminders / communications
+Supported triggers can send or queue appropriate communications under Automatic / Advisor Approval / Off rules with basic history.
+White label
+A firm can present a credible branded experience with its identity and supported controls.
+Benchmarking
+If included, at least one benchmark is understandable, credible, privacy-safe and accompanied by appropriate explanation/caveat.
+Scale / structure
+The product model supports a firm with multiple professionals and hundreds to a few thousand client households without redesigning core tenancy or relationships.
+Pilot validation
+The MVP can capture basic adoption and engagement signals such as invitation activation, Planning Update/assessment completion, repeat client visits, advisor follow-up created/resolved and relevant-content usage without requiring a full analytics platform.
+# 16. Product Decisions Requiring Business Confirmation
+The following items require business or product confirmation because they affect retirement-planning intent, advisor workflow, client experience, commercial positioning or policy.
+Decision Area
+Business/Product Confirmation Needed
+MVP boundary
+Confirm any capability that should move between Must Have, Must Have-Simplified, MVP Target/Validation Required, Conditional and Post-MVP after reviewing this prioritization.
+Assessments
+Confirm the initial assessment inventory, content/methodology owner, scoring intent and client/advisor result expectations.
+Planning Update
+Confirm initial purpose/form content, cadence, what constitutes a meaningful change and when advisor follow-up is expected.
+Client priorities
+Confirm the business categories that may appear in “what deserves attention” and the relative importance of advisor-assigned vs system-generated items.
+Life stage / personalization
+Confirm meaningful retirement/life-stage categories and which client attributes are appropriate to drive relevance.
+Advisor control
+Confirm whether advisors need pin/suppress/dismiss/reorder capabilities in MVP and where firm control should override client/advisor behavior.
+Communications
+Confirm first-build communication channels, Automatic / Advisor Approval / Off use cases, sender identity and consent/preferences expectations.
+Benchmarking
+Confirm which comparison measures would be commercially/usefully compelling enough to investigate for MVP inclusion.
+White label
+Confirm whether basic logo/colors/advisor identity is sufficient or whether custom domain/sender identity is essential for an initial pilot.
+Reporting
+Identify any specific report/export without which an initial firm would be unlikely to adopt/use the MVP.
+Client / household model
+Confirm whether the first build treats each client as an individual account only or needs a household relationship for spouses/partners and potentially shared advisor relationships.
+Target firm model
+Confirm current directional assumption of established independent firms with multiple professionals and hundreds to a few thousand client households as the design target, without treating exact size as fixed.
+# 17. Final Recommended MVP Boundary
+The recommended first build should be lean in implementation depth but complete enough to demonstrate why RetirementTrack is different from a generic portal or content library.
+Recommended MVP: personalized client engagement + recurring planning activity + advisor exception management + relevant education + assessments / Planning Updates + reminders / communications + firm-controlled branded delivery.
+Category
+Final Recommendation
+Must Have
+Secure multi-tenant firm/user structure; invitation/onboarding; personalized client dashboard; small priority/attention model; Planning Update; small assessment set; recurring engagement loop; relevant education; reminders/communications; advisor exception/follow-up dashboard; firm controls; basic platform administration; platform content administration; basic white label; essential history/audit.
+Simplified in MVP
+Rules-based personalization; simple status/progress; fixed assessments and Planning Update; limited reminder triggers/channels; simple advisor review lifecycle; platform-provided tagged content; basic platform content administration; limited platform/firm admin controls; operational reporting/counts; basic permissions/overrides.
+MVP Target – Validation Required
+Benchmarking: make a serious effort to include one or more simple, credible measures when the data source, cohort method, privacy treatment and caveats are validated. If validation is not adequate, preserve architectural support and defer only the live benchmark capability.
+Conditional MVP
+Selected client-level overrides; custom domain/sender identity; specific pilot-critical reports/exports; additional reminder channels; or any external integration proven necessary for launch/pilot. Include only when a concrete business or operating requirement justifies the added complexity.
+Post-MVP
+Broader analytics/reporting, additional assessments, expanded content management, richer advisor tasking, deeper white label, expanded communications, richer permissions and approved integrations.
+Longer-Term
+AI-assisted personalization, configurable rules/workflow/form builders, sophisticated analytics/benchmarking, broad integration ecosystem, advanced enterprise tenancy/deployment options and other platform capabilities justified by validated demand.

@@ -1,0 +1,255 @@
+RETIREMENTTRACK
+Product Requirements &User Workflow Definition
+# 1. Purpose and Scope
+Goal: Translate the product vision into buildable, testable user behavior for the first credible MVP without prematurely designing the technical architecture.
+Product vision: A white-label retirement education, assessment, and ongoing-engagement platform for professional firms and clients approaching or living in retirement.
+MVP principle: The MVP should not feel like a generic library of forms and retirement resources. The client experience should use known client context, life stage, assessments, circumstances, completion history, and firm/advisor inputs to present a small number of relevant next actions, content, and planning opportunities.
+## 1.1 What the product is intended to prove
+• Clients can understand where they are, what is complete, what needs attention, and what is relevant next.
+• Assessments, Planning Updates, education, reminders, and selected benchmarking can participate in one coherent client experience.
+• Advisors can see activity, exceptions, changes, and follow-up needs without manually reviewing every client.
+• Recurring engagement creates meaningful reasons for clients and advisors to return over time.
+# 2. User Roles
+Role
+First-Build Responsibility
+Access Boundary
+Client
+Complete assigned activities; review status, relevant content, reminders and supported results; return for ongoing engagement.
+Own profile and assigned client experience.
+Advisor
+Invite/manage assigned clients; assign/recommend activities; review results/changes; approve selected communications; perform follow-up.
+Authorized/assigned clients within the firm.
+Firm Administrator
+Manage firm users, basic branding, feature availability, communication behavior, content visibility and supported advisor/client governance.
+Own firm/tenant only.
+Platform Administrator
+Manage tenant setup/status, common content/configuration and operational support.
+Platform administration with limited tenant/client data access.
+# 3. Client Experience
+Client outcome: The client should feel that RetirementTrack knows enough about their stage and activity to present a purposeful next step, not a generic library of retirement resources.
+First-Build Client Experience
+Later / Expanded
+Personalized opening; simple planning status; completed/outstanding work; a small attention list; assessments; Planning Updates; relevant education; reminders/milestones; advisor identity; continuity between visits.
+Sophisticated AI recommendations; large dynamic content journeys; complex retirement-readiness scoring; highly configurable client journeys.
+# 4. Client Onboarding Flow
+## 4.1 First-Build behavior
+• Collect only the minimum profile/context required to make the first dashboard useful.
+• Establish the correct firm and advisor relationship before the client reaches the dashboard.
+• Show a useful starting state even when personalization data is limited.
+• Retain basic invitation, activation, consent and onboarding status/history.
+• Avoid unsupported benchmark or planning conclusions when required inputs are missing.
+## 4.2 Product decisions to confirm
+• Exact invitation expiration/resend policy.
+• Exact terms/privacy/communication-consent requirements.
+• Whether Firm Administrator and Advisor both create/invite clients.
+• Minimum age/life-stage fields required at activation.
+• Behavior for existing accounts, duplicate clients, multiple firms/advisors.
+# 5. Client Dashboard Requirements
+Dashboard Area
+First-Build Requirement
+Opening
+Client identity, firm branding, advisor identity, retirement/life-stage context where supported.
+Status / progress
+Simple completion/status indicators; do not imply a comprehensive planning score unless methodology is defined.
+What deserves attention
+A small prioritized set, approximately a few high-value items, based on defined rules.
+Activities
+Assigned assessments, Planning Updates, advisor-requested items.
+Relevant content
+Content surfaced because of known context, not only via a static library.
+Reminders / milestones
+Basic due/date/age/event items where enabled.
+Benchmarking
+Only when enabled and supported by validated inputs/methodology.
+Continuity
+Reflect what was completed, what changed and what is relevant now.
+# 6. Advisor Experience
+• Focus the first build on actionability rather than broad analytics.
+• Keep professional judgment with the advisor; RetirementTrack surfaces conditions and context rather than individualized advice.
+• Allow assignment/recommendation only for product capabilities enabled by the firm.
+• Provide enough history to understand what was sent, completed, changed and followed up.
+# 7. Advisor Dashboard Requirements
+Area
+First-Build Use
+Needs attention
+Meaningful changes, notable outcomes, overdue items, pending approvals and defined follow-up conditions.
+Planning Updates
+Upcoming/due/completed/overdue/changed state where applicable.
+Assessments
+Assigned/in progress/completed and review-needed state.
+Follow-up
+Simple open review items; completed/dismissed items move to history.
+Communications
+Pending approvals plus basic sent/history visibility.
+Client list
+Search/filter sufficient for the assigned-client workflow.
+Analytics
+Deferred beyond essential operational counts/status unless client makes it launch-critical.
+# 8. Firm Administrator Experience
+Control
+First-Build Direction
+Branding
+Firm name/logo and selected basic brand/advisor identity settings.
+Features
+Enable/disable supported modules such as Planning Updates, assessments, benchmarking, education and reminders.
+Communications
+Automatic / Advisor Approval / Off for supported communication types.
+Content
+Control availability of platform-provided content/resources.
+Users
+Manage firm users/advisors under the final role model.
+Client-level overrides
+Only where clearly needed; firm-disabled features should not be silently re-enabled per client.
+# 9. Platform Administrator Experience
+• Manage tenant/firms, tenant status, common content and supported platform defaults.
+• Support operational troubleshooting without becoming part of ordinary advisor-client workflows.
+• Keep direct access to sensitive client details restricted by default.
+• Maintain basic administrative/audit visibility required for tenant operations.
+# 10. Assessment Workflow
+First Build
+Not Assumed / Later
+Small number of structured assessments; risk assessment is a likely example; readable results; defined scoring/category logic; educational context; advisor follow-up cue.
+General-purpose assessment builder; dozens of assessments; firm-customizable forms/workflows; broad report engine.
+# 11. Planning Update Workflow
+## 11.1 First-Build intent
+• Treat Planning Update as a core recurring-engagement workflow.
+• Use a deliberately narrow initial form/state model rather than a configurable workflow engine.
+• Compare current information with relevant prior state to identify defined changes.
+• Only create advisor attention when business rules identify a meaningful change.
+• Update client state/history after completion.
+# 12. Recurring Engagement Workflow
+First-build triggers may come from: Planning Update due/overdue, assessment assignment/completion, advisor assignment, age/life-stage milestone, newly relevant content, or a defined change/opportunity. Exact trigger inventory is still a Product Decision.
+Automate in First Build
+Keep Advisor-Controlled
+Due/status calculations; basic reminder scheduling; completion/state tracking; simple personalization rules; defined change/follow-up creation; communication history.
+Professional interpretation; individualized advice; complex recommendations; arbitrary campaign creation; custom workflow/rule authoring.
+# 13. Communication Workflow
+Mode
+Behavior
+Automatic
+Send when the defined condition occurs.
+Advisor Approval
+Prepare/queue; advisor reviews before send.
+Off
+Do not send outbound communication for that scenario.
+Likely first-build communication use cases: Onboarding invitation, Planning Update invitation/reminder, assessment assignment/reminder, selected milestone/general planning reminders where defined.
+# 14. Advisor Review / Follow-Up Workflow
+First-build principle: A simple review lifecycle is enough. RetirementTrack should surface why attention is needed without turning into a full CRM/task-management platform.
+Potential Trigger
+First-Build Treatment
+Meaningful Planning Update change
+Create advisor review item when rule is defined.
+Assessment result condition
+Create review cue when methodology/business rule requires it.
+Pending communication approval
+Show in advisor work queue.
+Overdue/incomplete client item
+Only create follow-up if the business rule says advisor attention is warranted.
+Routine completion
+Record as activity; do not automatically create noise.
+# 15. Educational Content Delivery Workflow
+First-build content: Platform-provided articles, videos, resources and other approved educational items, with enough tagging to support simple relevance and firm visibility controls.
+Later-phase capability
+Firm-specific authoring/uploads, sophisticated recommendation engines, complex campaign journeys and large content-personalization taxonomies should not be assumed for the first build.
+# 16. Reminder Workflow
+## 16.1 First-Build reminder scope
+• Basic age/date/event reminders as described in the Discovery Brief.
+• Planning Update and assessment reminders where selected for MVP.
+• Noise controls: no reminder after completion, avoid duplicates, limit repeated reminders.
+# 17. Benchmarking Workflow
+MVP position: Benchmarking remains part of the stated product vision. However, the first build should only include a simplified benchmark experience if credible measures, data source, cohort methodology, privacy rules and caveats are validated during Discovery.
+Do not assume: Live cohort analytics, complex historical benchmarking, sophisticated readiness scoring, or benchmark-driven financial recommendations.
+# 18. Personalization Workflow
+Belongs in First Build
+Later / Avoid Overbuilding
+Personalized opening; age/life-stage relevance; assessment-driven relevance where rules exist; small “what deserves attention” list; dynamic education; progress/continuity; advisor connection.
+AI/ML recommendation engine; complex segmentation; firm-authored rule builder; large configurable decision engine.
+# 19. Role / Permission Requirements
+Role
+Core First-Build Permissions
+Must Not Assume
+Client
+Own profile/experience; complete activities; view supported results/content/status.
+Access to other clients or administration.
+Advisor
+Assigned clients; assignments; review/change context; approvals; follow-up/history.
+All firm clients unless authorized; firm/platform settings.
+Firm Admin
+Firm users, branding, feature/communication/content controls, supported governance.
+Unrestricted sensitive client data by default; other tenants.
+Platform Admin
+Tenant/status/content/configuration/operational administration.
+Routine unrestricted client financial/assessment access.
+# 20. Key Edge Cases
+Area
+First-Build Edge Cases to Handle
+Onboarding
+Expired/wrong invitation, duplicate record, abandoned onboarding, missing context, advisor change before activation.
+Tenant / relationship
+Unauthorized/cross-tenant access, advisor transfer, firm suspension, multi-firm/multi-advisor requests.
+Assessments
+Incomplete attempt, changed assessment version, repeat/edit after submission, firm disables after prior use.
+Planning Update
+Ignored/late/incomplete update, no meaningful changes, multiple changes, missing prior baseline, advisor changes.
+Communications / reminders
+Pending approval when advisor inactive, mode/feature changes, client completes before send, delivery failure, multiple reminders.
+Personalization
+Insufficient data, conflicting rules, too many eligible items, stale content, unavailable benchmark data.
+Administration
+Firm admin leaves, tenant suspended/closed, platform support requires limited investigation.
+# 21. Outstanding Product Decisions
+Decision Area
+Required Product Decision
+MVP boundary
+Final in-scope, simplified and deferred capabilities; measurable success criteria.
+Users / relationships
+Multiple advisors/firms, role combinations, advisor visibility and admin access.
+Client dashboard
+Definition of status/progress, priority ranking, first-login vs return behavior, advisor overrides.
+Assessments
+Initial inventory, questions, scoring, output, repeat/versioning and follow-up rules.
+Planning Updates
+Form, cadence, due/change rules, follow-up, save/resume and history.
+Content / personalization
+Content inventory/tags, personalization inputs, relevance rules and advisor assignment behavior.
+Reminders / communications
+Triggers, channels, templates, modes, timing, consent/preferences, failures and history.
+Benchmarking
+Measures, source, cohorts, calculations, caveats, privacy and visibility.
+Firm controls / white label
+Feature hierarchy, overrides, branding minimum and tenant administration.
+Data / privacy
+Minimum client data, permitted use, retention/deletion and support-access expectations.
+# 22. Functional Requirements Summary
+Capability
+First-Build Product Requirement
+Identity & tenancy
+Secure roles, tenant boundaries, user status, correct firm/advisor relationships.
+White label
+Basic firm name/logo and selected advisor/brand identity.
+Client onboarding
+Invitation, activation, minimum profile/consent, first dashboard.
+Client dashboard
+Status, priority items, next action, activities, relevant content, reminders, advisor identity, continuity.
+Assessments
+Small fixed initial set, readable results, defined scoring/category logic, advisor cue.
+Planning Update
+Core due-to-follow-up workflow with simple state/change model.
+Personalization
+Simple explicit rules using validated context, assignments, state/history and firm controls.
+Content
+Platform-provided content, basic tags/relevance, firm visibility, advisor recommend/assign if validated.
+Reminders / communications
+Limited triggers and delivery; Automatic/Approval/Off; basic history.
+Advisor experience
+Assigned-client dashboard, exceptions, review/follow-up, communication/activity context.
+Firm administration
+Users, basic branding, feature/content/communication controls.
+Platform administration
+Tenant setup/status, platform content/configuration, operational oversight.
+Benchmarking
+Simplified display only if method/data/privacy are validated.
+Audit/history
+Basic workflow/communication/admin history required to support operations and continuity.
+Integrations
+No external integration is assumed required by Task 2. Preserve future readiness in technical architecture.

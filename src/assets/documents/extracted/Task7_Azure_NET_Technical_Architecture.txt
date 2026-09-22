@@ -1,0 +1,479 @@
+RETIREMENTTRACK
+Azure/.NET Technical Architecture
+# 1.1 Architecture Goals & Principles
+This architecture translates the product, workflow, domain, privacy and MVP-prioritization decisions from Discovery into a concrete Azure/.NET implementation blueprint. It is intentionally detailed enough for implementation planning while keeping the first build disciplined.
+Operating model: RetirementTrack guides and engages -> the client learns and acts -> the platform records progress and follows up -> the advisor sees engagement, outstanding items and true exceptions -> professional help is brought in where it adds value.
+# 1.2 High-Level Architecture
+Component
+Responsibility
+React + TypeScript SPA
+Client, advisor, firm-admin and platform admin experiences. Runtime firm branding and role-aware navigation.
+Clerk
+Managed authentication, password recovery, MFA, session/token issuance. Not the source of truth for firm membership, roles or data authorization.
+ASP.NET Core API
+Authenticated HTTP boundary, request validation, authorization policies, DTO mapping, application use-case execution and dashboard aggregation.
+Application Layer
+Use cases, orchestration, transaction boundaries, policies, workflows and provider abstractions.
+Domain Layer
+Core entities, value objects, rules and invariants for tenants, households, assessments, Planning Updates, engagement, exceptions and benchmarking.
+Infrastructure Layer
+EF Core/Azure SQL persistence, Blob Storage, Clerk token validation/mapping, communications, Temporal integration, Key Vault and telemetry adapters.
+RetirementTrack.Worker
+Azure-hosted .NET Temporal Worker connecting to Temporal Cloud and executing durable workflows and activities for reminders, milestones, communications, due-state creation, cleanup and maintenance.
+Azure SQL Database
+Primary relational system of record for tenant-owned business data and normalized domain state.
+Blob Storage
+Downloadable guides, one-pagers, images and future generated files. SQL stores metadata and object references.
+Application Insights / Azure Monitor
+Tracing, metrics, failures, availability, job monitoring and operational alerts.
+## 1.2.1 Selected Compute Topology
+Workload
+Recommended Azure Hosting
+Why
+React SPA
+Azure Static Web Apps or equivalent static hosting
+Fast global static delivery, simple CI/CD, independent frontend deployment, runtime tenant branding.
+ASP.NET Core API
+Azure App Service
+Managed scaling, deployment slots, health checks, Azure integration and low operational overhead.
+Background Worker
+Azure-hosted .NET Temporal Worker + Temporal Cloud
+Separates background workflow execution from the interactive API and supports durable workflows, schedules, timers, retries and recovery.
+Database
+Azure SQL Database
+Relational consistency, strong EF Core fit, mature security, backup and scaling.
+Files
+Azure Blob Storage
+Low-cost scalable object storage with controlled access.
+Secrets
+Azure Key Vault
+Central secrets/certificate management and managed-identity access.
+# 1.3 Frontend Architecture
+The frontend should be one responsive React application with role-based route groups, reusable design-system components and a thin client architecture. Domain and authorization decisions remain server-side.
+Concern
+Recommended Approach
+Framework
+React 19 + TypeScript + Vite.
+Routing
+React Router with route groups for Client, Advisor, Firm Admin and Platform Admin experiences.
+Server state
+TanStack Query for API caching, loading/error states and invalidation after actions.
+Forms
+React Hook Form + schema validation (for example Zod) for onboarding, assessments and Planning Updates.
+Local/UI state
+React Context or a lightweight store only for transient shell/UI state; do not duplicate server domain state globally.
+API communication
+Typed API client generated/maintained from OpenAPI contracts. All protected requests carry Clerk session token.
+Error handling
+Global error boundary + standardized API problem details + field-level validation errors + retry only where safe.
+Accessibility
+Keyboard navigation, visible focus, semantic controls, WCAG contrast, large targets and readable type appropriate for older client users.
+Branding
+Firm logo, selected colors and advisor identity loaded from tenant configuration at runtime; no tenant-specific builds.
+Extensibility
+Feature modules under route/domain folders; new modules plug into navigation and API clients without restructuring the app.
+## 1.3.1 Primary Route Groups
+Persona
+Representative Routes
+Client
+/overview, /planning-update, /assessments, /learning, /progress, /notifications, /profile, /benchmarks
+Advisor
+/advisor/overview, /advisor/clients, /advisor/clients/{id}, /advisor/exceptions, /advisor/approvals
+Firm Admin
+/firm/users, /firm/advisors, /firm/branding, /firm/features, /firm/communications, /firm/content
+Platform Admin
+/platform/tenants, /platform/content, /platform/configuration, /platform/support
+# 1.4 Backend / .NET Architecture
+Recommendation: .NET 10 LTS modular monolith for the MVP. Do not introduce microservices unless independent scaling, ownership or integration pressure later creates a clear reason.
+Project
+Responsibility
+RetirementTrack.Api
+HTTP endpoints, Clerk token validation, policy authorization, request/response mapping, OpenAPI and API versioning.
+RetirementTrack.Application
+Use cases, orchestration, transactions, validation, dashboard composition, background-job commands and integration interfaces.
+RetirementTrack.Domain
+Business entities, value objects, domain rules, statuses and invariants. No Azure, EF Core, Clerk or UI dependencies.
+RetirementTrack.Infrastructure
+EF Core, Azure SQL, Blob Storage, Key Vault integration, Clerk mapping, Temporal client/workflow integration, email/notification providers, external adapter.
+RetirementTrack.Worker
+Azure-hosted .NET Temporal Worker connecting to Temporal Cloud and executing durable workflows and activities for reminders, milestones, communications, due-state creation, cleanup and maintenance.
+RetirementTrack.Contracts
+API DTOs, request/response contracts and common enums exposed across application boundaries.
+Tests
+Unit, integration, authorization/tenant-isolation, architecture and selected end-to-end tests.
+Dependency direction should remain inward: API and Infrastructure depend on Application/Domain; Domain does not depend on Infrastructure. Dependency injection wires concrete adapters at composition roots.
+# 1.5 Application & Domain Boundaries
+Module
+Core Responsibilities
+Key Boundaries
+Tenant & Identity
+FirmTenant, membership, application roles, Clerk identity linkage, tenant lifecycle.
+Authentication provider remains replaceable; tenant/roles live in RetirementTrack.
+Client & Household
+ClientProfile, Household, HouseholdMember, shared/private data classification.
+Separate identities; shared household default; no complex spouse permission engine in MVP.
+Advisor Relationships
+AdvisorProfile, AdvisorClientAssignment, reassignment/history.
+Advisor role alone never grants client access.
+Assessments
+Definitions/versions, assignments, responses, results, review thresholds.
+Small fixed inventory; no generic form builder.
+Planning Updates
+Versioned definition, due instances, responses, prior-state comparison, detected changes.
+Completion is not advisor work by itself.
+Engagement & Priorities
+Activity/accomplishments, outstanding items, priority items, milestones.
+Visible progress remains separate from advisor exceptions.
+Advisor Exceptions
+Professional-attention conditions, review lifecycle, client contact requests.
+Only defined exceptions become advisor work.
+Content / Learning
+ContentItem, tags, availability, viewed/completed state, related content.
+Growing library; no full CMS/theme builder in MVP.
+Communications
+Reminder intent, templates, approval state, delivery history.
+Provider-agnostic; routine reminders platform-led.
+Benchmarking
+Definitions, source/version/reference values, client results.
+External reference data for MVP; future de-identified analytics path.
+Governance / Audit
+Audit events, support access, export/deletion lifecycle.
+Operational logs are separate from immutable business/security audit events.
+# 1.6 Azure SQL & Data Architecture
+Selected database: Azure SQL Database using a shared-database multi-tenant model. Every tenant-owned business record carries FirmTenantId/TenantId and is protected by layered tenant enforcement.
+Area
+Architecture Decision
+Tenancy model
+Shared database for MVP. FirmTenant is the top-level business/security boundary. Avoid database-per-tenant operational complexity unless future enterprise requirements justify it.
+Core hierarchy
+FirmTenant -> TenantUserMembership -> UserRoleAssignment / ClientProfile / AdvisorProfile -> Household / AdvisorClientAssignment -> workflow and engagement data.
+Relational integrity
+Tenant-aware foreign keys/composite uniqueness where relationships are tenant-specific. Prevent cross-tenant references at database level where practical.
+Indexes
+TenantId-leading indexes on high-volume access paths; additional indexes for advisor/client/status/due-date and activity queries.
+Transactions
+Use one transactional boundary per business use case where immediate consistency is required; enqueue background work only after state is committed.
+Migrations
+EF Core migrations generated in source control, reviewed, tested in lower environments and applied through controlled deployment pipeline.
+Audit
+Security/business audit records stored separately from operational logs; preserve actor, tenant, action, target, timestamp and reason/metadata.
+Retention/deletion
+Default offboarding assumption: when a firm leaves RetirementTrack, provide a 30-day post-termination transition/retention window for authorized firm export and, where business/legal policy permits, individual client or household portability. After 30 days, tenant/client data is scheduled for deletion, subject to contractual/legal/regulatory retention, legal hold, backup lifecycle, and other documented exceptions. The 30-day default is configurable policy and can change without architecture redesign. All export, retention and deletion actions are tenant-scoped and audited.
+Backup/recovery
+Azure SQL point-in-time restore baseline; formalize RPO/RTO before production launch and test restores periodically.
+## 1.6.1 Financial Data Boundary
+May Store for Product Use
+Explicitly Out of Scope
+Account type
+Account numbers
+Ownership
+Bank/brokerage credentials
+Approximate/current balance
+Individual holdings/securities
+High-level income/savings/net worth
+Transactions
+Retirement timing and planning context
+Brokerage statements or account aggregation feeds
+This boundary should be enforced in the domain model, API contracts, logging rules and UI. RetirementTrack is not designed as an account-aggregation system or financial-data vault.
+# 1.7 Multi-Tenancy & Data Isolation
+Control Layer
+Enforcement
+Request tenant context
+Resolved server-side from the authenticated RetirementTrack membership. Browser-supplied TenantId is never trusted as proof of authorization.
+EF Core read isolation
+Global query filters on all ITenantEntity types automatically apply the active TenantId.
+EF Core write isolation
+SaveChanges interceptor assigns TenantId for inserts, blocks TenantId mutation and rejects cross-tenant update/delete attempts.
+Resource authorization
+ASP.NET Core authorization handlers verify same tenant plus client/household/advisor relationship and role.
+Database constraints
+Tenant-aware foreign keys/composite keys/unique constraints prevent invalid cross-tenant relationships.
+Database defense
+Use Azure SQL Row-Level Security for the most sensitive tenant tables where practical, with server-established session context. RLS is defense in depth only and does not replace application authorization, EF Core tenant filters, or relationship-level access checks.
+Background jobs
+Every job carries TenantId explicitly and creates a tenant context before loading data.
+Cache/files
+TenantId is included in tenant-owned cache keys and storage paths; storage path alone is never considered authorization.
+Query bypass
+IgnoreQueryFilters/raw SQL limited to reviewed privileged infrastructure code paths and audited.
+# 1.8 Identity & Authorization
+Recommended MVP identity provider: Clerk Pro. Clerk Pro costs $20/month when billed annually, or $25/month when billed monthly. It provides 50,000 Monthly Retained Users (MRUs); usage above 50,000 MRUs is charged at $0.02 per additional MRU per month. Clerk authenticates users; RetirementTrackauthorizes access. FirmTenant membership, roles, household relationships, and advisor-client assignments remain application data.
+## 1.8.1 Invitation / Activation Flow
+Step
+Flow
+1. Invitation
+Firm/Admin creates or invites the intended client/advisor. RetirementTrack creates User + TenantMembership + relationship context and a secure invitation state.
+2. Activation link
+User follows a RetirementTrack activation link. Invitation validity, tenant status and intended account are verified.
+3. Clerk registration/sign-in
+Clerk handles credential creation, verification, password reset, MFA and session/token issuance.
+4. Identity linkage
+Clerk user identifier is linked to the pre-existing RetirementTrack UserExternalIdentity record. Email is bootstrap/contact data, not the permanent authorization key.
+5. Business onboarding
+RetirementTrack records consent/household-sharing acknowledgment, minimum profile, household/advisor relationship and initial personalization.
+6. Protected access
+API validates Clerk token, resolves RetirementTrack user/membership/role/relationships and applies resource authorization.
+## 1.8.2 MFA and Session Direction
+User Type
+Recommended Policy
+Platform Administrator
+MFA mandatory. Shorter privileged session and audited support actions.
+Firm Administrator
+MFA mandatory.
+Advisor
+MFA mandatory because advisor access includes sensitive client planning information.
+Client
+MFA mandatory for production because RetirementTrack may contain household, planning, assessment and high-level financial information. During pilot readiness, use the lowest-friction secure Clerk-supported approach where appropriate (for example passkeys or trusted-session/device patterns) while preserving the production MFA requirement.
+Session behavior
+Use Clerk-managed sessions/tokens. RetirementTrack re-checks active membership, role and relationship on protected operations so stale business access is not trusted solely from the token.
+# 1.9 Azure Storage
+Storage Use
+Design
+Learning resources
+Videos may remain on an approved media host; downloadable PDFs/guides/one-pagers/images use Blob Storage with metadata in Azure SQL.
+Generated files
+Future reports/exports use tenant-scoped Blob locations and short-lived authorized download links.
+Client documents
+Not required unless specifically included later. If added, treat as private tenant-owned blobs with strict authorization.
+Container/path convention
+Use purpose-based containers and tenant-aware paths, e.g. content/{contentId}/..., tenant/{tenantId}/exports/{exportId}/... .
+Access
+Private by default. API validates authorization then issues short-lived SAS or streams content where appropriate.
+Encryption
+Azure Storage encryption at rest + HTTPS in transit.
+Retention/deletion
+Blob lifecycle aligns with domain record lifecycle; deletion/export jobs remove or package referenced objects safely.
+File controls
+Whitelist supported extensions/MIME types, size limits and scan uploaded content if client/firm uploads are introduced later.
+# 1.10 Configuration & Secrets
+Type
+Location
+Examples
+Normal configuration
+Environment/App Service configuration or Azure App Configuration if centralized configuration becomes useful.
+Feature defaults, API URLs, non-sensitive thresholds, environment name.
+Secrets
+Azure Key Vault.
+Database credentials when needed, provider keys, signing/certificates, communication credentials.
+Azure service authentication
+Managed Identity wherever supported.
+Key Vault, Storage, App Configuration, selected Azure resources.
+Local development
+Developer secret store / environment variables; never committed.
+Local provider/test keys.
+Rotation
+Key Vault versioning + documented rotation procedure.
+Provider keys, certificates, secrets.
+# 1.11 Background Processing
+Recommendation: use Temporal Cloud with an Azure-hosted .NET Temporal Worker for the MVP. Keep workflow/activity execution logically separate from the interactive API process. Temporal Cloud provides the managed durable orchestration service for schedules, timers, retries and long-running workflows, while RetirementTrack owns and deploys the Worker code in Azure. This avoids operating and maintaining a self-hosted Temporal cluster, persistence layer, upgrades, backups and high-availability infrastructure. Pricing is consumption-based. As of September 2026, Temporal's AWS Marketplace pay-as-you-go offering lists a $100/month plan fee plus $50 per million Actions, with storage and any applicable support/plan costs varying by usage and plan. Validate final commercial terms and projected Actions/storage immediately before implementation.
+Job Type
+Examples
+Execution Rule
+Reminder jobs
+Planning Update reminder, assessment reminder, milestone reminder.
+Tenant-scoped, idempotent, cancelled/stopped when the related activity completes.
+Milestone evaluation
+Age 64.5/65 Medicare, Social Security, RMD preparation, retirement timing.
+Evaluate defined rules tenant-by-tenant and create/update client priority state.
+Communication delivery
+Invitation, reminder, approved message, notification.
+Persist communication first, send via provider, record retry/delivery/failure.
+Planning Update scheduling
+Create due instances from cadence rules.
+Do not create advisor work unless later change rules require it.
+Maintenance
+Data lifecycle processing, cleanup, export jobs, stale invitation expiry.
+Audited where security/data lifecycle is involved.
+Future sync
+CRM/calendar/provider synchronization.
+Introduce Service Bus/event-driven workers only when volume/integration complexity warrants it.
+Temporal workflow payloads should carry stable IDs and TenantId, not large sensitive data payloads. Temporal Cloud provides durable workflow execution, timers and retries for reminders, communications and other asynchronous processes. Activities must remain idempotent and establish tenant context before loading or changing tenant-owned data.
+# 1.12 Communications & Notifications
+Concern
+Architecture Direction
+Provider boundary
+ICommunicationSender abstraction. Initial email provider may be Azure Communication Services Email or another selected provider without changing application/domain code.
+Templates
+Versioned templates stored as metadata/content; firm/advisor identity and branding are resolved at send time.
+Modes
+Automatic / Advisor Approval / Off by supported workflow.
+Channels
+Email + in-app notifications for MVP where confirmed. SMS and additional channels remain future adapters.
+Retry/failure
+Background jobs retry transient failures with bounded attempts; terminal failures create operational alerts/history.
+Sensitive content
+Outbound messages should contain minimal sensitive information and direct users back to authenticated RetirementTrack for detailed values.
+History
+Persist communication intent, approval, send attempt, delivery state and related workflow identifiers.
+# 1.13 Monitoring, Logging & Auditability
+Category
+Examples
+System
+Technical logs
+API failure, SQL timeout, provider failure, job retry, dependency latency.
+Application Insights / Log Analytics
+Metrics
+Request rate/latency, SQL performance, queue/job health, failed communications, availability.
+Azure Monitor / Application Insights
+Distributed trace
+Correlation across API -> application -> SQL/provider/worker.
+Application Insights
+Business audit
+Role change, membership change, advisor reassignment, tenant configuration change, support access, export/delete action.
+Azure SQL AuditEvent model
+Security events
+Repeated auth failure, privileged access, cross-tenant denial, secret/config change.
+Azure Monitor alerts + audit records where applicable
+Do not log passwords/tokens, detailed assessment answers, full Planning Update payloads, account balances, private message bodies or other unnecessary sensitive values. Prefer identifiers, categories and outcome metadata.
+# 1.14 Security & Privacy
+Area
+Architecture Requirement
+Encryption in transit
+HTTPS/TLS only across browser, API, providers and Azure services.
+Encryption at rest
+Azure SQL, Blob Storage and backups use platform encryption; consider field-level encryption only for specific risks that justify it.
+Least privilege
+Azure RBAC, managed identities, scoped support roles and no shared production credentials.
+Household privacy
+Authorized household participants share household information by default after acknowledgment. Individual/private classification remains available where needed.
+Advisor visibility
+Dashboards show useful engagement/status/exception information without unnecessarily exposing detailed sensitive financial values.
+Platform support
+No routine unrestricted client-detail access. Any privileged support access should be justified, controlled and audited.
+Data minimization
+Collect only high-level planning/benchmarking/personalization data required by approved workflows.
+No cross-firm exposure
+Identifiable tenant/client data from one firm is never exposed to another firm.
+Future analytics
+Proprietary benchmarks may later use appropriately aggregated/de-identified platform data behind separate privacy/legal controls; not live cross-tenant identifiable queries.
+Firm/client portability
+Architecture supports firm-level export, tenant-scoped Blob packaging, individual client/household portability where approved by business/legal policy, auditable retention/deletion workflows, and a default 30-day post-termination transition window. After the window, data is scheduled for deletion subject to documented legal/regulatory, legal-hold and backup-lifecycle exceptions. Portability never permits cross-firm exposure by default.
+## 1.14.1 Data Classification
+Use a simple data-classification model to drive logging, support access, export handling, household sharing and privacy controls: Public (approved public content), Internal (non-client operational/configuration data), Tenant Confidential (firm-specific settings and operational data), Client Sensitive (planning, assessment, financial and workflow data), and Individual Private (client data intentionally excluded from shared household visibility). Classification should guide least-privilege access and prevent sensitive values from entering logs or broad support views.
+# 1.15 Business Rules vs Technical Rules
+Business Rule
+Technical Enforcement
+A client can access only their authorized individual/shared-household experience.
+API authorization handler resolves User -> TenantMembership -> ClientProfile/HouseholdMember and applies shared/private data rules.
+Advisor visibility does not automatically mean advisor work.
+EngagementActivity, OutstandingItem and AdvisorException are separate domain concepts and dashboard queries.
+Advisor accesses only authorized clients.
+Same-tenant check + active Advisor role + active AdvisorClientAssignment.
+Routine reminders should be platform-led.
+Temporal workflows evaluate due items and communication mode; advisor approval is required only for configured scenarios.
+Planning Update completion does not always require advisor review.
+Prior-state comparison creates AdvisorException only when versioned meaningful-change rules match.
+Household information is shared by default for authorized participants.
+Household/HouseholdMember plus DataVisibilityScope (SharedHousehold vs IndividualPrivate) on applicable records.
+RetirementTrack is not an account aggregation platform.
+API/domain contracts exclude account numbers, credentials, holdings, transactions and statement ingestion.
+Benchmarking must be explainable.
+BenchmarkDefinition + source/version/reference values + reproducible client result + client-facing caveat.
+# 1.16 Deployment & CI/CD
+Area
+Recommended Practice
+Repository
+Client-controlled Git repository; protected main branch; pull-request review required.
+Branching
+Trunk-based or short-lived feature branches. Avoid long-lived environment branches.
+CI
+Restore/build, unit tests, integration tests, architecture tests, lint/static checks, dependency/security scanning.
+Infrastructure
+Bicep templates versioned with application code or infrastructure repository.
+Database migrations
+Reviewed EF Core migration scripts applied as controlled release step after lower-environment validation.
+Secrets
+Resolved from Key Vault/environment; never committed to repo or pipeline YAML.
+Production deployment
+App Service deployment slot or equivalent staged rollout, smoke test, then swap/promote.
+Approval
+Manual production approval after staging/UAT checks for MVP.
+Rollback
+App rollback/slot swap; DB changes use backward-compatible migrations when possible, otherwise documented forward-fix/restore plan.
+Production ownership & portability
+Production-critical assets and accounts are owned or controlled by RetirementTrack, not an individual developer or development firm. This includes the Azure subscription/resources, source repository, Clerk, Temporal Cloud, domains/DNS, communication-provider accounts, monitoring, deployment identities/credentials, Key Vault/secrets and other critical production SaaS services. Developers/vendors receive least-privilege role-based access. This preserves operational continuity and full portability if development resources change.
+# 1.17 Scalability
+Concern
+MVP Architecture
+Scale Path
+API compute
+Stateless ASP.NET Core App Service.
+Horizontal App Service scale-out; split modules only when independent scaling/ownership is proven.
+Frontend
+Static SPA/CDN.
+Global edge/CDN capabilities as traffic grows.
+Database
+Azure SQL single logical database, strong indexing and pagination.
+Scale service tier/read strategies; consider partitioning/data decomposition only after measured pressure.
+Background work
+Azure-hosted .NET Temporal Worker connected to Temporal Cloud.
+Scale Azure-hosted Temporal Workers horizontally and introduce Service Bus/specialized integration workers only when throughput or fan-out requires it.
+Caching
+No broad distributed cache by default.
+Introduce Redis only for measured hot paths; tenant-owned keys always include TenantId.
+Content/files
+Blob Storage.
+Native horizontal object-storage scaling.
+Advisor dashboards
+Server-side aggregation with pagination and bounded time ranges.
+Pre-computed read models only if measured query volume justifies them.
+Analytics
+Operational SQL only for MVP.
+Separate de-identified analytics/warehouse pipeline for future proprietary benchmarking and analytics.
+# 1.18 Environment Strategy
+Environment
+Purpose
+Data / Access Rule
+Development
+Developer integration and local/hosted dev testing.
+Synthetic/test data. Developer access allowed.
+QA / Test
+Automated/functional/regression testing.
+Synthetic/anonymized data. No raw production client data.
+Staging / UAT
+Production-like validation, pilot review, deployment rehearsal.
+Production-like configuration with non-production secrets/data.
+Production
+Live tenant/client service.
+Named-user access, MFA, Azure RBAC, least privilege, audited privileged access.
+Each environment should have separate database, storage, secrets/configuration and monitoring resources or clearly isolated equivalents. Environment promotion occurs through CI/CD rather than manual file copying.
+# 1.19 Architecture Decisions & Trade-offs
+Decision Area
+Recommendation
+Why
+Frontend
+React + TypeScript SPA
+Matches interactive dashboard/workflow product and current prototype direction.
+Backend
+ASP.NET Core on .NET 10 LTS
+Strong Azure/EF/security ecosystem and long support runway.
+Architecture
+Modular monolith
+Fastest path to a coherent MVP with clean module boundaries and low ops overhead.
+Database
+Azure SQL Database
+Relational domain, transactions, EF Core, RLS, mature backup/security.
+Identity
+Clerk Pro for MVP
+Managed authentication, MFA, recovery and sessions. Pro provides 50,000 MRUs; additional usage is $0.02 per MRU/month while RetirementTrack retains application-owned authorization.
+Files
+Azure Blob Storage
+Scalable object storage and secure access patterns.
+Secrets
+Azure Key Vault
+Central secure secrets and managed-identity integration.
+Background
+Temporal Cloud + Azure-hosted .NET Temporal Worker
+Managed durable workflow orchestration, schedules, timers, retries and recovery without self-hosting Temporal control-plane/persistence infrastructure. Consumption-based cost should be validated against projected MVP Actions and storage before implementation.
+Communications
+Provider abstraction; Azure Communication Services Email as Azure-native baseline candidate
+Keeps core workflows provider-independent while minimizing infrastructure sprawl.
+Monitoring
+Application Insights + Azure Monitor + Log Analytics
+Azure-native end-to-end telemetry and alerts.
+IaC
+Bicep
+Azure-native, versionable and suitable for reproducible client-owned environments.
+Ownership
+RetirementTrack-controlled production accounts and infrastructure
+Preserves vendor independence, recovery control and platform portability when development resources change.

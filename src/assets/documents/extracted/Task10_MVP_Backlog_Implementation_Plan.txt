@@ -1,0 +1,142 @@
+RETIREMENTTRACK
+Task 10 – MVP Backlog, Implementation Plan & Estimate
+# 1. Purpose & Executive Summary
+This document converts the Discovery decisions into a practical implementation plan for the first production-ready RetirementTrack release. The objective is to preserve the product’s distinctive recurring-engagement model while keeping the first build focused, secure, supportable and commercially testable.
+# 2. What the First Build Must Prove
+MVP outcome
+What success looks like
+Firm-ready SaaS foundation
+A firm can be configured, branded and securely isolated from every other firm.
+Simple client onboarding
+A client/household can be invited, activate access with MFA, complete minimum profile information and understand household sharing.
+Personalized retirement journey
+The client sees a small number of relevant priorities, visible progress, milestones and educational items rather than a generic task list.
+Recurring engagement
+Planning Updates, selected assessments, reminders, milestones and educational content create reasons to return before and during retirement.
+Low routine advisor workload
+Client accomplishments, outstanding items and true advisor exceptions are separate; routine engagement does not automatically create advisor work.
+Professional-judgment boundary
+The system identifies issues, considerations and opportunities but does not provide individualized financial, investment, tax or legal recommendations.
+Pilot-operable platform
+RetirementTrack owns production accounts; deployment, monitoring, backups, recovery, access and support procedures are ready for pilot use.
+# 3. Prioritization Model
+Priority
+Meaning
+Treatment
+P0 – Foundation / Launch Required
+Security, tenancy, identity, data integrity, deployment and core operating controls.
+Must be completed before production pilot.
+P1 – Core MVP Value
+Features that demonstrate RetirementTrack’s differentiated client/advisor engagement model.
+Must be in the first usable MVP.
+P2 – Pilot Important / Simplified
+Needed for credible pilot operation but intentionally narrow/configured.
+Build a simple version; avoid generalized engines.
+P3 – Post-MVP / Future
+Valuable capabilities that are not necessary to validate the first build.
+Preserve extension points; do not build now.
+# 4. Dependency Map & Critical Path
+Dependency
+Why it matters
+Schedule effect if late
+Azure/Git/Clerk/Temporal accounts under RetirementTrack control
+Required for secure environments, authentication and durable workflow setup.
+Blocks foundation and production-readiness work.
+Tenant/household/domain model
+All client, advisor, assessment, content and lifecycle data depends on these boundaries.
+Rework risk across most features.
+Assessment/scoring and Planning Update rules
+Needed to implement results, comparisons and advisor exceptions.
+Blocks core recurring workflow completion.
+Education content/taxonomy
+Needed to validate browse and contextual surfacing experience.
+Can use seed content temporarily; pilot quality affected.
+Benchmark source/method approval
+Licensing, cohort method and calculation must be credible.
+Benchmark can be feature-flagged/deferred without blocking core MVP.
+Communication sender/provider readiness
+Needed for invitations/reminders and deliverability testing.
+Blocks end-to-end reminder/UAT scenarios.
+Legal/privacy/retention language
+Needed for production notices, household sharing and final lifecycle policy.
+Does not block early coding but can block launch.
+# 5. Recommended Team Structure
+Role
+Recommended involvement
+Primary responsibility
+Full-Stack Engineer
+Full-time
+Frontend and backend development, architecture implementation, core features, integrations, testing, code reviews, and deployment support.
+Full-Stack Engineer
+Full-time
+Frontend and backend development, feature implementation, integrations, testing, bug fixes, and ongoing development support.
+Independent Reviewer
+Phase 6
+Pre-Production Security & Architecture -  Full Implementation Verification
+# 6. Implementation Backlog
+The current implementation backlog totals 980 hours. Developer-level unit/feature testing is included in the relevant implementation items, with formal system validation, independent review and production launch represented separately.
+#
+Implementation Workstream
+Hours
+1
+Foundation, Repo, IaC & Environments
+36
+2
+Clerk Pro Identity & MFA
+46
+3
+Tenancy, Firm, Roles & Advisor Assignment
+56
+4
+Household, Client & Privacy Model
+46
+5
+White-Label & Firm Configuration
+20
+6
+Onboarding & Invitations
+34
+7
+Client Dashboard, Personalization, Journey & Progress Meter
+72
+8
+Planning Updates
+58
+9
+Assessments, Scoring & History
+60
+10
+Engagement, Outstanding Items & Advisor Exceptions
+46
+11
+Advisor Dashboard & Exception Handling
+50
+12
+Education Library & Contextual Surfacing
+52
+13
+Milestones, Reminders, Communications & Temporal Cloud
+74
+14
+Benchmarking MVP
+30
+15
+Firm / Platform Administration Basics
+30
+16
+Audit, Security, Data Lifecycle & Portability
+56
+17
+Monitoring & Operational Readiness
+56
+18
+Stage, UAT, Accessibility, Security & Performance
+66
+19
+Independent Pre-Production Security & Architecture Reviewer
+46
+20
+Production Launch & Handoff
+46
+Total
+980

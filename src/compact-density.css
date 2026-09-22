@@ -626,3 +626,135 @@
 @media (max-width: 820px) {
   .financial-context-panel { grid-template-columns: 1fr; gap: var(--space-2); }
 }
+
+/* Documentation reader: one route, persistent task navigation, in-place content changes. */
+.documentation-app {
+  display: grid;
+  grid-template-columns: 294px minmax(0, 1fr);
+  min-height: 100vh;
+  color: var(--brand-ink);
+  background: var(--brand-canvas);
+}
+
+.documentation-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 14px;
+  border-right: 1px solid var(--brand-border);
+  background: var(--brand-surface);
+}
+
+.documentation-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 7px;
+  color: var(--brand-primary-strong);
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.documentation-brand:hover { text-decoration: none; }
+.documentation-brand svg { color: var(--brand-primary); }
+.documentation-brand > span > span { color: var(--brand-primary); }
+.documentation-brand small { display: block; margin-top: 6px; color: var(--brand-primary-strong); font-size: 8px; letter-spacing: 1.6px; }
+.documentation-kicker { margin: 34px 7px 10px; color: var(--brand-muted); font-size: var(--fs-micro); font-weight: 750; letter-spacing: 1.2px; }
+
+.documentation-sidebar nav { display: grid; gap: 3px; }
+.documentation-sidebar nav button {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 9px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--brand-muted);
+  background: transparent;
+  font: inherit;
+  font-size: var(--fs-body-sm);
+  text-align: left;
+}
+
+.documentation-sidebar nav button:hover { color: var(--brand-primary-strong); background: var(--brand-surface-muted); }
+.documentation-sidebar nav button.active { color: var(--brand-primary-strong); background: var(--brand-nav-selected); font-weight: 750; }
+.documentation-sidebar nav button svg:last-child { opacity: .65; }
+
+.documentation-main { min-width: 0; }
+.documentation-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 62px;
+  padding: 0 var(--content-padding-x);
+  border-bottom: 1px solid var(--brand-border);
+  background: var(--brand-surface);
+}
+
+.documentation-topbar > div,
+.documentation-topbar a { display: inline-flex; align-items: center; gap: 8px; }
+.documentation-topbar > div { color: var(--brand-primary-strong); font-size: var(--fs-body-sm); font-weight: 750; }
+.documentation-topbar a { font-size: var(--fs-small); font-weight: 700; }
+
+.documentation-reader {
+  width: min(1280px, calc(100% - 40px));
+  max-height: calc(100vh - 106px);
+  margin: 22px auto;
+  overflow: auto;
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  background: var(--brand-surface);
+  box-shadow: var(--experience-lift);
+}
+
+.documentation-reader-header {
+  padding: 28px 34px 24px;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.documentation-reader-header p { margin: 0 0 5px; color: var(--brand-primary); font-size: var(--fs-small); font-weight: 750; letter-spacing: .7px; text-transform: uppercase; }
+.documentation-reader-header h1 { margin: 0 0 8px; color: var(--brand-primary-strong); font-size: var(--fs-h2); line-height: 1.2; }
+.documentation-reader-header span { color: var(--brand-muted); font-size: var(--fs-small); }
+
+.documentation-body { padding: 26px 34px 42px; }
+.documentation-body h2,
+.documentation-body h3,
+.documentation-body h4 { color: var(--brand-primary-strong); }
+.documentation-body h2 { margin: 30px 0 10px; font-size: var(--fs-h3); }
+.documentation-body h3 { margin: 24px 0 8px; font-size: var(--fs-body); }
+.documentation-body h4 { margin: 18px 0 6px; font-size: var(--fs-body-sm); }
+.documentation-body h2:first-child { margin-top: 0; }
+.documentation-body p { margin: 0 0 10px; color: var(--brand-muted); font-size: var(--fs-body-sm); line-height: 1.6; }
+.documentation-body p:empty { display: none; }
+.documentation-body .document-table-wrap { max-width: 100%; margin: 18px 0 24px; overflow-x: auto; border: 1px solid var(--brand-border); border-radius: var(--radius-sm); }
+.documentation-body table { width: 100%; min-width: 560px; border-collapse: collapse; color: var(--brand-ink); font-size: var(--fs-small); }
+.documentation-body th,
+.documentation-body td { padding: 10px 12px; border-right: 1px solid var(--brand-border); border-bottom: 1px solid var(--brand-border); text-align: left; vertical-align: top; line-height: 1.45; }
+.documentation-body th:last-child,
+.documentation-body td:last-child { border-right: 0; }
+.documentation-body tr:last-child td { border-bottom: 0; }
+.documentation-body th { color: var(--brand-primary-strong); background: var(--brand-primary-soft); font-weight: 750; }
+.documentation-body td { color: var(--brand-muted); background: var(--brand-surface); }
+.documentation-body .document-image { width: fit-content; max-width: 100%; margin: 18px 0 24px; }
+.documentation-body .document-image img { display: block; width: auto; max-width: 100%; height: auto; border: 1px solid var(--brand-border); border-radius: var(--radius-sm); background: var(--brand-surface); }
+
+.documentation-empty { display: grid; place-items: center; min-height: 380px; padding: 36px; color: var(--brand-muted); text-align: center; }
+.documentation-empty svg { color: var(--brand-primary); }
+.documentation-empty h2 { margin: 14px 0 6px; color: var(--brand-primary-strong); font-size: var(--fs-h3); }
+.documentation-empty p { max-width: 54ch; margin: 0; font-size: var(--fs-body-sm); line-height: 1.55; }
+.documentation-empty code { padding: 2px 4px; border-radius: 3px; background: var(--brand-surface-muted); color: var(--brand-primary-strong); }
+
+@media (max-width: 760px) {
+  .documentation-app { grid-template-columns: 1fr; }
+  .documentation-sidebar { position: sticky; top: 0; z-index: 2; padding: 13px; border-right: 0; border-bottom: 1px solid var(--brand-border); }
+  .documentation-kicker { display: none; }
+  .documentation-sidebar nav { display: flex; max-width: 100%; margin-top: 14px; overflow-x: auto; }
+  .documentation-sidebar nav button { flex: 0 0 auto; width: auto; grid-template-columns: 18px auto; white-space: nowrap; }
+  .documentation-sidebar nav button svg:last-child { display: none; }
+  .documentation-reader { width: calc(100% - 28px); max-height: none; margin: 14px auto; }
+  .documentation-reader-header,
+  .documentation-body { padding-inline: 20px; }
+}

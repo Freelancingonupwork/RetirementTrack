@@ -1,0 +1,394 @@
+RETIREMENTTRACK
+Task 9 – DevOps, Ownership & Operational Approach
+Discovery deliverable defining the operational foundation for source control, production ownership, environment separation, CI/CD, infrastructure as code, access control, monitoring, backup/recovery, incident handling, third-party account governance, documentation, and developer/vendor transition.
+# 1. Purpose & Operating Principles
+Task 9 converts the confirmed technical architecture into an operating model that keeps RetirementTrack portable, supportable and secure without introducing enterprise process overhead that is unnecessary for the MVP.
+Principle
+Recommended Direction
+RetirementTrack ownership
+Production-critical accounts, infrastructure, repositories and recovery controls are owned or controlled by RetirementTrack, not an individual developer or development firm.
+Replaceable delivery resources
+Developers/vendors receive named, least-privilege access. A change in development resources must not prevent RetirementTrack from operating, deploying or recovering the platform.
+Reproducible environments
+Infrastructure and deployment configuration are source-controlled and repeatable through Bicep and CI/CD.
+Controlled production access
+Production access is named, MFA-protected, auditable and limited to operational need.
+Operational simplicity
+Use Azure-managed services, Clerk Pro and Temporal Cloud rather than self-hosting infrastructure that does not create product differentiation.
+Recoverability
+Backups, restore procedures, account recovery paths and runbooks are documented and periodically tested.
+# 2. Production Asset Ownership & Control
+Confirmed ownership modelAll critical production assets should ultimately be owned or controlled by RetirementTrack. Developers and vendors are granted appropriate role-based access but should not be the sole account owner, billing owner, recovery contact or holder of production credentials.
+Asset / Service
+Ownership & Control
+Git repository / organization
+RetirementTrack-controlled organization/repository with RetirementTrack recovery administrators.
+Azure
+Production subscription, resource groups, billing relationship and privileged administration controlled by RetirementTrack.
+Clerk Pro
+Production Clerk organization/account, billing and recovery contacts controlled by RetirementTrack.
+Temporal Cloud
+Production account, namespaces, billing and recovery access controlled by RetirementTrack; .NET Worker remains deployed in Azure.
+Domains / DNS
+Registrar, DNS and certificate-related recovery access controlled by RetirementTrack.
+Communication providers
+Email and future messaging provider accounts, sender configuration and billing controlled by RetirementTrack.
+Secrets / deployment identities
+Key Vault, managed identities, service connections, certificates and production deployment credentials remain under RetirementTrack-controlled Azure/CI/CD governance.
+Monitoring / other SaaS
+Critical monitoring, alerting and future production SaaS accounts follow the same ownership, billing and recovery rule.
+# 3. Source Control & Repository Governance
+Area
+Recommended Practice
+Repository ownership
+Client-controlled Git organization and repositories; development firms are collaborators, not owners.
+Branching
+Protected main branch; short-lived feature/fix branches; pull request required for production-bound changes.
+Review
+At least one appropriate review for material production changes; architecture/security-sensitive changes receive lead review.
+Quality gates
+Build, automated tests and applicable dependency/security checks must pass before merge/deployment.
+Secrets
+No production secrets, private keys or credentials in Git history. Use Key Vault and protected deployment identities.
+Traceability
+Preserve pull requests, commit history, release tags/build versions and deployment records.
+Recovery administration
+At least designated RetirementTrack account owners/recovery admins should be able to regain repository access independent of a vendor.
+# 4. Environment Strategy
+Environment
+Purpose
+Operational Boundary
+Development
+Developer integration and feature work.
+Non-production configuration; synthetic/test data; no routine production credentials.
+Staging / UAT
+Production-like validation before release.
+Separate secrets/configuration; representative sanitized/synthetic data; release candidate validation.
+Production
+Live RetirementTrack service.
+Strict RBAC/MFA, production-only secrets, controlled deployments, monitoring, backups and audit.
+Environment-specific configuration and secrets must remain separate. Production client data should not be copied into lower environments by default. Shared non-sensitive platform definitions may be promoted through controlled deployment/configuration processes rather than manually recreated.
+# 5. Infrastructure as Code
+Area
+Decision
+Tooling
+Bicep is the recommended Azure Infrastructure-as-Code approach.
+Source control
+Bicep modules, environment parameters and deployment scripts are stored with controlled source history.
+Repeatability
+Dev/QA/Staging/Production resources should be reproducible from reviewed definitions with environment-specific parameters.
+Manual changes
+Avoid undocumented portal-only production changes. Necessary emergency/manual changes must be recorded and reconciled back into IaC.
+State / drift
+Periodically compare deployed configuration with intended IaC and correct unexplained drift.
+Sensitive values
+Do not place secrets in Bicep parameter files; reference Key Vault/secure deployment inputs.
+# 6. CI/CD & Release Flow
+Recommended release flowPull Request → Build/Test/Scan → Versioned Artifact → Deploy to Staging/UAT → Health/Smoke Validation → Authorized Production Approval → Production Slot Deployment → Validate → Slot Swap → Monitor / Roll Back if required.
+Component
+CI/CD Approach
+React frontend
+Install/build, lint/test as defined, produce versioned static artifact, deploy through controlled pipeline.
+ASP.NET Core API
+Restore/build/test, dependency/security checks, package once and promote the same release artifact.
+.NET Temporal Worker
+Build/test/package with the application release; deploy Azure-hosted Worker separately from API while maintaining compatible contracts/workflows.
+Bicep
+Validate infrastructure templates and deploy reviewed environment changes through pipeline.
+Azure SQL
+Apply reviewed EF Core migrations through controlled release sequencing; no ad hoc production schema edits.
+Production
+Use App Service deployment slots where applicable, health checks and explicit production approval. Keep a rollback/roll-forward path.
+# 7. Database Migration & Release Safety
+Control
+Recommended Practice
+Migration ownership
+EF Core migrations are source-controlled and reviewed with the application change that requires them.
+Compatibility
+Prefer additive/forward-compatible migrations so old and new application versions can coexist during staged deployment where practical.
+Risky changes
+Take/confirm an appropriate recovery checkpoint before high-risk schema/data changes and test migration behavior outside production.
+Execution
+Apply migrations through a controlled deployment step or explicitly authorized migration job, not developer workstation scripts against production.
+Failure handling
+Define whether a failed release rolls application code back or rolls forward with a corrective migration; destructive down-migrations should not be assumed safe.
+Audit
+Retain migration/version and deployment history for operational diagnosis.
+# 8. Configuration, Secrets & Managed Identity
+Area
+Recommended Direction
+Azure Key Vault
+Store application secrets, provider credentials, certificates and other sensitive configuration.
+Managed Identity
+Use for Azure-to-Azure authentication where supported, reducing long-lived secrets.
+App Configuration
+Use for non-secret environment/feature configuration where centralized management adds value.
+Pipelines
+Use workload/service identities and protected variables; never echo secrets into logs.
+Rotation
+Document owner, rotation method and impact for each credential that cannot use managed identity.
+Separation
+Production secrets are distinct from Dev/QA/Staging secrets and are not distributed to developers by default.
+# 9. Operational Identity, RBAC & Production Access
+Control
+Rule
+Named accounts
+No shared administrator or production developer accounts.
+MFA
+Mandatory for privileged operational access and critical production SaaS accounts.
+Least privilege
+Assign Azure RBAC, repository roles, Clerk/Temporal roles and provider access according to job need.
+Elevation
+Use time-bounded/elevated access where practical for exceptional production work.
+Break-glass
+Maintain a documented emergency recovery path controlled by RetirementTrack, protected with strong MFA/recovery controls.
+Access review
+Review privileged and vendor access periodically and whenever responsibilities change.
+Audit
+Preserve sign-in, administrative and deployment evidence where the platform/provider supports it.
+# 10. Temporal Cloud Operational Approach
+Confirmed MVP directionUse Temporal Cloud for orchestration. RetirementTrack owns the Temporal Cloud production account, billing and recovery access. The RetirementTrack .NET Temporal Worker runs in Azure and connects securely to Temporal Cloud.
+Area
+Operational Direction
+Environment isolation
+Use separate Temporal namespaces/environments as appropriate so non-production workflow execution cannot affect production.
+Credentials
+Store Temporal connectivity credentials/certificates in Key Vault; do not place them in source code or developer configuration.
+Worker operations
+Deploy and monitor the Azure-hosted worker independently while maintaining compatible workflow/activity versions.
+Visibility
+Use Temporal workflow visibility together with Azure monitoring for stuck/failed workflows, retries and operational diagnosis.
+Recovery
+RetirementTrack retains account recovery/admin access independent of the development vendor.
+# 11. Monitoring, Logging & Alerting
+Area
+Recommended Coverage
+Application telemetry
+Application Insights / Azure Monitor with OpenTelemetry instrumentation where appropriate.
+Correlation
+Correlation/trace IDs across API, worker and external calls; include tenant/user identifiers only where safe and operationally useful.
+Sensitive data
+Do not log assessment answers, Planning Update payloads, approximate balances or other sensitive client payloads unnecessarily.
+Health endpoints
+Expose /health/live and /health/ready; readiness should verify critical dependencies appropriately without creating excessive load.
+Alerts
+Alert on sustained API failures, worker/Temporal failures, communication failures, database/resource health and other actionable operational conditions.
+Dashboards
+Maintain concise operational dashboards for availability, error rate, latency, job/workflow health and key Azure resource signals.
+Audit
+Keep business/security audit events separate from diagnostic logs where retention/access requirements differ.
+# 12. Independent Pre-Production Security & Architecture Validation
+Before production launch, RetirementTrack should complete a focused independent review of the implemented security and operational controls. The reviewer should be qualified and independent from the developer or team responsible for implementing those controls. The objective is to verify that the actual production environment matches the approved architecture and Task 9 requirements, without turning the MVP into a burdensome enterprise audit or formal compliance certification.
+Review area
+What should be independently validated
+Tenant isolation
+Verify that one firm/client cannot access another firm’s identifiable data across APIs, database access paths and background workflows.
+Identity & access
+Review Clerk integration, application authorization, RBAC, MFA, advisor/client relationships, privileged access and least-privilege assignments.
+Azure & environment configuration
+Confirm production resources, environment separation and production access follow the approved architecture.
+Secrets & credentials
+Validate Key Vault, Managed Identity where supported, credential storage/rotation, pipeline secrets and absence of exposed production secrets.
+Production-data controls
+Confirm production client data is not routinely copied to lower environments or developer devices and that support/export access is controlled and auditable.
+Logging, monitoring & audit
+Confirm sensitive payloads are excluded from broad logs and that monitoring, alerts, audit evidence and operational visibility work as intended.
+Backup & recovery
+Review Azure SQL/Blob/Key Vault recovery configuration and evidence of restore testing against the approved recovery approach.
+Deployment controls
+Review CI/CD approvals, migration controls, deployment identities, rollback/roll-forward procedures and production change traceability.
+Findings & closure
+Document findings by severity. Material/high-risk findings should be remediated or formally accepted by RetirementTrack before production launch, with revalidation where appropriate.
+This independent validation should be included as a pre-production implementation activity and budget item. It is intended as a practical second set of eyes on the implemented controls. Broader penetration testing, compliance certification or formal audit can be added later if client, insurer, regulatory or commercial requirements justify it.
+# 13. Backup, Recovery & Business Continuity
+Area
+Recommended Approach
+Azure SQL
+Use Azure SQL automated backups and point-in-time restore capabilities; configure retention appropriate to confirmed production requirements.
+Blob Storage
+Use suitable redundancy plus soft delete/versioning/lifecycle features where they support recovery requirements.
+Key Vault
+Enable appropriate soft-delete/purge-protection and document recovery of critical secrets/certificates.
+IaC / source
+Git + Bicep provide reproducible application/infrastructure definitions but do not replace data backups.
+Restore testing
+Periodically test restoration into an isolated environment and document elapsed time, dependencies and issues.
+RPO / RTO
+Exact production Recovery Point Objective and Recovery Time Objective remain business confirmations and must be finalized before production launch.
+# 14. Production Data Restrictions
+Rule
+Operational Requirement
+Lower environments
+Do not copy production client data into Dev/QA/Staging by default. Use synthetic or sanitized datasets.
+Developer devices
+Do not download production databases, client files or bulk exports to developer machines for routine troubleshooting.
+Support access
+Use authorized, least-privilege access and prefer metadata/status views over sensitive payload inspection.
+Exports
+Generate firm/client exports only through approved, auditable paths and according to confirmed portability/privacy policy.
+Database access
+Restrict direct production SQL access; use application/admin tooling where feasible and audit exceptional access.
+Logs
+Do not use logs as a secondary store for sensitive client information.
+# 15. Incident & Support Approach
+Stage
+Recommended Practice
+Detect
+Monitoring/alerts, provider notifications or user reports identify an operational issue.
+Triage
+Establish severity, affected tenants/users, security/privacy implications and immediate owner.
+Contain
+Limit impact: disable failing workflow/integration, roll back deployment, revoke credential or isolate affected component as appropriate.
+Recover
+Restore service/data using documented release, backup or provider recovery procedures.
+Communicate
+Use agreed escalation and client/firm communication responsibilities; avoid speculative or premature incident statements.
+Review
+For material incidents, record timeline, cause, corrective actions and follow-up ownership.
+Evidence
+Preserve relevant deployment, audit, application and provider evidence consistent with privacy/retention policy.
+Exact operational support hours, response expectations, escalation contacts and any service-level commitments remain business confirmations rather than assumptions in this Discovery document.
+# 16. Third-Party Service Billing, Recovery & Renewal
+Control
+Recommended Rule
+Billing
+Critical production services use RetirementTrack-controlled billing/payment methods rather than a developer/vendor personal or corporate card.
+Account owner
+RetirementTrack designates primary and backup account owners/recovery administrators.
+Recovery
+Recovery email/phone and MFA recovery methods remain accessible to RetirementTrack.
+Inventory
+Maintain a service inventory including purpose, environment, owner, billing owner, renewal/expiry date, recovery path and support contact.
+Renewals
+Domains, certificates and paid SaaS renewals should generate alerts before expiry where manual renewal risk exists.
+Vendor transition
+No production service should become inaccessible solely because a developer/vendor relationship ends.
+# 17. Documentation & Runbooks
+Runbook / Record
+Minimum Content
+Environment inventory
+Azure resources, URLs/endpoints, provider accounts, ownership and environment mapping.
+Access matrix
+Roles, privileged users/groups, approval path and recovery administrators.
+Deployment / rollback
+Pipeline flow, approvals, slot swap, validation, rollback/roll-forward procedure.
+Database migration
+Migration execution, validation, failure handling and recovery prerequisites.
+Backup / restore
+SQL/Blob/Key Vault recovery procedures and restore-test record.
+Incident response
+Escalation contacts, severity approach, containment/recovery steps and evidence locations.
+Secret rotation
+How to rotate each non-managed credential without avoidable downtime.
+Third-party recovery
+Clerk, Temporal Cloud, domains/DNS, communication providers and other critical SaaS recovery steps.
+Onboarding / offboarding
+Access grant/removal checklist for employees, developers and vendors.
+Independent security review record
+Review scope, evidence reviewed, findings, remediation/acceptance decisions, revalidation status and final pre-production closure.
+Operational documentation should be stored in a RetirementTrack-controlled location. Technical runbooks and infrastructure/deployment documentation should be source-controlled where appropriate so changes remain reviewable and portable.
+# 18. Developer / Vendor Onboarding & Offboarding
+Phase
+Required Actions
+Onboarding
+Create named identity; enforce MFA; grant only required repo/Azure/provider roles; document access owner and purpose; provide approved development/runbook documentation.
+During engagement
+Avoid shared credentials; use approved secrets/configuration paths; request temporary elevation only when necessary; keep work and deployment history in RetirementTrack-controlled systems.
+Role change
+Review and reduce access when responsibilities change.
+Offboarding
+Remove repository, Azure, Clerk, Temporal, provider, VPN/remote and other production access promptly; revoke tokens/keys; rotate shared/non-user credentials if exposure is possible.
+Handoff
+Transfer open work, deployment knowledge, runbooks and unresolved operational issues before engagement ends where practical.
+Verification
+Confirm RetirementTrack retains billing, account-owner and recovery access and that no vendor-only dependency remains.
+# 19. Operational Responsibility Matrix
+Operational Area
+RetirementTrack
+Development Team / Vendor
+Managed Provider
+Account ownership /billing
+Accountable / Owner
+No ownership; authorized access only
+Operates service under subscription
+Architecture / implementation
+Approves business/ownership direction
+Responsible for implementation/recommendation
+Platform capability
+CI/CD / deployments
+Defines approval authority
+Implements and executes per authorization
+Hosts deployment targets/services
+Production access
+Controls policy and privileged ownership
+Least-privilege access as approved
+Provider administrative controls
+Monitoring / triage
+Owns escalation model
+Implements telemetry; investigates application issues
+Service health/managed platform incidents
+Backups / recovery
+Owns RPO/RTO and restore acceptance
+Implements/tests recovery procedures
+Provides managed backup/recovery features
+Incident response
+Owns business decisions/communications
+Technical triage, containment and recovery
+Provider support for platform incidents
+Vendor transition
+Owns accounts/data/repositories
+Provides handoff and access return
+Continues service under RetirementTrack account
+Independent security validation
+Selects/authorizes independent reviewer; accepts closure of material findings
+Provides evidence and remediation support; does not self-certify the implementation
+May provide service/configuration evidence or specialist review support
+# 20. Production Launch Operational Checklist
+Check
+Launch Requirement
+Ownership
+RetirementTrack owns/controls Azure, Git, Clerk Pro, Temporal Cloud, domains/DNS, communication provider and critical recovery paths.
+Access
+Named accounts, MFA, least privilege, production groups/roles and break-glass recovery validated.
+Environments
+Dev/QA/Staging/Production configuration and secrets separated; production data restrictions verified.
+Deployment
+CI/CD, Bicep, staging validation, production approval, health checks and rollback tested.
+Database
+Migration process and production recovery checkpoint approach validated.
+Secrets
+Key Vault/Managed Identity configured; no production secrets in repo or logs.
+Monitoring
+Dashboards, actionable alerts, health endpoints and escalation contacts tested.
+Recovery
+Backup configuration verified; restore test completed; RPO/RTO confirmed.
+Runbooks
+Deployment, rollback, migration, restore, incident, secret rotation and account recovery documentation accessible.
+Third parties
+Billing, renewal, recovery contacts and support access verified for critical providers.
+Support
+Production support owner, release approver and incident expectations confirmed.
+Independent security review
+Qualified independent reviewer validates material implementation controls; high-risk findings are remediated or formally accepted before launch.
+# 21. Final Recommended Operational Boundary
+Recommended first-build operational boundaryEstablish a professional but lightweight operating foundation: RetirementTrack owns the critical accounts and recovery paths; developers/vendors remain replaceable; environments and deployments are reproducible; production access is controlled and auditable; secrets are centrally managed; monitoring and recovery are documented; restore/deployment procedures are tested; and the implemented security controls receive an independent pre-production review. Avoid enterprise bureaucracy that does not improve MVP reliability, security or portability.
+Include for MVP / Production Readiness
+Keep Simple / Mature with Scale
+RetirementTrack-controlled accounts, billing and recovery
+No vendor-owned production dependencies.
+Dev/Staging/Production separation
+No unnecessary duplicate enterprise platform stacks.
+Bicep + CI/CD + controlled release approvals
+No heavyweight release-management suite required.
+Key Vault, Managed Identity, RBAC and MFA
+No broad standing production administrator access.
+App Insights/Azure Monitor/OpenTelemetry and actionable alerts
+No exhaustive enterprise SIEM program unless risk/compliance requires it.
+Azure-managed backup/PITR plus restore testing
+No custom backup platform where managed capabilities meet confirmed RPO/RTO.
+Documented incident, recovery and vendor-transition runbooks
+No process bureaucracy beyond what supports reliable operations.
+Temporal Cloud and Clerk Pro under RetirementTrack ownership
+No self-hosted Temporal or custom identity infrastructure for MVP.
+Independent pre-production security/architecture review
+No heavy enterprise audit or formal certification unless later required.
