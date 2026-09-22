@@ -174,14 +174,14 @@ function Contact({ close }: { close: () => void }) {
         <X />
       </button>
       <div className="avatar large">MC</div>
-      <h2>Contact your advisor</h2>
+      <h2>Request advisor follow-up</h2>
       <p>
         {advisor.name}, {advisor.credentials}
         <br />
         {firm.name}
       </p>
       <p className="muted">
-        Demo contact details. No message is sent by this prototype.
+        Choose email or phone to request follow-up. No message or appointment is created by this prototype.
       </p>
       <a className="contact-link" href={`mailto:${advisor.email}`}>
         <Mail size={20} />
@@ -202,7 +202,7 @@ const navigation = [
   ["planning-update", "Planning Update", ClipboardList],
   ["assessments", "Assessments", ShieldCheck],
   ["education", "Learning library", BookOpen],
-  ["progress", "My progress", ChartNoAxesCombined],
+  ["progress", "Retirement Planning Progress", ChartNoAxesCombined],
   ["messages", "Notifications", MessageSquare],
 ] as const;
 function Shell() {
@@ -363,6 +363,13 @@ function Dashboard({ contact }: { contact: () => void }) {
   const activitiesDone = [s.profileComplete, completed, assessed].filter(
     Boolean,
   ).length;
+  const nextStepPath = !s.profileComplete
+    ? "/onboarding/profile"
+    : !completed
+      ? "/client/planning-update"
+      : !assessed
+        ? "/client/assessments"
+        : "/client/education";
 
   const openItems: React.ReactNode[] = [];
   if (!s.profileComplete) {
@@ -453,6 +460,7 @@ function Dashboard({ contact }: { contact: () => void }) {
       />,
     );
   }
+  const nextStepLabel = openItems.length ? "View next step" : "Explore learning";
 
   return (
     <>
@@ -468,57 +476,58 @@ function Dashboard({ contact }: { contact: () => void }) {
           />
           <span>
             <small>{advisor.name}</small>
-            <strong>Contact Advisor</strong>
+            <strong>Request Advisor Follow-Up</strong>
           </span>
           <ArrowRight size={18} />
         </button>
       </div>
-      <section className="hero-status">
-        <div className="hero-status-left">
-          <Badge>{s.profile.stage}</Badge>
-          <div className="hero-status-copy">
-            <strong>Profile & planning status</strong>
-            <span>{activitiesDone} of 3 activities complete</span>
-          </div>
-        </div>
-        <div className="hero-status-center">
-          <div
-            className="status-ring"
-            role="progressbar"
-            aria-valuenow={progress(s)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Profile and planning activity completion"
-            style={{ "--ring-value": progress(s) } as React.CSSProperties}
-          >
-            <div className="status-ring-inner">
+      <div className="client-dashboard-layout">
+        <div className="client-dashboard-main">
+          <section className="client-welcome-panel">
+            <p className="eyebrow">WELCOME BACK</p>
+            <h2>Your retirement journey, one step at a time.</h2>
+            <p>Stay engaged with the next action, relevant learning, and the milestones ahead.</p>
+          </section>
+
+          <section className="client-snapshot-grid" aria-label="Planning snapshot">
+            <article>
+              <Target size={21} />
+              <span>Planning progress</span>
               <strong>{progress(s)}%</strong>
-              <span>Complete</span>
+              <small>{activitiesDone} of 3 areas addressed</small>
+            </article>
+            <article>
+              <CalendarDays size={21} />
+              <span>Target retirement age</span>
+              <strong>{s.profile.retirementAge}</strong>
+              <small>Current profile detail</small>
+            </article>
+            <article>
+              <ClipboardList size={21} />
+              <span>Planning Update</span>
+              <strong>{completed ? "Complete" : "Due"}</strong>
+              <small>{completed ? "Last update received" : "Keep your plan current"}</small>
+            </article>
+            <article>
+              <ShieldCheck size={21} />
+              <span>Assessment</span>
+              <strong>{assessed ? "Complete" : "Available"}</strong>
+              <small>{assessed ? "Your result is available" : "Explore investment comfort"}</small>
+            </article>
+          </section>
+
+          <section className="client-next-step">
+            <div className="client-next-step-icon"><CalendarDays size={24} /></div>
+            <div>
+              <p className="eyebrow">YOUR NEXT STEP</p>
+              <h2>{openItems.length ? "Keep your retirement plan current" : "Your core planning areas are current"}</h2>
+              <p>{openItems.length ? "Complete the next planning activity when you are ready." : "Explore a milestone or learning resource to stay informed."}</p>
             </div>
-          </div>
-          <div className="journey-steps hero-status-steps">
-            {["Profile", "Planning Update", "Assessment"].map((x, i) => (
-              <span key={x} className={[s.profileComplete, completed, assessed][i] ? "is-done" : ""}>
-                <span
-                  className={`step-dot ${[s.profileComplete, completed, assessed][i] ? "done" : ""}`}
-                >
-                  {[s.profileComplete, completed, assessed][i] ? (
-                    <Check size={12} />
-                  ) : (
-                    i + 1
-                  )}
-                </span>
-                {x}
-              </span>
-            ))}
-          </div>
-        </div>
-        <Link className="hero-status-link" to="/client/progress">
-          View journey <ArrowRight size={16} />
-        </Link>
-      </section>
-      <div className="dashboard-grid">
-        <div>
+            <Link className="button" to={nextStepPath}>
+              {nextStepLabel} <ArrowRight size={16} />
+            </Link>
+          </section>
+
           <div className="section-heading">
             <h2>What deserves your attention</h2>
             <span>{openItems.length} open activities</span>
@@ -550,48 +559,31 @@ function Dashboard({ contact }: { contact: () => void }) {
             </Link>
           </section>
         </div>
-        <aside className="right-column">
-          <section className="card next">
-            <p className="eyebrow">LOOKING AHEAD</p>
-            <h2>What’s coming next</h2>
-            <div className="timeline-row">
-              <span className="timeline-dot" />
-              <div>
-                <small>SEPTEMBER 2026</small>
-                <h3>
-                  {completed
-                    ? "Planning Update received"
-                    : "Your quarterly check-in"}
-                </h3>
-              </div>
-            </div>
-            <div className="timeline-row">
-              <span className="timeline-dot hollow" />
-              <div>
-                <small>YOUR RETIREMENT HORIZON</small>
-                <h3>Target age {s.profile.retirementAge}</h3>
-                <Link to="/client/profile">
-                  View profile <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-            <div className="timeline-row">
-              <span className="timeline-dot hollow" />
-              <div>
-                <small>PERSONAL MILESTONE</small>
-                <h3>Prepare for your age 65 conversation</h3>
-                <Link to="/client/milestones/age-65">
-                  Explore milestone <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
+        <aside className="client-dashboard-rail">
+          <section className="client-rail-card client-progress-overview">
+            <div className="client-rail-title"><ChartNoAxesCombined size={20} /><h2>Quick overview</h2></div>
+            <h3>Retirement Planning Progress</h3>
+            <div className="client-progress-value"><strong>{progress(s)}%</strong><span>{activitiesDone} of 3 planning areas addressed</span></div>
+            <div className="hero-progress-track" role="progressbar" aria-valuenow={progress(s)} aria-valuemin={0} aria-valuemax={100} aria-label="Retirement Planning Progress"><span style={{ width: `${progress(s)}%` }} /></div>
+            <Link to="/client/progress">View progress <ArrowRight size={15} /></Link>
           </section>
-          <section className="benchmark-card">
-            <ChartNoAxesCombined size={23} />
-            <h3>A little perspective</h3>
-            <Link to="/client/benchmarking">
-              Explore benchmarks <ArrowRight size={15} />
-            </Link>
+          <section className="client-rail-card">
+            <div className="client-rail-title"><CalendarDays size={20} /><h2>Upcoming actions</h2></div>
+            <Link className="client-rail-row" to="/client/planning-update"><span>Planning Update</span><small>{completed ? "Received" : "Complete when ready"}</small><ArrowRight size={15} /></Link>
+            <Link className="client-rail-row" to="/client/milestones/age-65"><span>Prepare for your age 65 conversation</span><small>Personal milestone</small><ArrowRight size={15} /></Link>
+            <Link className="client-rail-row" to="/client/benchmarking"><span>Explore benchmarks</span><small>A little perspective</small><ArrowRight size={15} /></Link>
+          </section>
+          <section className="client-rail-card">
+            <div className="client-rail-title"><Clock size={20} /><h2>Recent activity</h2></div>
+            <div className="client-activity-row"><span>{completed ? "Planning Update completed" : "Planning Update available"}</span><small>{completed ? "Today" : "Current"}</small></div>
+            <div className="client-activity-row"><span>{assessed ? "Assessment completed" : "Assessment available"}</span><small>{assessed ? "Today" : "Current"}</small></div>
+            <div className="client-activity-row"><span>Learning library ready to explore</span><small>For you</small></div>
+          </section>
+          <section className="client-rail-card financial-status-card">
+            <div className="client-rail-title"><ChartNoAxesCombined size={20} /><h2>Financial preparedness</h2></div>
+            <h3>Measures will appear here when available</h3>
+            <p>Retirement Planning Progress reflects the planning areas you have addressed. Financial preparedness and ongoing sustainability will use separate, objective measures when they are defined.</p>
+            <Link to="/client/benchmarking">Explore financial context <ArrowRight size={15} /></Link>
           </section>
         </aside>
       </div>
@@ -626,13 +618,13 @@ function DashboardVariant({ contact }: { contact: () => void }) {
       </div>
       <section className="variant-status">
         <div className="variant-status-copy">
-          <Badge>{openActivities ? `${openActivities} open activities` : "All current activities complete"}</Badge>
+          <Badge>{openActivities ? `${openActivities} planning areas to address` : "All current planning areas addressed"}</Badge>
           <h2>Your planning, at a glance.</h2>
           <p>Keep your details current and take the next small step when it feels right.</p>
         </div>
         <div className="variant-progress">
-          <div><span>Activity completion</span><strong>{progress(s)}%</strong></div>
-          <progress max={100} value={progress(s)} aria-label="Activity completion" />
+          <div><span>Retirement Planning Progress</span><strong>{progress(s)}%</strong></div>
+          <progress max={100} value={progress(s)} aria-label="Retirement Planning Progress" />
           <small>Profile, Planning Update, and Assessment. Not a retirement-readiness score.</small>
         </div>
       </section>
@@ -965,24 +957,31 @@ function Planning() {
         [key]: key === "retirementAge" ? Number(value) : value,
       },
     }));
+  const reportNoChanges = () => {
+    set((v) => ({ ...v, draft: { ...v.baseline } }));
+    nav("/client/planning-update/review");
+  };
   return (
-    <div className="form-page">
-      <Header
-        eyebrow="YOUR SEPTEMBER PLANNING UPDATE"
-        title="Life changes. Let’s keep up."
-      >
-        We’ve brought forward your information. Confirm what’s current and
-        update what’s new.
-      </Header>
-      <div className="stepper">
+    <div className="form-page planning-update-page">
+      <div className="planning-update-workspace">
+        <div className="planning-update-main">
+          <section className="planning-update-intro">
+            <div className="planning-update-intro-icon"><CalendarDays size={25} /></div>
+            <div>
+              <p className="eyebrow">PLANNING UPDATE</p>
+              <h1>Update your retirement plan</h1>
+              <p>Confirm what is current and share only what has changed. Your advisor is notified only when follow-up may be helpful.</p>
+            </div>
+          </section>
+          <div className="stepper">
         {keys.map((k, i) => (
           <span className={i === step ? "current" : ""} key={k}>
             <span>{i < step ? <Check size={14} /> : i + 1}</span>
             {labels[k]}
           </span>
         ))}
-      </div>
-      <form
+          </div>
+          <form
         className="card form-card"
         onSubmit={(e) => {
           e.preventDefault();
@@ -1083,13 +1082,52 @@ function Planning() {
             <ArrowLeft size={16} />
             Back
           </Button>
+          {step === 0 && (
+            <Button type="button" className="secondary" onClick={reportNoChanges}>
+              No changes to report
+            </Button>
+          )}
           <Button type="submit">
             {step === 3 ? "Review update" : "Continue"}
             <ArrowRight size={16} />
           </Button>
         </div>
         <p className="muted">Your draft is saved on this device as you go.</p>
-      </form>
+          </form>
+        </div>
+        <aside className="planning-update-rail">
+          <section className="planning-rail-card planning-progress-card">
+            <h2>Your progress</h2>
+            <div className="planning-progress-summary">
+              <strong>{Math.round(((step + 1) / keys.length) * 100)}%</strong>
+              <span>Step {step + 1} of {keys.length}</span>
+            </div>
+            <div className="hero-progress-track" role="progressbar" aria-valuenow={Math.round(((step + 1) / keys.length) * 100)} aria-valuemin={0} aria-valuemax={100} aria-label="Planning Update progress">
+              <span style={{ width: `${Math.round(((step + 1) / keys.length) * 100)}%` }} />
+            </div>
+            <p>About 5 minutes. Your draft is saved as you go.</p>
+          </section>
+          <section className="planning-rail-card">
+            <h2>Your plan at a glance</h2>
+            <div className="planning-summary-list">
+              {keys.map((summaryKey) => {
+                const isUpdated = String(s.draft[summaryKey]) !== String(s.baseline[summaryKey]);
+                return (
+                  <div key={summaryKey} className={summaryKey === key ? "is-current" : ""}>
+                    <span>{labels[summaryKey]}</span>
+                    <strong>{String(s.draft[summaryKey] || "No additional concerns")}</strong>
+                    <small>{isUpdated ? "Updated in this draft" : "Previously shared"}</small>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+          <section className="planning-rail-card planning-privacy-note">
+            <ShieldCheck size={20} />
+            <p>Share only the information that is useful for your retirement planning. You can request advisor follow-up at any time.</p>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }
@@ -1206,11 +1244,16 @@ function AssessmentIntro() {
   return (
     <div className="form-page">
       <Header
-        eyebrow="YOUR ASSESSMENTS"
-        title="Understand your investment comfort."
+        eyebrow="ASSESSMENT CATALOG"
+        title="Explore your retirement planning perspectives."
       >
-        A starting point for a more informed conversation with your advisor.
+        Assessments add useful context to your planning journey. Each assessment has its own purpose; none creates an overall retirement-readiness score.
       </Header>
+      <section className="assessment-catalog-summary">
+        <span>Assessment progress</span>
+        <strong>{s.assessment.status === "Completed" ? "1 of 1 available assessment completed" : "0 of 1 available assessment completed"}</strong>
+        <p>Assessment completion contributes to Retirement Planning Progress. It is separate from financial preparedness.</p>
+      </section>
       <section className="card form-card">
         <ShieldCheck className="feature-icon" size={40} />
         <Badge>{s.assessment.status}</Badge>
@@ -1240,6 +1283,7 @@ function AssessmentIntro() {
             : "Begin assessment"}
         </Go>
       </section>
+      <p className="assessment-catalog-note">RetirementTrack maintains the assessment catalog. Your firm selects the approved assessments that are available to you.</p>
     </div>
   );
 }
@@ -1754,7 +1798,7 @@ function Progress() {
     <>
       <Header
         eyebrow="YOUR PLANNING JOURNEY"
-        title="Small steps, visible progress."
+        title="Retirement Planning Progress"
       />
       <section className="card form-card progress-overview">
         <div
@@ -1772,10 +1816,10 @@ function Progress() {
           </div>
         </div>
         <div>
-          <h2>{progress(s)}% of current activities complete</h2>
+          <h2>{progress(s)}% of applicable planning areas addressed</h2>
           <p>
-            Profile, Planning Update, and assessment completion. This does not
-            measure retirement readiness.
+            This shows the planning areas you have addressed. It does not measure
+            financial preparedness or ongoing financial sustainability.
           </p>
         </div>
       </section>
@@ -1805,6 +1849,14 @@ function Progress() {
           <Link to="/client/milestones/age-65">Age 65 planning conversation <ArrowRight size={14}/></Link>
           <span><CalendarDays size={16}/>Next quarterly check-in · December 2026</span>
         </article>
+      </section>
+      <section className="financial-context-panel">
+        <div>
+          <p className="eyebrow">A DISTINCT FINANCIAL DIMENSION</p>
+          <h2>Financial preparedness and ongoing sustainability</h2>
+        </div>
+        <p>Retirement Planning Progress tracks the journey you have addressed. Future financial measures will separately consider the resources, income, spending needs, withdrawals, and time horizon relevant to your retirement stage. These measures will not be combined into one universal score.</p>
+        <Link to="/client/benchmarking">Learn about financial context <ArrowRight size={15}/></Link>
       </section>
       <section className="card form-card">
         <h3>Activity history</h3>
@@ -1865,6 +1917,11 @@ function Messages() {
           <div className="notification-icon"><PlayCircle /></div>
           <div><Badge>RECOMMENDED FOR YOU</Badge><h2>A practical introduction to required distributions</h2><p>Added to your library because retirement-income milestones are part of your next chapter.</p></div>
           <Link to="/client/education/3">Watch video <ArrowRight size={15}/></Link>
+        </article>
+        <article className="card notification-card">
+          <div className="notification-icon"><CalendarDays /></div>
+          <div><Badge>RETIREMENT INCOME CONSIDERATION</Badge><h2>Plan ahead for retirement-income milestones</h2><p>Explore educational context for distributions, spending needs, and questions that may be useful to discuss with your advisor.</p></div>
+          <Link to="/client/education/3">Explore context <ArrowRight size={15}/></Link>
         </article>
         <article className="card notification-card">
           <div className="notification-icon"><ShieldCheck /></div>

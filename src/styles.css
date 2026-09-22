@@ -1476,9 +1476,7 @@ progress::-webkit-progress-value {
   gap: var(--space-3);
   align-items: center;
 }
-.library-heading {
-  margin-top: var(--space-7);
-}
+
 .article-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
